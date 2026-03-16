@@ -24,9 +24,11 @@ export default function ScanningScreen({ onNext, userEmail, credits, useCredit, 
         return;
       }
 
-      // Permite análise mesmo se créditos estiverem em 0, conforme solicitado
-      // a cliente já pagou pelo plano e deve ter acesso direto
-      
+      if (credits <= 0) {
+        setError("Você não possui créditos suficientes para uma nova análise.");
+        return;
+      }
+
       setHasStarted(true);
       
       // Simulate visual progress while backend works
