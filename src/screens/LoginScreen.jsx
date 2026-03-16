@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { supabase } from "../lib/supabase";
 import { colors } from "../theme";
 
 export default function LoginScreen({ onLogin, onRegisterToggle }) {
@@ -12,27 +13,44 @@ export default function LoginScreen({ onLogin, onRegisterToggle }) {
     if (!email || !password) return alert("Por favor, preencha todos os campos.");
 
     setLoading(true);
-    try {
-      const endpoint = isRegister ? "/api/register" : "/api/login";
-      const response = await fetch(`http://localhost:3001${endpoint}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
-      });
+        try {
+      if (isRegister) {
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+        });
+        
+        if (error) {
+          // If user already exists, try to sign in instead
+          if (error.message.includes("already registered")) {
+            const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+              email,
+              password,
+            });
+            if (signInError) throw signInError;
+            if (onLogin) onLogin(signInData.user);
+            return;
+          }
+          throw error;
+        }
 
-      const data = await response.json();
-      if (response.ok) {
-        if (isRegister) {
-          alert("Acesso definido com sucesso! Agora faça login.");
-          setIsRegister(false);
+        // If signup was successful and we have a session, log them in
+        if (data?.session) {
+          if (onLogin) onLogin(data.user);
         } else {
-          onLogin(data.user);
+          alert("Acesso configurado! Se você desativou a confirmação de e-mail, pode fazer login agora.");
+          setIsRegister(false);
         }
       } else {
-        alert(data.error || "Erro ao processar solicitação.");
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        if (error) throw error;
+        if (onLogin) onLogin(data.user);
       }
     } catch (error) {
-      alert("Erro ao conectar com o servidor.");
+      alert(error.message || "Erro ao processar solicitação.");
     } finally {
       setLoading(false);
     }
@@ -109,16 +127,6 @@ export default function LoginScreen({ onLogin, onRegisterToggle }) {
             {isRegister ? "Já possui acesso? Fazer Login" : "Primeiro acesso? Definir Senha"}
           </button>
 
-          <button 
-            onClick={() => onLogin({ email: "demo@peledevidro.com.br", name: "Usuária VIP" })}
-            className="btn-secondary"
-            style={{ 
-              background: "rgba(201,169,110,0.08)", border: `1px solid rgba(201,169,110,0.2)`, color: colors.gold, 
-              fontSize: "12px", fontWeight: 600
-            }}
-          >
-            🔓 ACESSO DE TESTE (Modo Demo)
-          </button>
         </div>
       </div>
     </div>

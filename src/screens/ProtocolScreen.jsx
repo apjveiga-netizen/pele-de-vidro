@@ -34,7 +34,7 @@ export default function ProtocolScreen({ onExercise, onBack, credits = 0, onUseC
   const [streak, setStreak] = useState(0);
   const [visible, setVisible] = useState(false);
   const [expandedProblem, setExpandedProblem] = useState(null);
-  const [unlocked, setUnlocked] = useState(false); // Paywall flag
+  const [unlocked, setUnlocked] = useState(true); // Default to true as requested
 
   useEffect(() => {
     const p = getProtocol();
@@ -51,12 +51,7 @@ export default function ProtocolScreen({ onExercise, onBack, credits = 0, onUseC
   };
 
   const handleUnlock = () => {
-    if (credits > 0) {
-      if (onUseCredit) onUseCredit();
-      setUnlocked(true);
-    } else {
-      if (onBuyCredits) onBuyCredits();
-    }
+    setUnlocked(true);
   };
 
   if (!protocol || !protocol.exercises || protocol.exercises.length === 0) {

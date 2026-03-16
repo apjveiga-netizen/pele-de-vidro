@@ -14,10 +14,14 @@ export default function UploadScreen({ onNext }) {
 
   const handleFile = (file) => {
     if (!file) return;
-    const url = URL.createObjectURL(file);
-    if (activeSide === "front") setPhotoFront(url);
-    if (activeSide === "left") setPhotoLeft(url);
-    if (activeSide === "right") setPhotoRight(url);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64 = reader.result;
+      if (activeSide === "front") setPhotoFront(base64);
+      if (activeSide === "left") setPhotoLeft(base64);
+      if (activeSide === "right") setPhotoRight(base64);
+    };
+    reader.readAsDataURL(file);
   };
 
   const isDataComplete = userData.name.length > 2 && userData.age.length > 0;
@@ -39,11 +43,12 @@ export default function UploadScreen({ onNext }) {
       step++;
       if (step >= analysisSteps.length) {
         clearInterval(interval);
+        // Pass base64 photos
         onNext({ ...userData, photos: { front: photoFront, left: photoLeft, right: photoRight } });
       } else {
         setAnalyzeStep(step);
       }
-    }, 1500);
+    }, 1200);
   };
 
   if (analyzing) {

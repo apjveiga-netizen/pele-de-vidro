@@ -6,31 +6,36 @@ const products = [
     icon: "🧴",
     title: "Rotina de Skincare Personalizada",
     desc: "Produtos ideais para seu tipo de pele, com foco em rugas, hidratação profunda, clareamento de manchas e proteção solar! Um cronograma completo e personalizado!",
-    price: "R$ 47,00"
+    price: "R$ 47,00",
+    checkoutUrl: "https://mpago.la/2fCQ5iT"
   },
   {
     icon: "💇‍♀️",
     title: "Corte e Estilo de Cabelo Ideal",
     desc: "Sugestão de cortes que valorizam o formato do seu rosto, alongando ou suavizando os traços conforme sua estrutura facial, além de cores que combinam com o seu tom de pele!",
-    price: "R$ 47,00"
+    price: "R$ 47,00",
+    checkoutUrl: "https://mpago.la/2qqo5sB"
   },
   {
     icon: "🥗",
     title: "Alimentação Anti-Idade",
     desc: "Receitas com antioxidantes, colágeno natural e vitaminas específicas para a saúde da sua pele de dentro para fora. Nutrição e saúde a um clique!",
-    price: "R$ 29,00"
+    price: "R$ 29,00",
+    checkoutUrl: "" // Missing: Dieta
   },
   {
     icon: "💄",
     title: "Maquiagem Rejuvenescedora",
     desc: "Técnicas de contorno e iluminação que disfarçam linhas de expressão e criam um efeito lifting natural com maquiagem leve!",
-    price: "R$ 29,00"
+    price: "R$ 29,00",
+    checkoutUrl: "" // Missing: Make
   },
   {
     icon: "😴",
     title: "Sono e Recuperação Noturna",
     desc: "Rotina noturna otimizada e personalizada — posição ao dormir, higiene do sono, horários ideais e técnicas para dormir!",
-    price: "R$ 37,00"
+    price: "R$ 37,00",
+    checkoutUrl: "" // Missing: Sono
   },
 ];
 
@@ -43,10 +48,12 @@ export default function UpsellScreen({ onAccept, onDecline }) {
     setPhoto(URL.createObjectURL(file));
   };
 
-  const handleBuy = (productTitle) => {
-    // Aqui entrará a lógica do link de pagamento depois
-    console.log(`Comprando: ${productTitle}`);
-    alert(`Link de pagamento para: ${productTitle} (Em breve)`);
+  const handleBuy = (item) => {
+    if (item.checkoutUrl) {
+      window.location.href = item.checkoutUrl;
+    } else {
+      alert(`Link de pagamento para: ${item.title} (Em breve)`);
+    }
   };
 
   return (
@@ -119,7 +126,7 @@ export default function UpsellScreen({ onAccept, onDecline }) {
                     {item.price}
                   </div>
                   <button 
-                    onClick={() => handleBuy(item.title)}
+                    onClick={() => handleBuy(item)}
                     style={{
                       background: `linear-gradient(135deg, ${colors.gold}, #a67c00)`,
                       color: "#fff", border: "none", borderRadius: "8px",

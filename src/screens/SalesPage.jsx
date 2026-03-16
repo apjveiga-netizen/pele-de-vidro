@@ -299,7 +299,7 @@ export default function SalesPage({ userEmail }) {
               tier="Básico"
               name="Básico" 
               price="47" 
-              checkoutUrl="COLOQUE-SEU-LINK-AQUI-BASICO"
+              checkoutUrl="https://mpago.la/1nmokBx"
               features={["1 análise facial com IA", "Protocolo Exclusivo e Personalizado — montado só pra você", "Exercícios diários — para reduzir rugas, levantar músculos e rejuvenescer", "Receitas Pele de Porcelana — para clarear olheiras, manchas, eliminar células mortas"]} 
             />
             <PlanCard 
@@ -307,14 +307,14 @@ export default function SalesPage({ userEmail }) {
               name="Pró" 
               price="97" 
               highlight={true}
-              checkoutUrl="COLOQUE-SEU-LINK-AQUI-PRO"
+              checkoutUrl="https://mpago.la/2JCbXtn"
               features={["3 análises faciais com IA — Acompanhe sua evolução", "Protocolo Exclusivo e Personalizado — montado só pra você", "Exercícios diários — para reduzir rugas, levantar músculos e rejuvenescer", "Receitas Pele de Porcelana — para clarear olheiras, manchas, eliminar células mortas", "BÔNUS: Protocolo Adeus Papada — exercícios para eliminar essa super vilã"]} 
             />
             <PlanCard 
               tier="Premium"
               name="Premium" 
               price="117" 
-              checkoutUrl="COLOQUE-SEU-LINK-AQUI-PREMIUM"
+              checkoutUrl="https://mpago.la/1NS9HZD"
               features={["10 análises faciais com IA — Acompanhe sua evolução", "Protocolo Exclusivo e Personalizado — montado só pra você", "Exercícios diários — Para reduzir rugas, levantar músculos e rejuvenescer", "Receitas Pele de Porcelana — para clarear olheiras, manchas, eliminar células mortas", "BÔNUS: Protocolo Adeus Papada — exercícios para eliminar essa super vilã", "BÔNUS: Protocolo Pescoço e Colo — rosto + pescoço + colo = liso"]} 
             />
           </div>

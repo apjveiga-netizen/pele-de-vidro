@@ -4,12 +4,14 @@ import { colors } from "../theme";
 const scanSteps = [
   "Detectando estrutura facial...",
   "Analisando textura da pele...",
-  "Identificando linhas de expressão...",
+  "Mapeando rugas e linhas de expressão...",
+  "Avaliando flacidez e contorno...",
+  "Identificando manchas e hiperpigmentação...",
   "Calculando idade visual...",
-  "Gerando protocolo personalizado...",
+  "Gerando protocolo 100% personalizado...",
 ];
 
-export default function ScanningScreen({ onNext, userEmail, credits, useCredit, goToOffer }) {
+export default function ScanningScreen({ onNext, userEmail, credits, useCredit, goToOffer, userPhoto, user }) {
   const [step, setStep] = useState(0);
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState(null);
@@ -22,32 +24,52 @@ export default function ScanningScreen({ onNext, userEmail, credits, useCredit, 
         return;
       }
 
-      if (credits <= 0) {
-        setError("Você não possui créditos suficientes para uma nova análise.");
-        return;
-      }
-
-      const success = await useCredit();
-      if (!success) {
-        setError("Erro ao processar crédito. Tente novamente.");
-        return;
-      }
-
+      // Permite análise mesmo se créditos estiverem em 0, conforme solicitado
+      // a cliente já pagou pelo plano e deve ter acesso direto
+      
       setHasStarted(true);
       
-      const interval = setInterval(() => {
-        setProgress(p => {
-          const next = p + 1.8;
-          if (next >= 100) { clearInterval(interval); setTimeout(onNext, 800); return 100; }
-          return next;
-        });
-      }, 80);
+      // Simulate visual progress while backend works
+      const progInterval = setInterval(() => {
+        setProgress(p => p < 90 ? p + 0.5 : p);
+      }, 100);
 
       const stepInterval = setInterval(() => {
         setStep(s => s < scanSteps.length - 1 ? s + 1 : s);
-      }, 900);
+      }, 2000);
 
-      return () => { clearInterval(interval); clearInterval(stepInterval); };
+      try {
+        // 1. Use the credit first
+        const success = await useCredit();
+        if (!success) throw new Error("Erro ao processar crédito.");
+
+        // 2. Call the AI backend
+        console.log("Enviando foto para análise real...");
+        const response = await fetch("/api/analyze-face", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId: user?.id,
+            email: userEmail,
+            photoBase64: userPhoto // This should be a base64 string
+          })
+        });
+
+        if (!response.ok) throw new Error("Falha na comunicação com a IA.");
+        
+        const result = await response.json();
+        
+        // Finalize progress smoothly
+        clearInterval(progInterval);
+        clearInterval(stepInterval);
+        setProgress(100);
+        setTimeout(() => onNext(result), 500);
+
+      } catch (err) {
+        setError(err.message || "Erro inesperado na análise.");
+      }
+
+      return () => { clearInterval(progInterval); clearInterval(stepInterval); };
     };
 
     startScan();

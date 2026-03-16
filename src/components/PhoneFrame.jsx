@@ -23,7 +23,7 @@ export default function PhoneFrame({ children, onBack, showBack }) {
           animation: shimmer 4s linear infinite;
         }
       `}</style>
-      <div style={{ width: "100%", maxWidth: "390px", position: "relative" }}>
+      <div style={{ width: "100%", maxWidth: "360px", position: "relative" }}>
         <div style={{
           background: "linear-gradient(145deg, #2a2420, #1a1410)",
           borderRadius: "44px", padding: "10px",
@@ -31,7 +31,7 @@ export default function PhoneFrame({ children, onBack, showBack }) {
         }}>
           <div style={{ position: "absolute", top: "18px", left: "50%", transform: "translateX(-50%)", width: "100px", height: "28px", background: "#0a0908", borderRadius: "14px", zIndex: 10 }} />
           <div style={{
-            borderRadius: "36px", overflow: "hidden", height: "780px", background: colors.bg, position: "relative",
+            borderRadius: "36px", overflow: "hidden", height: "580px", background: colors.bg, position: "relative",
           }}>
             <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "50px", zIndex: 20, display: "flex", alignItems: "flex-end", justifyContent: "space-between", padding: "0 24px 8px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>

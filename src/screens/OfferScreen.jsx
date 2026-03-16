@@ -23,33 +23,13 @@ export default function OfferScreen({ onNext, onUpsell, userEmail, credits }) {
 
   const plans = allPlans;
 
-  const handleCheckout = async (planName) => {
+  const handleCheckout = (planName) => {
     if (!email || !email.includes("@")) {
       alert("Por favor, insira um e-mail válido para vincular seus créditos.");
       return;
     }
-
-    setLoading(true);
-    try {
-      const response = await fetch("http://localhost:3001/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, planName })
-      });
-
-      const data = await response.json();
-      
-      if (data.init_point) {
-        window.location.href = data.init_point;
-      } else {
-        alert("Erro ao gerar link de pagamento. Tente novamente.");
-      }
-    } catch (error) {
-      console.error("Erro no checkout:", error);
-      alert("Não foi possível conectar ao servidor de pagamento.");
-    } finally {
-      setLoading(false);
-    }
+    // Redirect directly to the generated Mercado Pago Link
+    window.location.href = "https://mpago.la/2g1uTGK";
   };
 
   return (

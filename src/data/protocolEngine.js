@@ -26,6 +26,11 @@ const zoneToProblems = {
   "Rosto completo":                ["flacidez", "perda_tonus", "manchas_textura"],
   "Face completa":                 ["flacidez", "perda_tonus", "manchas_textura"],
   "Mandíbula":                     ["papada", "flacidez"],
+  // Mapeamento direto do ResultScreen
+  "Hidratação":                    ["manchas_textura"],
+  "Elasticidade":                  ["flacidez", "perda_tonus"],
+  "Manchas":                       ["manchas_textura"],
+  "Rugas":                         ["rugas_testa", "pes_de_galinha"],
 };
 
 // ─── Mapeamento de severidade → quantidade de exercícios ───────────

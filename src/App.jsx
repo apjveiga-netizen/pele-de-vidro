@@ -42,29 +42,75 @@ const SCREENS = {
 import PhoneFrame from "./components/PhoneFrame";
 import BottomNav from "./components/BottomNav";
 
-// ─── MAIN APP ───────────────────────────────────────────────────────
+import { supabase } from "./lib/supabase";
 
 export default function App() {
   const [screen, setScreen] = useState(SCREENS.SPLASH); 
-  const [credits, setCredits] = useState(3);
-  const [userEmail, setUserEmail] = useState(localStorage.getItem("pele_de_vidro_email") || "");
+  const [credits, setCredits] = useState(0);
+  const [userEmail, setUserEmail] = useState("");
   const [user, setUser] = useState(null);
   const [activeExerciseId, setActiveExerciseId] = useState(null);
+  const [photos, setPhotos] = useState(null);
 
-  const refreshCredits = (email) => {
-    console.log("Refreshing credits for", email);
+  useEffect(() => {
+    // Check active sessions and sets the user
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        setUser(session.user);
+        fetchProfile(session.user.id);
+      }
+    });
+
+    // Listen for changes on auth state (logged in, signed out, etc.)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) {
+        setUser(session.user);
+        fetchProfile(session.user.id);
+        if (screen === SCREENS.LOGIN || screen === SCREENS.SPLASH) {
+          setScreen(SCREENS.DASHBOARD);
+        }
+      } else {
+        setUser(null);
+        setCredits(0);
+        setScreen(SCREENS.LOGIN);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const fetchProfile = async (userId) => {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
+      .single();
+    
+    if (data) {
+      setCredits(data.credits);
+      setUserEmail(data.email);
+    }
+  };
+
+  const refreshCredits = async (email) => {
+    if (!user) return;
+    await fetchProfile(user.id);
   };
 
   const handleLogin = (userData) => {
-    setUser(userData);
-    setUserEmail(userData.email);
-    localStorage.setItem("pele_de_vidro_email", userData.email);
-    setScreen(SCREENS.DASHBOARD);
+    // Supabase Listener handles the state update
   };
 
-  const handleUseCredit = () => {
-    if (credits > 0) {
-      setCredits(credits - 1);
+  const handleUseCredit = async () => {
+    if (credits > 0 && user) {
+      const { data, error } = await supabase
+        .from('profiles')
+        .update({ credits: credits - 1 })
+        .eq('id', user.id);
+      
+      if (!error) {
+        setCredits(credits - 1);
+      }
     }
   };
 
@@ -73,22 +119,29 @@ export default function App() {
     setScreen(SCREENS.EXERCISE);
   };
 
+  const [screenData, setScreenData] = useState({});
+
+  const navigateTo = (newScreen, data = {}) => {
+    setScreenData(data);
+    setScreen(newScreen);
+  };
+
   const renderScreen = () => {
     switch (screen) {
       case SCREENS.SPLASH:      return <SplashScreen onFinish={() => setScreen(SCREENS.LOGIN)} />;
       case SCREENS.LOGIN:       return <LoginScreen onLogin={handleLogin} />;
       case SCREENS.ONBOARDING:  return <OnboardingScreen onFinish={() => setScreen(SCREENS.UPLOAD)} />;
-      case SCREENS.UPLOAD:      return <UploadScreen onNext={() => setScreen(SCREENS.SCANNING)} />;
-      case SCREENS.SCANNING:    return <ScanningScreen onNext={() => setScreen(SCREENS.RESULT)} />;
-      case SCREENS.RESULT:      return <ResultScreen onNext={() => setScreen(SCREENS.OFFER)} goToProtocol={() => setScreen(SCREENS.PROTOCOL)} />;
+      case SCREENS.UPLOAD:      return <UploadScreen onNext={(data) => { setPhotos(data.photos); setScreen(SCREENS.SCANNING); }} />;
+      case SCREENS.SCANNING:    return <ScanningScreen onNext={(aiResult) => navigateTo(SCREENS.RESULT, { aiResult })} userEmail={userEmail} credits={credits} useCredit={handleUseCredit} goToOffer={() => setScreen(SCREENS.OFFER)} userPhoto={photos?.front} user={user} />;
+      case SCREENS.RESULT:      return <ResultScreen onNext={() => setScreen(SCREENS.OFFER)} goToProtocol={() => setScreen(SCREENS.PROTOCOL)} aiData={screenData?.aiResult} />;
       case SCREENS.PROTOCOL:    return <ProtocolScreen onExercise={goToExercise} onBack={() => setScreen(SCREENS.DASHBOARD)} credits={credits} onUseCredit={handleUseCredit} onBuyCredits={() => setScreen(SCREENS.OFFER)} />;
       case SCREENS.OFFER:       return <OfferScreen onNext={() => setScreen(SCREENS.DASHBOARD)} credits={credits} userEmail={userEmail} />;
       case SCREENS.UPSELL:      return <UpsellScreen onDecline={() => setScreen(SCREENS.DASHBOARD)} />;
-      case SCREENS.DASHBOARD:   return <DashboardScreen credits={credits} userEmail={userEmail} refreshCredits={refreshCredits} onExercise={goToExercise} onNavigate={setScreen} screens={SCREENS} />;
+      case SCREENS.DASHBOARD:   return <DashboardScreen credits={credits} userEmail={userEmail} onExercise={goToExercise} onNavigate={setScreen} screens={SCREENS} refreshCredits={refreshCredits} />;
       case SCREENS.EXERCISE:    return <ExerciseScreen exerciseId={activeExerciseId} onBack={() => setScreen(SCREENS.PROTOCOL)} />;
       case SCREENS.MANAGE_EXERCISES: return <ManageExercisesScreen onBack={() => setScreen(SCREENS.DASHBOARD)} />;
-      case SCREENS.SCANS:       return <ScanHistoryScreen />;
-      case SCREENS.PROFILE:     return <ProfileScreen />;
+      case SCREENS.SCANS:       return <ScanHistoryScreen credits={credits} userEmail={userEmail} user={user} />;
+      case SCREENS.PROFILE:     return <ProfileScreen user={user} profile={userEmail} credits={credits} />;
       case SCREENS.MENU:        return <MenuScreen onNavigate={setScreen} screens={SCREENS} />;
       case SCREENS.SALES_PAGE:  return <SalesPage />;
       default: return null;

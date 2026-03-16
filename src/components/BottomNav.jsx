@@ -18,7 +18,7 @@ export default function BottomNav({ onNavigate }) {
 
   const items = [
     { label: "Início", icon: "🏠", action: "HomeView" },
-    { label: "Análise", icon: "📤", action: "UploadView" },
+    { label: "Análise", icon: "📸", action: "UploadView" },
     { label: "Créditos", icon: "💎", action: "CreditsView" },
     { label: "Protocolo", icon: "📋", action: "ResultView" },
     { label: "Diamante", icon: "✨", action: "DiamanteView" },
@@ -52,25 +52,28 @@ export default function BottomNav({ onNavigate }) {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            background: "#FFFFFF",
-            border: "1px solid #D9D9D9",
-            borderRadius: "10px",
-            color: "#3A3A3A",
+            background: "rgba(30, 25, 20, 0.95)",
+            border: `1px solid rgba(201, 169, 110, 0.2)`,
+            borderRadius: "14px",
+            color: "#C9A96E",
             cursor: "pointer",
-            transition: "all 120ms ease",
-            padding: "0 10px",
-            fontFamily: "'Inter', sans-serif",
-            fontSize: "12px", // Slightly smaller for more delicate look
-            fontWeight: "500",
-            letterSpacing: "0.15px",
-            margin: "0 2px",
+            transition: "all 0.2s ease",
+            padding: "0 4px",
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: "10px",
+            fontWeight: "600",
+            textTransform: "uppercase",
+            letterSpacing: "0.05em",
+            margin: "0 4px",
+            flexDirection: "column",
+            gap: "4px"
           }}
         >
+          <span style={{ fontSize: "18px", marginBottom: "2px" }}>{item.icon}</span>
           <span style={{ 
             whiteSpace: "nowrap", 
             overflow: "hidden", 
             textOverflow: "ellipsis",
-            width: "100%",
             textAlign: "center"
           }}>
             {item.label}
