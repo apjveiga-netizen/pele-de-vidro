@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./server/db.sqlite:/app/db.sqlite
+      - ./server/uploads:/app/uploads
+    environment:
+      - PORT=3001
+      - MP_ACCESS_TOKEN=${MP_ACCESS_TOKEN}
+    restart: always
+
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:3001
+    depends_on:
+      - server
+    restart: always
