@@ -96,22 +96,61 @@ export default function DashboardScreen({ onExercise, credits, userEmail, refres
         </div>
       </div>
 
-      {/* Botão Avançar */}
-      <div style={{ marginTop: "auto", paddingTop: "40px", opacity: visible ? 1 : 0, transition: "opacity 0.5s 0.1s" }}>
-        <button
-          className="btn-gold"
-          onClick={() => onNavigate(screens.UPLOAD)}
-          style={{ 
-            width: "100%", 
-            padding: "18px", 
-            fontSize: "14px", 
-            letterSpacing: "0.2em",
-            fontWeight: 600,
-            boxShadow: "0 8px 32px rgba(201,169,110,0.2)"
-          }}
-        >
-          AVANÇAR PARA A ANÁLISE
-        </button>
+      {/* Área Dinâmica: Protocolo ou Nova Análise */}
+      <div style={{ marginTop: "auto", paddingTop: "20px", opacity: visible ? 1 : 0, transition: "opacity 0.5s 0.1s" }}>
+        {exercises.length > 0 && exercises[0].id.startsWith("fb_") ? (
+          <div className="card-glow" style={{ padding: "20px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+              <div>
+                <div style={{ color: colors.gold, fontSize: "11px", letterSpacing: "0.15em", marginBottom: "4px" }}>PROTOCOLO ATIVO</div>
+                <div className="cormorant" style={{ fontSize: "20px", color: colors.cream }}>
+                  {doneList.length === exercises.length ? "✨ Concluído hoje!" : `${exercises.length - doneList.length} pendentes`}
+                </div>
+              </div>
+              <button 
+                onClick={() => onNavigate(screens.PROTOCOL)}
+                style={{ 
+                  background: "rgba(201,169,110,0.1)", border: `1px solid ${colors.gold}`,
+                  color: colors.gold, padding: "8px 16px", borderRadius: "8px", fontSize: "11px", fontWeight: 600
+                }}
+              >
+                DETALHES
+              </button>
+            </div>
+            
+            {/* Barra de Progresso Simples */}
+            <div style={{ height: "4px", background: colors.border, borderRadius: "2px", overflow: "hidden", marginBottom: "12px" }}>
+              <div style={{ 
+                height: "100%", background: colors.gold, 
+                width: `${(doneList.length / exercises.length) * 100}%`,
+                transition: "width 0.5s ease" 
+              }} />
+            </div>
+
+            <button
+              className="btn-gold"
+              onClick={() => onNavigate(screens.UPLOAD)}
+              style={{ width: "100%", padding: "12px", fontSize: "12px", marginTop: "8px", opacity: 0.8 }}
+            >
+              NOVA ANÁLISE IA
+            </button>
+          </div>
+        ) : (
+          <button
+            className="btn-gold"
+            onClick={() => onNavigate(screens.UPLOAD)}
+            style={{ 
+              width: "100%", 
+              padding: "18px", 
+              fontSize: "14px", 
+              letterSpacing: "0.2em",
+              fontWeight: 600,
+              boxShadow: "0 8px 32px rgba(201,169,110,0.2)"
+            }}
+          >
+            AVANÇAR PARA A ANÁLISE
+          </button>
+        )}
       </div>
         </div>
         {/* If there were global buttons, they would go here in .button-group */}

@@ -11,7 +11,7 @@ const scanSteps = [
   "Gerando protocolo 100% personalizado...",
 ];
 
-export default function ScanningScreen({ onNext, userEmail, credits, useCredit, goToOffer, userPhoto, user }) {
+export default function ScanningScreen({ onNext, userEmail, credits, useCredit, goToOffer, userPhotos, user }) {
   const [step, setStep] = useState(0);
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState(null);
@@ -46,18 +46,24 @@ export default function ScanningScreen({ onNext, userEmail, credits, useCredit, 
         if (!success) throw new Error("Erro ao processar crédito.");
 
         // 2. Call the AI backend
-        console.log("Enviando foto para análise real...");
+        console.log("Enviando 3 fotos para análise real (Frente, Esquerda, Direita)...");
+        console.log("Fazendo fetch para /api/analyze-face com dados:", { userId: user?.id, email: userEmail });
         const response = await fetch("/api/analyze-face", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             userId: user?.id,
             email: userEmail,
-            photoBase64: userPhoto // This should be a base64 string
+            photos: userPhotos // Sending the object with {front, left, right}
           })
         });
 
-        if (!response.ok) throw new Error("Falha na comunicação com a IA.");
+        console.log("Resposta da API recebida. Status:", response.status);
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error("Erro na API (texto):", errorText);
+          throw new Error(`Falha na comunicação com a IA (Status ${response.status})`);
+        }
         
         const result = await response.json();
         

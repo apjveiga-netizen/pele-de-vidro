@@ -18,7 +18,13 @@ export default function ResultScreen({ onNext, goToProtocol, aiData }) {
     
     // Auto-save the real AI scan results
     if (aiData) {
-      const analysisZones = [
+      // Usar zonas específicas da AI ou fallback para diagnósticos gerais
+      const analysisZones = aiData.zones ? 
+        Object.entries(aiData.zones).map(([zone, severity]) => ({
+          zone,
+          severity: parseInt(severity) || 0,
+          label: severity > 60 ? "Crítico" : (severity > 30 ? "Moderado" : "Leve")
+        })) : [
         { zone: "Hidratação", severity: aiData.hydration, label: aiData.hydration > 70 ? "Boa" : "Melhorável" },
         { zone: "Elasticidade", severity: aiData.elasticity, label: aiData.elasticity > 70 ? "Firme" : "Baixa" },
         { zone: "Manchas", severity: aiData.spots, label: aiData.spots > 30 ? "Crítico" : "Leve" },
@@ -29,12 +35,23 @@ export default function ResultScreen({ onNext, goToProtocol, aiData }) {
         realAge: getProfile().age,
         visualAge: aiData.visualAge,
         zones: analysisZones,
+        mainIssue: aiData.mainIssue,
+        summary: aiData.summary
       });
 
-      // Generate and save the personalized protocol
-      const newProtocol = generateProtocol(analysisZones);
+      // Generate and save the personalized protocol using the full AI data (for zones + recipes)
+      const newProtocol = generateProtocol(aiData);
       saveProtocol(newProtocol);
-      console.log("Protocolo personalizado gerado e salvo:", newProtocol);
+      console.log("AI Data received:", aiData);
+      console.log("Protocol Generated:", newProtocol);
+      
+      // Verify save
+      const saved = localStorage.getItem("pdv_protocol");
+      if (saved) {
+        console.log("✓ Protocolo salvo com sucesso no armazenamento local.");
+      } else {
+        console.error("✗ FALHA ao salvar o protocolo no armazenamento local.");
+      }
     }
   }, [aiData]);
 
@@ -46,11 +63,19 @@ export default function ResultScreen({ onNext, goToProtocol, aiData }) {
   const targetAge = realAge - 6; // Potential reduction goal
   const potentialAgeReduction = currentApparentAge - targetAge;
 
-  const analysisZones = [
-    { zone: "Textura / Hidratação", severity: aiData?.hydration || 50, color: colors.success, label: (aiData?.hydration > 70 ? "Excelente" : "Ressecada") },
-    { zone: "Firmeza / Elasticidade", severity: aiData?.elasticity || 50, color: colors.rose, label: (aiData?.elasticity > 70 ? "Firme" : "Flacidez") },
-    { zone: "Uniformidade / Manchas", severity: aiData?.spots || 50, color: colors.gold, label: (aiData?.spots > 30 ? "Hiperpigmentação" : "Uniforme") },
-    { zone: "Linhas / Rugas", severity: aiData?.wrinkles || 50, color: colors.danger, label: (aiData?.wrinkles > 30 ? "Profundas" : "Superficiais") },
+  const displayZones = aiData?.zones ? 
+    Object.entries(aiData.zones).map(([zone, severity]) => {
+      const s = parseInt(severity) || 0;
+      let color = colors.success;
+      let label = "Leve";
+      if (s > 60) { color = colors.danger; label = "Crítico"; }
+      else if (s > 30) { color = colors.gold; label = "Moderado"; }
+      return { zone, severity: s, color, label };
+    }) : [
+    { zone: "Hidratação", severity: aiData?.hydration || 50, color: colors.success, label: (aiData?.hydration > 70 ? "Excelente" : "Ressecada") },
+    { zone: "Elasticidade", severity: aiData?.elasticity || 50, color: colors.rose, label: (aiData?.elasticity > 70 ? "Firme" : "Flacidez") },
+    { zone: "Manchas", severity: aiData?.spots || 50, color: colors.gold, label: (aiData?.spots > 30 ? "Hiperpigmentação" : "Uniforme") },
+    { zone: "Rugas", severity: aiData?.wrinkles || 50, color: colors.danger, label: (aiData?.wrinkles > 30 ? "Profundas" : "Superficiais") },
   ];
 
   return (
@@ -66,8 +91,15 @@ export default function ResultScreen({ onNext, goToProtocol, aiData }) {
         <div style={{ color: colors.gold, fontSize: "11px", letterSpacing: "0.3em", marginBottom: "12px", fontWeight: 500 }}>
           RELATÓRIO FINAL IA
         </div>
-        <div className="cormorant" style={{ fontSize: "36px", color: colors.cream, fontWeight: 300, lineHeight: 1.1 }}>
+        <div className="cormorant" style={{ fontSize: "36px", color: colors.cream, fontWeight: 300, lineHeight: 1.1, marginBottom: "16px" }}>
           Sua Análise
+        </div>
+        <div style={{ 
+          background: "rgba(125,170,138,0.15)", border: `1px solid ${colors.success}`,
+          color: colors.success, padding: "8px 16px", borderRadius: "20px",
+          display: "inline-block", fontSize: "12px", fontWeight: 600, letterSpacing: "0.05em"
+        }}>
+          PROTOCOLO GERADO COM SUCESSO ✓
         </div>
       </div>
 
@@ -131,12 +163,12 @@ export default function ResultScreen({ onNext, goToProtocol, aiData }) {
         <div style={{ color: colors.muted, fontSize: "11px", letterSpacing: "0.2em", marginBottom: "18px", fontWeight: 500 }}>
           MAPEAMENTO DE ZONAS CRÍTICAS
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-          {analysisZones.map((item, i) => (
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          {displayZones.map((item, i) => (
             <div key={i} className="card-glow" style={{
-              padding: "20px"
+              padding: "16px 20px"
             }}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px", alignItems: "center" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px", alignItems: "center" }}>
                 <span style={{ color: colors.cream, fontSize: "14px", fontWeight: 500 }}>{item.zone}</span>
                 <span style={{ color: item.color, fontSize: "11px", fontWeight: 600, letterSpacing: "0.02em" }}>{item.label.toUpperCase()}</span>
               </div>
@@ -156,7 +188,7 @@ export default function ResultScreen({ onNext, goToProtocol, aiData }) {
         </div>
         <div className="button-group">
           <button className="btn-gold" onClick={goToProtocol}>
-            VER MEU PROTOCOLO →
+            LIBERAR MEU PROTOCOLO IA →
           </button>
         </div>
       </div>

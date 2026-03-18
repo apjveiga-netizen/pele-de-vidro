@@ -4,29 +4,7 @@ import { getProtocol, getDailyProgress, toggleExerciseDone, getStreak } from "..
 import { problemLabels } from "../data/protocolEngine";
 import ZoneIcon from "../components/ZoneIcon";
 
-const NATURAL_RECIPES = [
-  {
-    id: "rec1",
-    name: "Sérum Clareador Noturno (Manchas)",
-    desc: "Misture 1 colher de chá de óleo de rosa mosqueta com 2 gotas de óleo essencial de olíbano. Aplique nas áreas manchadas antes de dormir.",
-    freq: "3x na semana",
-    icon: "🌸"
-  },
-  {
-    id: "rec2",
-    name: "Máscara Rejuvenescedora (Flacidez)",
-    desc: "Amasse 1/4 de abacate com 1 colher de chá de mel puro. Deixe no rosto por 20 minutos e enxágue com água fria.",
-    freq: "2x na semana",
-    icon: "🥑"
-  },
-  {
-    id: "rec3",
-    name: "Tônico Iluminador (Textura)",
-    desc: "Faça chá de camomila forte, deixe esfriar e misture com 1 colher de sopa de vinagre de maçã. Use com algodão após lavar o rosto.",
-    freq: "Diário",
-    icon: "✨"
-  }
-];
+// Removed hardcoded NATURAL_RECIPES in favor of personalized ones from the protocol
 
 export default function ProtocolScreen({ onExercise, onBack, credits = 0, onUseCredit, onBuyCredits }) {
   const [protocol, setProtocol] = useState(null);
@@ -579,7 +557,7 @@ export default function ProtocolScreen({ onExercise, onBack, credits = 0, onUseC
               TRATAMENTOS NATURAIS SEMANAIS
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-              {NATURAL_RECIPES.map((rec) => (
+              {(protocol.recipes || []).map((rec) => (
                 <div key={rec.id} className="card-glow" style={{ padding: "16px", display: "flex", gap: "16px", alignItems: "flex-start" }}>
                   <div style={{ 
                     width: "48px", height: "48px", borderRadius: "12px", background: "rgba(201,169,110,0.08)", 

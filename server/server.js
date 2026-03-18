@@ -6,7 +6,7 @@ import path, { dirname } from 'path';
 import dotenv from 'dotenv';
 import multer from 'multer';
 import fs from 'fs';
-import OpenAI from 'openai';
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { createClient } from '@supabase/supabase-js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -27,9 +27,8 @@ const supabase = createClient(
   process.env.VITE_SUPABASE_ANON_KEY
 );
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
+// Gemini se inicializa dinamicamente no handler
+let genAI = null;
 
 const mpClient = new MercadoPagoConfig({ 
     accessToken: process.env.MP_ACCESS_TOKEN, 
@@ -40,47 +39,103 @@ const mpClient = new MercadoPagoConfig({
 
 app.post('/api/analyze-face', async (req, res) => {
   try {
-    const { email, photoBase64, userId } = req.body;
+    const { email, photos, userId } = req.body;
+    console.log("User email:", email);
+    console.log("Photos received:", photos ? Object.keys(photos) : "none");
     
-    if (!photoBase64 || !userId) {
-      return res.status(400).json({ error: 'Photo and UserID are required' });
+    if (!photos || (!photos.front && !photos.left && !photos.right) || !userId) {
+      return res.status(400).json({ error: 'Photos (front/left/right) and UserID are required' });
     }
 
-    console.log(`Iniciando análise AI para usuário: ${userId}`);
+    console.log(`Iniciando análise AI 360° para usuário: ${userId}`);
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini-vision-2024-07-18",
-      messages: [
+    if (!process.env.GOOGLE_API_KEY) {
+        console.error("ERRO: GOOGLE_API_KEY não configurada no servidor.");
+        return res.status(500).json({ error: "Credenciais de IA ausentes." });
+    }
+    console.log("--- [DEBUG] /api/analyze-face chamado ---");
+    
+    if (!process.env.GOOGLE_API_KEY) {
+        console.error("ERRO: GOOGLE_API_KEY não configurada no servidor.");
+        return res.status(500).json({ error: "Credenciais de IA ausentes no servidor." });
+    }
+
+    // Inicialização tardia para garantir env vars
+    if (!genAI) {
+      genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
+    }
+
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" }); // Ou gemini-1.5-flash
+
+    // Gemini expects parts: [{ text: "..." }, { inlineData: { mimeType: "image/jpeg", data: "base64..." } }]
+    // Banco de Exercícios resumido para a IA (Bridge)
+    const exerciseContext = [
+      { id: "fb_rugas_testa_01", name: "Alisamento Frontal Isométrico", problem: "rugas_testa" },
+      { id: "fb_pes_galinha_01", name: "Pressão Orbital Lateral", problem: "pes_de_galinha" },
+      { id: "fb_bigode_chines_02", name: "Inflação Zigomática", problem: "bigode_chines" },
+      { id: "fb_flacidez_01", name: "Lifting Natural das Maçãs", problem: "flacidez" },
+      { id: "fb_palpebra_01", name: "Elevação Palpebral com Resistência", problem: "palpebra_caida" },
+      { id: "fb_manchas_01", name: "Drenagem Linfática Geral", problem: "manchas_textura" },
+      { id: "fb_tonus_01", name: "Bombeio Facial Completo", problem: "perda_tonus" },
+      { id: "fb_papada_01", name: "Firmeza do Pescoço — Platisma", problem: "papada" },
+      { id: "fb_olheiras_01", name: "Drenagem Periorbital", problem: "olheiras" }
+      // ... Adicionei os principais aqui, mas a IA pode inferir outros baseados nos problemas detectados
+    ];
+
+    const parts = [
+      { 
+        text: `Você é uma esteticista facial premium. Analise estas 3 fotos (Frente, Esquerda, Direita). 
+        
+        TAREFA: 
+        1. Gere um diagnóstico técnico detalhado.
+        2. PONTE DE PROTOCOLO: Com base nos problemas identificados, selecione EXATAMENTE entre 5 a 6 exercícios do banco abaixo que melhor tratam as patologias da cliente. 
+        
+        BANCO DE EXERCÍCIOS DISPONÍVEIS: 
+        - rugas_testa: fb_rugas_testa_01 até 05
+        - pes_de_galinha: fb_pes_galinha_01 até 04
+        - bigode_chines: fb_bigode_chines_01 até 05
+        - flacidez: fb_flacidez_01 até 05
+        - palpebra_caida: fb_palpebra_01 até 04
+        - manchas_textura: fb_manchas_01 até 04
+        - perda_tonus: fb_tonus_01 até 05
+        - papada: fb_papada_01 até 04
+        - olheiras: fb_olheiras_01 até 03
+
+        DEVOLVA APENAS UM JSON (sem markdown):
         {
-          role: "user",
-          content: [
-            { 
-              type: "text", 
-              text: `Analise esta foto facial com extrema precisão estética. Devolva APENAS um objeto JSON com estes campos (use apenas números para as pontuações de 0 a 100):
-              {
-                "visualAge": "número estimado",
-                "hydration": "0-100",
-                "elasticity": "0-100",
-                "spots": "0-100 (mais baixo é melhor)",
-                "wrinkles": "0-100 (mais baixo é melhor)",
-                "mainIssue": "uma frase curta descrevendo o maior problema",
-                "summary": "um parágrafo curto de 3 frases com o diagnóstico geral em tom premium de consultoria"
-              }`
-            },
-            {
-              type: "image_url",
-              image_url: {
-                url: photoBase64 // Expecting data:image/jpeg;base64,...
-              },
-            },
-          ],
-        },
-      ],
-      max_tokens: 500,
-      response_format: { type: "json_object" }
-    });
+          "visualAge": "número",
+          "hydration": "0-100",
+          "elasticity": "0-100",
+          "spots": "0-100",
+          "wrinkles": "0-100",
+          "zones": { "Testa": 0, "Olhos": 0, "Sulco Nasogeniano": 0, "Mandíbula": 0, "Pescoço": 0 },
+          "selectedExercises": ["id1", "id2", "id3", "id4", "id5"],
+          "mainIssue": "frase curta",
+          "summary": "parágrafo premium"
+        }`
+      }
+    ];
 
-    const analysisResult = JSON.parse(response.choices[0].message.content);
+    if (photos.front) {
+      const base64Data = photos.front.split(",")[1] || photos.front;
+      parts.push({ inlineData: { mimeType: "image/jpeg", data: base64Data } });
+    }
+    if (photos.left) {
+      const base64Data = photos.left.split(",")[1] || photos.left;
+      parts.push({ inlineData: { mimeType: "image/jpeg", data: base64Data } });
+    }
+    if (photos.right) {
+      const base64Data = photos.right.split(",")[1] || photos.right;
+      parts.push({ inlineData: { mimeType: "image/jpeg", data: base64Data } });
+    }
+
+    const result = await model.generateContent(parts);
+    const responseText = result.response.text();
+    
+    // Clean potential markdown from response
+    const jsonString = responseText.replace(/```json|```/g, "").trim();
+    const analysisResult = JSON.parse(jsonString);
+    console.log("Análise Gemini concluída com sucesso!");
     console.log("Análise concluída com sucesso!");
 
     // Save to Supabase
@@ -98,8 +153,8 @@ app.post('/api/analyze-face', async (req, res) => {
 
     res.json(analysisResult);
   } catch (error) {
-    console.error("ERRO NA ANÁLISE AI:", error);
-    res.status(500).json({ error: 'Erro ao processar análise da IA. Verifique sua chave da OpenAI e créditos.' });
+    console.error("ERRO NA ANÁLISE AI (Gemini):", error);
+    res.status(500).json({ error: 'Erro ao processar análise da IA. Verifique sua GOOGLE_API_KEY.' });
   }
 });
 
@@ -129,6 +184,11 @@ app.get('/', (req, res) => {
 });
 
 // Export for Vercel
+// Heartbeat endpoint
+app.get('/api/health', (req, res) => {
+  res.json({ status: "ok", time: new Date().toISOString(), ai_configured: !!process.env.GOOGLE_API_KEY });
+});
+
 export default app;
 
 if (process.env.NODE_ENV !== 'production') {

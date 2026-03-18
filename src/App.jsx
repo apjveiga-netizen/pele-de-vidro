@@ -105,11 +105,11 @@ export default function App() {
     if (credits > 0 && user) {
       const { data, error } = await supabase
         .from('profiles')
-        .update({ credits: credits - 1 })
+        .update({ credits: Math.max(0, credits - 1) })
         .eq('id', user.id);
       
       if (!error) {
-        setCredits(credits - 1);
+        setCredits(Math.max(0, credits - 1));
       }
     }
   };
@@ -132,7 +132,7 @@ export default function App() {
       case SCREENS.LOGIN:       return <LoginScreen onLogin={handleLogin} />;
       case SCREENS.ONBOARDING:  return <OnboardingScreen onFinish={() => setScreen(SCREENS.UPLOAD)} />;
       case SCREENS.UPLOAD:      return <UploadScreen onNext={(data) => { setPhotos(data.photos); setScreen(SCREENS.SCANNING); }} />;
-      case SCREENS.SCANNING:    return <ScanningScreen onNext={(aiResult) => navigateTo(SCREENS.RESULT, { aiResult })} userEmail={userEmail} credits={credits} useCredit={handleUseCredit} goToOffer={() => setScreen(SCREENS.OFFER)} userPhoto={photos?.front} user={user} />;
+      case SCREENS.SCANNING:    return <ScanningScreen onNext={(aiResult) => navigateTo(SCREENS.RESULT, { aiResult })} userEmail={userEmail} credits={credits} useCredit={handleUseCredit} goToOffer={() => setScreen(SCREENS.OFFER)} userPhotos={photos} user={user} />;
       case SCREENS.RESULT:      return <ResultScreen onNext={() => setScreen(SCREENS.OFFER)} goToProtocol={() => setScreen(SCREENS.PROTOCOL)} aiData={screenData?.aiResult} />;
       case SCREENS.PROTOCOL:    return <ProtocolScreen onExercise={goToExercise} onBack={() => setScreen(SCREENS.DASHBOARD)} credits={credits} onUseCredit={handleUseCredit} onBuyCredits={() => setScreen(SCREENS.OFFER)} />;
       case SCREENS.OFFER:       return <OfferScreen onNext={() => setScreen(SCREENS.DASHBOARD)} credits={credits} userEmail={userEmail} />;
@@ -153,7 +153,7 @@ export default function App() {
   return (
     <PhoneFrame onBack={() => setScreen(SCREENS.DASHBOARD)} showBack={isNavVisible && screen !== SCREENS.DASHBOARD}>
       <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
-        <div style={{ flex: 1, overflowY: "auto", paddingBottom: isNavVisible ? "68px" : "0" }}>
+        <div style={{ flex: 1, overflowY: "auto", paddingBottom: isNavVisible ? "60px" : "0" }}>
           {renderScreen()}
         </div>
 

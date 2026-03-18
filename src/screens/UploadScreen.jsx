@@ -1,8 +1,16 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { colors } from "../theme";
+import { getProfile } from "../data/store";
 
 export default function UploadScreen({ onNext }) {
   const [userData, setUserData] = useState({ name: "", age: "" });
+
+  useEffect(() => {
+    const profile = getProfile();
+    if (profile && profile.name && profile.name !== "Usuária") {
+      setUserData({ name: profile.name, age: profile.age.toString() });
+    }
+  }, []);
   const [photoFront, setPhotoFront] = useState(null);
   const [photoLeft, setPhotoLeft] = useState(null);
   const [photoRight, setPhotoRight] = useState(null);

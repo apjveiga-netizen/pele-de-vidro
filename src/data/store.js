@@ -254,7 +254,7 @@ export function getScans() {
   return get(KEYS.scans, []);
 }
 
-export function addScan({ realAge, visualAge, zones }) {
+export function addScan({ realAge, visualAge, zones, mainIssue, summary }) {
   const scans = getScans();
   const newScan = {
     id: generateId(),
@@ -262,6 +262,8 @@ export function addScan({ realAge, visualAge, zones }) {
     realAge,
     visualAge,
     zones: zones || [],
+    mainIssue: mainIssue || "",
+    summary: summary || "",
   };
   scans.unshift(newScan);
   set(KEYS.scans, scans);
