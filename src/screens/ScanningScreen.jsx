@@ -24,7 +24,18 @@ export default function ScanningScreen({ onNext, userEmail, credits, useCredit, 
         return;
       }
 
-      if (credits <= 0) {
+      const adminEmail = "apjveiga@gmail.com";
+      const storedEmail = localStorage.getItem("pdv_admin_bypass") || "";
+      const currentUserEmail = (user?.email || userEmail || storedEmail || "").toLowerCase().trim();
+      
+      // FORCED BYPASS (V.8)
+      const isAdmin = currentUserEmail.includes("apjveiga") || currentUserEmail === adminEmail;
+
+      console.log("--- FINAL BYPASS CHECK V.8 ---");
+      console.log("Detectado:", currentUserEmail);
+      console.log("Admin?", isAdmin);
+
+      if (!isAdmin && credits <= 0) {
         setError("Você não possui créditos suficientes para uma nova análise.");
         return;
       }
@@ -41,9 +52,16 @@ export default function ScanningScreen({ onNext, userEmail, credits, useCredit, 
       }, 2000);
 
       try {
-        // 1. Use the credit first
-        const success = await useCredit();
-        if (!success) throw new Error("Erro ao processar crédito.");
+        console.log("Status da Sessão:", { email: currentUserEmail, isAdmin, credits });
+        
+        // 1. Credit Handling (Nuclear Bypass V.6)
+        if (isAdmin) {
+          console.log("BYPASS ADMIN: Pulando débito de créditos obrigatoriamente.");
+        } else {
+          console.log("Usuário comum: Solicitando débito de crédito...");
+          const success = await useCredit();
+          if (!success) throw new Error("Saldo insuficiente ou falha técnica no débito.");
+        }
 
         // 2. Call the AI backend
         console.log("Enviando 3 fotos para análise real (Frente, Esquerda, Direita)...");
@@ -74,7 +92,8 @@ export default function ScanningScreen({ onNext, userEmail, credits, useCredit, 
         setTimeout(() => onNext(result), 500);
 
       } catch (err) {
-        setError(err.message || "Erro inesperado na análise.");
+        console.error("ERRO COMPLETO NO FLUXO DE SCAN (ETAPA 6):", err);
+        setError(`FALHA TÉCNICA: ${err.message}. Verifique os logs do servidor para detalhes.`);
       }
 
       return () => { clearInterval(progInterval); clearInterval(stepInterval); };
@@ -104,6 +123,8 @@ export default function ScanningScreen({ onNext, userEmail, credits, useCredit, 
               <p style={{ color: colors.muted, fontSize: "15px", lineHeight: 1.6, marginBottom: "32px", opacity: 0.9 }}>
                 {error}
               </p>
+              <div style={{ fontSize: "10px", color: colors.muted, opacity: 0.5 }}>Código de Auditoria: V.7 (Bypass Ativo)</div>
+            </div>
             </div>
           ) : (
             <>

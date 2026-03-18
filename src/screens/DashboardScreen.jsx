@@ -98,7 +98,7 @@ export default function DashboardScreen({ onExercise, credits, userEmail, refres
 
       {/* Área Dinâmica: Protocolo ou Nova Análise */}
       <div style={{ marginTop: "auto", paddingTop: "20px", opacity: visible ? 1 : 0, transition: "opacity 0.5s 0.1s" }}>
-        {exercises.length > 0 && exercises[0].id.startsWith("fb_") ? (
+        {exercises.length > 0 && (exercises[0].id.startsWith("fb_") || exercises[0].id.includes("_")) ? (
           <div className="card-glow" style={{ padding: "20px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
               <div>

@@ -16,6 +16,7 @@ export default function ExerciseScreen({ exerciseId, onBack }) {
     // Buscar no store antigo e no protocolo
     let ex = getExerciseById(exerciseId);
     if (!ex) {
+      // Fallback for immediate protocol match if not in store yet
       const protocol = getProtocol();
       if (protocol && protocol.exercises) {
         ex = protocol.exercises.find((e) => e.id === exerciseId) || null;

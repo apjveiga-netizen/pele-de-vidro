@@ -6,7 +6,7 @@ import ZoneIcon from "../components/ZoneIcon";
 
 // Removed hardcoded NATURAL_RECIPES in favor of personalized ones from the protocol
 
-export default function ProtocolScreen({ onExercise, onBack, credits = 0, onUseCredit, onBuyCredits }) {
+export default function ProtocolScreen({ onExercise, onBack, credits, onUseCredit, onBuyCredits, user }) {
   const [protocol, setProtocol] = useState(null);
   const [doneList, setDoneList] = useState([]);
   const [streak, setStreak] = useState(0);
@@ -19,8 +19,19 @@ export default function ProtocolScreen({ onExercise, onBack, credits = 0, onUseC
     setProtocol(p);
     setDoneList(getDailyProgress());
     setStreak(getStreak());
+    
+    // Auto-unlock for admin (Nuclear V.6)
+    const adminEmail = "apjveiga@gmail.com";
+    const userEmail = user?.email?.toLowerCase().trim();
+    const isAdmin = credits > 10000 || userEmail === adminEmail;
+    
+    if (isAdmin) {
+      console.log("ProtocolScreen: Admin detectado, liberando acesso.");
+      setUnlocked(true);
+    }
+
     setTimeout(() => setVisible(true), 100);
-  }, []);
+  }, [credits, user]);
 
   const handleToggle = (exId) => {
     const updated = toggleExerciseDone(exId);
@@ -40,15 +51,28 @@ export default function ProtocolScreen({ onExercise, onBack, credits = 0, onUseC
             <div style={{ textAlign: "center", padding: "40px 32px", animation: "fadeUp 0.5s ease" }}>
               <div style={{ fontSize: "56px", marginBottom: "24px" }}>🔬</div>
               <div className="cormorant" style={{ fontSize: "28px", color: colors.gold, marginBottom: "16px", fontWeight: 300 }}>
-                Nenhum Protocolo Ativo
+                Protocolo não encontrado
               </div>
-              <p style={{ color: colors.muted, fontSize: "15px", lineHeight: 1.6, marginBottom: "32px", opacity: 0.9 }}>
-                Para gerar seu protocolo, volte para a aba Análise, faça o upload de suas fotos e aguarde o relatório.
+              <p style={{ color: colors.muted, fontSize: "14px", lineHeight: 1.6, marginBottom: "24px", opacity: 0.9 }}>
+                Ocorreu uma falha ao carregar seu plano. Isso pode acontecer se a análise for interrompida ou se houver um erro de sincronização.
               </p>
+              
+              <div style={{ 
+                textAlign: "left", background: "rgba(0,0,0,0.3)", padding: "12px", borderRadius: "8px", 
+                fontSize: "10px", color: colors.rose, fontFamily: "monospace", marginBottom: "32px"
+              }}>
+                LOGS DE AUDITORIA (V.4):<br/>
+                - Protocolo existe: {protocol ? "Sim" : "Não"}<br/>
+                - Exercícios: {protocol?.exercises?.length || 0}<br/>
+                - UserID: {localStorage.getItem("supabase.auth.token") ? "Logado" : "Deslogado"}
+              </div>
             </div>
           </div>
           <div className="button-group">
-            <button className="btn-gold" onClick={onBack}>
+            <button className="btn-gold" onClick={() => window.location.reload()}>
+              RECARREGAR APLICATIVO
+            </button>
+            <button className="btn-ghost" onClick={onBack}>
               VOLTAR AO INÍCIO
             </button>
           </div>

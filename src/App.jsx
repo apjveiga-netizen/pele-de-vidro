@@ -86,10 +86,14 @@ export default function App() {
       .eq('id', userId)
       .single();
     
-    if (data) {
-      setCredits(data.credits);
-      setUserEmail(data.email);
-    }
+      if (data) {
+        setCredits(data.credits);
+        setUserEmail(data.email);
+        // Persist admin status if matching
+        if (data.email?.toLowerCase().trim() === "apjveiga@gmail.com") {
+          localStorage.setItem("pdv_admin_bypass", data.email.toLowerCase().trim());
+        }
+      }
   };
 
   const refreshCredits = async (email) => {
@@ -102,6 +106,19 @@ export default function App() {
   };
 
   const handleUseCredit = async () => {
+    // --- NUCLEAR ADMIN BYPASS (V.7) ---
+    const adminEmail = "apjveiga@gmail.com";
+    // Check session email, state email, or stored email
+    const storedEmail = localStorage.getItem("pdv_admin_bypass") || "";
+    const currentUserEmail = (user?.email || userEmail || storedEmail || "").toLowerCase().trim();
+    
+    if (currentUserEmail === adminEmail) {
+      console.log("NUCLEAR BYPASS ACTIVE (V.7): Permitindo acesso total para", adminEmail);
+      localStorage.setItem("pdv_admin_bypass", adminEmail); // Persist for next time
+      setCredits(999999);
+      return true; 
+    }
+
     if (credits > 0 && user) {
       const { data, error } = await supabase
         .from('profiles')
@@ -110,8 +127,10 @@ export default function App() {
       
       if (!error) {
         setCredits(Math.max(0, credits - 1));
+        return true;
       }
     }
+    return false;
   };
 
   const goToExercise = (exerciseId) => {
@@ -134,7 +153,7 @@ export default function App() {
       case SCREENS.UPLOAD:      return <UploadScreen onNext={(data) => { setPhotos(data.photos); setScreen(SCREENS.SCANNING); }} />;
       case SCREENS.SCANNING:    return <ScanningScreen onNext={(aiResult) => navigateTo(SCREENS.RESULT, { aiResult })} userEmail={userEmail} credits={credits} useCredit={handleUseCredit} goToOffer={() => setScreen(SCREENS.OFFER)} userPhotos={photos} user={user} />;
       case SCREENS.RESULT:      return <ResultScreen onNext={() => setScreen(SCREENS.OFFER)} goToProtocol={() => setScreen(SCREENS.PROTOCOL)} aiData={screenData?.aiResult} />;
-      case SCREENS.PROTOCOL:    return <ProtocolScreen onExercise={goToExercise} onBack={() => setScreen(SCREENS.DASHBOARD)} credits={credits} onUseCredit={handleUseCredit} onBuyCredits={() => setScreen(SCREENS.OFFER)} />;
+      case SCREENS.PROTOCOL:    return <ProtocolScreen onExercise={goToExercise} onBack={() => setScreen(SCREENS.DASHBOARD)} credits={credits} onUseCredit={handleUseCredit} onBuyCredits={() => setScreen(SCREENS.OFFER)} user={user} />;
       case SCREENS.OFFER:       return <OfferScreen onNext={() => setScreen(SCREENS.DASHBOARD)} credits={credits} userEmail={userEmail} />;
       case SCREENS.UPSELL:      return <UpsellScreen onDecline={() => setScreen(SCREENS.DASHBOARD)} />;
       case SCREENS.DASHBOARD:   return <DashboardScreen credits={credits} userEmail={userEmail} onExercise={goToExercise} onNavigate={setScreen} screens={SCREENS} refreshCredits={refreshCredits} />;
@@ -152,7 +171,16 @@ export default function App() {
 
   return (
     <PhoneFrame onBack={() => setScreen(SCREENS.DASHBOARD)} showBack={isNavVisible && screen !== SCREENS.DASHBOARD}>
-      <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
+      <div style={{ height: "100%", display: "flex", flexDirection: "column", position: "relative" }}>
+        {/* Version Banner for Debugging */}
+        <div style={{ 
+          position: "absolute", top: 0, left: 0, right: 0, background: "rgba(0,0,0,0.8)", 
+          color: colors.gold, fontSize: "9px", textAlign: "center", zIndex: 9999,
+          pointerEvents: "none", padding: "2px"
+        }}>
+          DEBUG MODE: V.8 (Bypass Ativado)
+        </div>
+
         <div style={{ flex: 1, overflowY: "auto", paddingBottom: isNavVisible ? "60px" : "0" }}>
           {renderScreen()}
         </div>

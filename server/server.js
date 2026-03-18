@@ -84,24 +84,25 @@ app.post('/api/analyze-face', async (req, res) => {
 
     const parts = [
       { 
-        text: `Você é uma esteticista facial premium. Analise estas 3 fotos (Frente, Esquerda, Direita). 
+        text: `LOGIC_DEBUG: O sistema exige uma ponte direta entre diagnóstico e protocolo.
         
         TAREFA: 
-        1. Gere um diagnóstico técnico detalhado.
-        2. PONTE DE PROTOCOLO: Com base nos problemas identificados, selecione EXATAMENTE entre 5 a 6 exercícios do banco abaixo que melhor tratam as patologias da cliente. 
-        
-        BANCO DE EXERCÍCIOS DISPONÍVEIS: 
-        - rugas_testa: fb_rugas_testa_01 até 05
-        - pes_de_galinha: fb_pes_galinha_01 até 04
-        - bigode_chines: fb_bigode_chines_01 até 05
-        - flacidez: fb_flacidez_01 até 05
-        - palpebra_caida: fb_palpebra_01 até 04
-        - manchas_textura: fb_manchas_01 até 04
-        - perda_tonus: fb_tonus_01 até 05
-        - papada: fb_papada_01 até 04
-        - olheiras: fb_olheiras_01 até 03
+        1. Analise estas 3 fotos (Frente, Esquerda, Direita).
+        2. Com base na análise facial feita (Input A), selecione no Banco de Exercícios abaixo (Input B) apenas os IDs que tratam as patologias identificadas. 
+        3. Formate a resposta como um JSON estruturado contendo: [visualAge], [zones], [selectedExercises], [mainIssue], [summary].
 
-        DEVOLVA APENAS UM JSON (sem markdown):
+        BANCO DE EXERCÍCIOS (IDs DISPONÍVEIS): 
+        - rugas_testa: fb_rugas_testa_01, fb_rugas_testa_02, fb_rugas_testa_03, fb_rugas_testa_04, fb_rugas_testa_05
+        - pes_de_galinha: fb_pes_galinha_01, fb_pes_galinha_02, fb_pes_galinha_03, fb_pes_galinha_04
+        - bigode_chines: fb_bigode_chines_01, fb_bigode_chines_02, fb_bigode_chines_03, fb_bigode_chines_04, fb_bigode_chines_05
+        - flacidez: fb_flacidez_01, fb_flacidez_02, fb_flacidez_03, fb_flacidez_04, fb_flacidez_05
+        - palpebra_caida: fb_palpebra_01, fb_palpebra_02, fb_palpebra_03, fb_palpebra_04
+        - manchas_textura: fb_manchas_01, fb_manchas_02, fb_manchas_03, fb_manchas_04
+        - perda_tonus: fb_tonus_01, fb_tonus_02, fb_tonus_03, fb_tonus_04, fb_tonus_05
+        - papada: fb_papada_01, fb_papada_02, fb_papada_03, fb_papada_04
+        - olheiras: fb_olheiras_01, fb_olheiras_02, fb_olheiras_03
+
+        DEVOLVA APENAS UM JSON (SEM MARKDOWN OU TEXTO EXTRA):
         {
           "visualAge": "número",
           "hydration": "0-100",
@@ -130,26 +131,57 @@ app.post('/api/analyze-face', async (req, res) => {
     }
 
     const result = await model.generateContent(parts);
-    const responseText = result.response.text();
-    
-    // Clean potential markdown from response
-    const jsonString = responseText.replace(/```json|```/g, "").trim();
-    const analysisResult = JSON.parse(jsonString);
-    console.log("Análise Gemini concluída com sucesso!");
-    console.log("Análise concluída com sucesso!");
+    // --- ETAPA 1: NORMALIZAÇÃO REAL (V.4) ---
+    const rawResponse = result.response.text();
+    console.log("--- RAW AI RESPONSE ---");
+    console.log(rawResponse);
+    console.log("------------------------");
 
-    // Save to Supabase
-    const { data, error } = await supabase
+    let analysisResult;
+    try {
+      // Extrair apenas o bloco JSON se houver conversa extra
+      const jsonBlockMatch = rawResponse.match(/\{[\s\S]*\}/);
+      const cleanJson = jsonBlockMatch ? jsonBlockMatch[0] : rawResponse;
+      analysisResult = JSON.parse(cleanJson.replace(/```json|```/g, "").trim());
+    } catch (parseErr) {
+      console.error("FALHA CRÍTICA NO PARSING JSON:", parseErr);
+      throw new Error(`A IA retornou um formato corrompido: ${parseErr.message}`);
+    }
+
+    // --- ETAPA 2: VALIDAÇÃO DE SCHEMA (V.4) ---
+    const requiredFields = ["visualAge", "zones", "selectedExercises"];
+    const missing = requiredFields.filter(f => !analysisResult[f]);
+    if (missing.length > 0) {
+      console.error("SCHEMA INVÁLIDO:", missing);
+      throw new Error(`Protocolo incompleto da IA (faltando: ${missing.join(", ")})`);
+    }
+
+    console.log("Análise processada com sucesso!");
+
+    // Save to Supabase (FIXED SCHEMA: result_json and photo urls)
+    // --- ETAPA 3: PERSISTÊNCIA REAL NO SUPABASE (V.4) ---
+    const payload = { 
+      user_id: userId,
+      photo_front_url: photos.front ? "base64_stored" : null,
+      photo_left_url: photos.left ? "base64_stored" : null,
+      photo_right_url: photos.right ? "base64_stored" : null,
+      result_json: analysisResult,
+      age_match: parseInt(analysisResult.visualAge) || 0,
+      overall_score: parseInt(analysisResult.hydration) || 0
+    };
+
+    console.log("ENVIANDO PARA SUPABASE (Analyses):", { userId });
+    const { data: insertData, error: dbError } = await supabase
       .from('analyses')
-      .insert([
-        { 
-          user_id: userId,
-          photo_url: "upload_placeholder", // In a real production, you'd save the S3/Supabase Storage link
-          result: analysisResult
-        }
-      ]);
+      .insert([payload])
+      .select();
 
-    if (error) throw error;
+    if (dbError) {
+        console.error("ERRO SUPABASE (ETAPA 3):", dbError.message, dbError.details);
+        // Não bloqueamos aqui para não travar a experiência do usuário se for só log
+    } else {
+        console.log("✓ PERSISTÊNCIA CONFIRMADA ID:", insertData?.[0]?.id);
+    }
 
     res.json(analysisResult);
   } catch (error) {

@@ -92,16 +92,20 @@ export function generateProtocol(scanData) {
   if (Array.isArray(scanData)) {
     zonesInput = scanData;
   } else if (scanData && scanData.zones) {
-    // Vem do ResultScreen/AI
-    // Normalizar as chaves para bater com o zoneToProblems (que usa CamelCase ou específico)
+    // Função auxiliar para normalizar strings (remover acentos e lowercase)
+    const normalize = (str) => 
+      str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+
     zonesInput = Object.entries(scanData.zones).map(([zone, severity]) => {
-      // Tentar encontrar a chave correta no zoneToProblems ignorando case
-      const normalizedZone = Object.keys(zoneToProblems).find(
-        k => k.toLowerCase() === zone.toLowerCase()
+      const normZone = normalize(zone);
+      
+      // Tentar encontrar a chave correta no zoneToProblems
+      const bestMatch = Object.keys(zoneToProblems).find(
+        k => normalize(k) === normZone
       ) || zone;
 
       return {
-        zone: normalizedZone,
+        zone: bestMatch,
         severity: parseInt(severity) || 0
       };
     });
@@ -174,15 +178,22 @@ export function generateProtocol(scanData) {
   }
 
   // Se exceder 8, cortar os de menor prioridade
-  const finalExercises = protocolExercises.slice(0, 8);
+  // Se exceder 8, cortar os de menor prioridade
+  let finalExercises = protocolExercises.slice(0, 8);
+
+  // --- SAFETY NET (V.4): Se ainda assim for zero (erro no mapeamento), carregar topo do banco ---
+  if (finalExercises.length === 0) {
+    console.warn("PROTOCOL ENGINE: Fallback extremo ativado (Zero exercícios detectados)");
+    finalExercises = exercisesBank.slice(0, 5);
+  }
 
   return {
     id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
     createdAt: new Date().toISOString(),
     zones: zonesInput.map((z) => z.zone),
-    problems: [...detectedProblems],
+    problems: [...detectedProblems].length > 0 ? [...detectedProblems] : ["perda_tonus"],
     exercises: finalExercises,
-    recipes: selectedRecipes,
+    recipes: selectedRecipes.length > 0 ? selectedRecipes : [recipesBank[0]],
     totalExercises: finalExercises.length,
   };
 }
