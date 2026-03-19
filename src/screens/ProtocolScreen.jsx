@@ -20,13 +20,14 @@ export default function ProtocolScreen({ onExercise, onBack, credits, onUseCredi
     setDoneList(getDailyProgress());
     setStreak(getStreak());
     
-    // Auto-unlock for admin (Nuclear V.6)
+    // Auto-unlock for admin (Nuclear V.8.1)
     const adminEmail = "apjveiga@gmail.com";
-    const userEmail = user?.email?.toLowerCase().trim();
-    const isAdmin = credits > 10000 || userEmail === adminEmail;
+    const storedEmail = localStorage.getItem("pdv_admin_bypass") || "";
+    const currentUserEmail = (user?.email || storedEmail || "").toLowerCase().trim();
+    const isAdmin = credits > 10000 || currentUserEmail === adminEmail;
     
     if (isAdmin) {
-      console.log("ProtocolScreen: Admin detectado, liberando acesso.");
+      console.log("ProtocolScreen: Admin detectado na V.8.1, liberando acesso total.");
       setUnlocked(true);
     }
 
