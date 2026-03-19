@@ -123,7 +123,7 @@ export default function ScanningScreen({ onNext, userEmail, credits, useCredit, 
               <p style={{ color: colors.muted, fontSize: "15px", lineHeight: 1.6, marginBottom: "32px", opacity: 0.9 }}>
                 {error}
               </p>
-              <div style={{ fontSize: "10px", color: colors.muted, opacity: 0.5 }}>Código de Auditoria: V.8.1 (Local Fix)</div>
+              <div style={{ fontSize: "10px", color: colors.muted, opacity: 0.5 }}>Código de Auditoria: V.8.2.1 (Local Fix)</div>
             </div>
           ) : (
             <>

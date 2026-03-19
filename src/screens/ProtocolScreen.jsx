@@ -62,10 +62,10 @@ export default function ProtocolScreen({ onExercise, onBack, credits, onUseCredi
                 textAlign: "left", background: "rgba(0,0,0,0.3)", padding: "12px", borderRadius: "8px", 
                 fontSize: "10px", color: colors.rose, fontFamily: "monospace", marginBottom: "32px"
               }}>
-                LOGS DE AUDITORIA (V.4):<br/>
+                LOGS DE AUDITORIA (V.8.2.1):<br/>
                 - Protocolo existe: {protocol ? "Sim" : "Não"}<br/>
                 - Exercícios: {protocol?.exercises?.length || 0}<br/>
-                - UserID: {localStorage.getItem("supabase.auth.token") ? "Logado" : "Deslogado"}
+                - UserID: {user?.id ? "Logado" : "Deslogado"} (Persistência: {localStorage.getItem("sb-") ? "Detectada" : "Inexistente"})
               </div>
             </div>
           </div>

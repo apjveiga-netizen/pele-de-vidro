@@ -65,7 +65,8 @@ app.post('/api/analyze-face', async (req, res) => {
       genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" }); // Ou gemini-1.5-flash
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }); 
+    console.log("Using model: gemini-1.5-flash (STABLE)");
 
     // Gemini expects parts: [{ text: "..." }, { inlineData: { mimeType: "image/jpeg", data: "base64..." } }]
     // Banco de Exercícios resumido para a IA (Bridge)
