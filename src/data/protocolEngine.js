@@ -43,16 +43,16 @@ function getExerciseCount(severity) {
  * @returns {Object} Protocolo com exercícios selecionados
  */
 export function generateProtocol(scanData) {
-  // --- NOVA LÓGICA: Se a IA já selecionou os exercícios (Bridge), use-os! ---
+  // --- NOVA LÓGICA (V.8.2): Se a IA já selecionou os exercícios, use-os com limites! ---
   if (scanData && scanData.selectedExercises && Array.isArray(scanData.selectedExercises)) {
     const aiExercises = scanData.selectedExercises
       .map(id => exercisesBank.find(ex => ex.id === id))
       .filter(Boolean);
     
-    if (aiExercises.length >= 3) { // Se a IA retornou um número razoável
+    if (aiExercises.length >= 3) {
       const selectedRecipes = [];
-      // Pegar receitas baseadas nos problemas detectados na análise
       const detectedProblems = new Set();
+      
       if (scanData.zones) {
         Object.entries(scanData.zones).forEach(([zone, severity]) => {
           if (parseInt(severity) > 20) {
@@ -64,21 +64,30 @@ export function generateProtocol(scanData) {
 
       const problemList = [...detectedProblems];
       if (problemList.length > 0) {
-        problemList.slice(0, 2).forEach(prob => {
+        // Selecionar até 4 receitas baseadas nos problemas (V.8.2)
+        problemList.slice(0, 4).forEach(prob => {
           const rec = recipesBank.find(r => r.problem === prob);
           if (rec) selectedRecipes.push(rec);
         });
       }
-      if (selectedRecipes.length < 1) selectedRecipes.push(recipesBank[0]);
+      
+      // Garantir 3-4 receitas (V.8.2)
+      if (selectedRecipes.length < 3) {
+        const extraRecipes = recipesBank.filter(r => !selectedRecipes.find(sr => sr.id === r.id));
+        selectedRecipes.push(...extraRecipes.slice(0, 4 - selectedRecipes.length));
+      }
+
+      // Limitar exercícios a 8 (V.8.2)
+      const finalAiExercises = aiExercises.slice(0, 8);
 
       return {
         id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
         createdAt: new Date().toISOString(),
         zones: scanData.zones ? Object.keys(scanData.zones) : [],
         problems: problemList,
-        exercises: aiExercises,
+        exercises: finalAiExercises,
         recipes: selectedRecipes,
-        totalExercises: aiExercises.length,
+        totalExercises: finalAiExercises.length,
       };
     }
   }
@@ -92,14 +101,11 @@ export function generateProtocol(scanData) {
   if (Array.isArray(scanData)) {
     zonesInput = scanData;
   } else if (scanData && scanData.zones) {
-    // Função auxiliar para normalizar strings (remover acentos e lowercase)
     const normalize = (str) => 
       str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
 
     zonesInput = Object.entries(scanData.zones).map(([zone, severity]) => {
       const normZone = normalize(zone);
-      
-      // Tentar encontrar a chave correta no zoneToProblems
       const bestMatch = Object.keys(zoneToProblems).find(
         k => normalize(k) === normZone
       ) || zone;
@@ -119,15 +125,11 @@ export function generateProtocol(scanData) {
 
     for (const problem of problems) {
       detectedProblems.add(problem);
-      
-      // Buscar exercícios deste problema
       const available = exercisesBank.filter(
         (ex) => ex.problem === problem && !selectedIds.has(ex.id)
       );
 
       if (available.length === 0) continue;
-
-      // Selecionar mix de dificuldades: priorizar iniciante, depois intermediário
       const sorted = available.sort((a, b) => {
         const order = { iniciante: 0, "intermediário": 1, avançado: 2 };
         return (order[a.difficulty] || 0) - (order[b.difficulty] || 0);
@@ -143,26 +145,26 @@ export function generateProtocol(scanData) {
     }
   }
 
-  // Selecionar Receitas (1-2 baseadas nos problemas mais severos ou problemas gerais)
+  // Selecionar Receitas (3-4 baseadas nos problemas — V.8.2)
   const selectedRecipes = [];
   const problemList = [...detectedProblems];
   
   if (problemList.length > 0) {
-    // Tentar pegar 1 receita para cada um dos 2 principais problemas
-    const topProblems = problemList.slice(0, 2);
+    const topProblems = problemList.slice(0, 4);
     for (const prob of topProblems) {
       const rec = recipesBank.find(r => r.problem === prob);
-      if (rec) selectedRecipes.push(rec);
+      if (rec && !selectedRecipes.find(sr => sr.id === rec.id)) {
+        selectedRecipes.push(rec);
+      }
     }
   }
 
-  // Se não tem receitas suficientes, adicionar padrão
-  if (selectedRecipes.length < 1) {
-    selectedRecipes.push(recipesBank[0]);
+  if (selectedRecipes.length < 3) {
+    const fillers = recipesBank.filter(r => !selectedRecipes.find(sr => sr.id === r.id));
+    selectedRecipes.push(...fillers.slice(0, 3 - selectedRecipes.length));
   }
 
   // Garantir mínimo de 4 e máximo de 8 exercícios
-  // Se muito poucos, adicionar tonificação geral
   if (protocolExercises.length < 4) {
     const extras = exercisesBank.filter(
       (ex) =>
@@ -178,10 +180,8 @@ export function generateProtocol(scanData) {
   }
 
   // Se exceder 8, cortar os de menor prioridade
-  // Se exceder 8, cortar os de menor prioridade
   let finalExercises = protocolExercises.slice(0, 8);
 
-  // --- SAFETY NET (V.4): Se ainda assim for zero (erro no mapeamento), carregar topo do banco ---
   if (finalExercises.length === 0) {
     console.warn("PROTOCOL ENGINE: Fallback extremo ativado (Zero exercícios detectados)");
     finalExercises = exercisesBank.slice(0, 5);
@@ -193,14 +193,11 @@ export function generateProtocol(scanData) {
     zones: zonesInput.map((z) => z.zone),
     problems: [...detectedProblems].length > 0 ? [...detectedProblems] : ["perda_tonus"],
     exercises: finalExercises,
-    recipes: selectedRecipes.length > 0 ? selectedRecipes : [recipesBank[0]],
+    recipes: selectedRecipes,
     totalExercises: finalExercises.length,
   };
 }
 
-/**
- * Retorna os detalhes de problema de forma legível.
- */
 export const problemLabels = {
   rugas_testa: { label: "Rugas na Testa", emoji: "📐", color: "#D4B87A" },
   pes_de_galinha: { label: "Pés de Galinha", emoji: "👁️", color: "#C4907A" },

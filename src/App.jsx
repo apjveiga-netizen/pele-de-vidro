@@ -178,7 +178,7 @@ export default function App() {
           color: colors.gold, fontSize: "9px", textAlign: "center", zIndex: 9999,
           pointerEvents: "none", padding: "2px"
         }}>
-          DEBUG MODE: V.8.1 (Local Build)
+          DEBUG MODE: V.8.2 (Local Build)
         </div>
 
         <div style={{ flex: 1, overflowY: "auto", paddingBottom: isNavVisible ? "60px" : "0" }}>
