@@ -19,9 +19,9 @@ export default function BottomNav({ onNavigate }) {
   const items = [
     { label: "Início", icon: "🏠", action: "HomeView" },
     { label: "Análise", icon: "📸", action: "UploadView" },
-    { label: "Créditos", icon: "💎", action: "CreditsView" },
     { label: "Protocolo", icon: "📋", action: "ResultView" },
     { label: "Diamante", icon: "✨", action: "DiamanteView" },
+    { label: "Créditos", icon: "💎", action: "CreditsView" },
   ];
 
   return (
