@@ -62,7 +62,7 @@ export default function ProtocolScreen({ onExercise, onBack, credits, onUseCredi
                 textAlign: "left", background: "rgba(0,0,0,0.3)", padding: "12px", borderRadius: "8px", 
                 fontSize: "10px", color: colors.rose, fontFamily: "monospace", marginBottom: "32px"
               }}>
-                LOGS DE AUDITORIA (V.8.2.2):<br/>
+                LOGS DE AUDITORIA (V.8.2.3):<br/>
                 - Protocolo existe: {protocol ? "Sim" : "Não"}<br/>
                 - Exercícios: {protocol?.exercises?.length || 0}<br/>
                 - UserID: {user?.id ? "Logado" : "Deslogado"} (Persistência: {Object.keys(localStorage).some(k => k.includes("-auth-token")) ? "Detectada" : "Inexistente"})

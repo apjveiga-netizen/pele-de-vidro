@@ -17,7 +17,8 @@ dotenv.config();
 
 const app = express();
 app.use(cors());
-app.use(express.json({ limit: '10mb' })); // Allow high-res photo uploads
+app.use(express.json({ limit: '50mb' })); // Higher limit for multiple high-res photos
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ─── INITIALIZE CLIENTS ──────────────────────────────────────────────
