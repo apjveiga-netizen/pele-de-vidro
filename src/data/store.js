@@ -181,13 +181,21 @@ export function clearProtocol() {
   localStorage.removeItem(KEYS.protocol);
 }
 
-/** Retorna exercícios do protocolo ativo, ou defaultExercises se não houver */
+/** Verifica se um objeto é um protocolo válido e personalizado (V.8.2.4) */
+export function isValidProtocol(p) {
+  if (!p || !p.exercises || !Array.isArray(p.exercises)) return false;
+  // Se tiver menos de 10 exercícios (o banco tem ~39), é um protocolo personalizado da IA
+  return p.exercises.length > 0 && p.exercises.length < 20; 
+}
+
+/** Retorna exercícios do protocolo ativo, ou defaultExercises se não houver um protocolo válido */
 export function getActiveExercises() {
   const protocol = getProtocol();
-  if (protocol && protocol.exercises && protocol.exercises.length > 0) {
+  if (isValidProtocol(protocol)) {
     return protocol.exercises;
   }
-  return getExercises();
+  // Se for o banco de dados completo (fallback), não é um protocolo ativo real
+  return []; 
 }
 
 // ─── RESET ──────────────────────────────────────────────────────────

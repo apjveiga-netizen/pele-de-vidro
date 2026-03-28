@@ -67,7 +67,7 @@ app.post('/api/analyze-face', async (req, res) => {
     }
 
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" }); 
-    console.log("Using model: gemini-2.5-flash (STABLE v.2026)");
+    console.log("Using model: gemini-2.5-flash (CONFIRMED WORKING)");
 
     // Gemini expects parts: [{ text: "..." }, { inlineData: { mimeType: "image/jpeg", data: "base64..." } }]
     // Banco de Exercícios resumido para a IA (Bridge)
@@ -86,12 +86,16 @@ app.post('/api/analyze-face', async (req, res) => {
 
     const parts = [
       { 
-        text: `LOGIC_DEBUG: O sistema exige uma ponte direta entre diagnóstico e protocolo.
+        text: `LOGIC_DEBUG: O sistema exige uma ponte direta e profissional entre diagnóstico facial e protocolo de exercícios.
+        
+        IDENTIDADE: Você é uma Inteligência Artificial especialista em Rejuvenescimento Facial Natural e Dermatoscopia Estética, inspirada nos maiores profissionais da área da beleza e dermatologia.
         
         TAREFA: 
-        1. Analise estas 3 fotos (Frente, Esquerda, Direita).
-        2. Com base na análise facial feita (Input A), selecione no Banco de Exercícios abaixo (Input B) apenas os IDs que tratam as patologias identificadas. 
-        3. Formate a resposta como um JSON estruturado contendo: [visualAge], [zones], [selectedExercises], [mainIssue], [summary].
+        1. Analise estas 3 fotos (Frente, Esquerda, Direita) com máximo rigor técnico.
+        2. Identifique os PONTOS CRÍTICOS (rugas profundas, perda de tônus, flacidez tissular, ptose palpebral, etc).
+        3. Com base nas patologias identificadas, selecione no Banco de Exercícios abaixo (Input B) apenas os IDs que tratam especificamente esses pontos. 
+        4. NÃO INVENTE EXERCÍCIOS. Use apenas os IDs fornecidos. Priorize qualidade sobre quantidade (3 a 5 exercícios focados).
+        5. Formate a resposta como um JSON estruturado de alto padrão.
 
         BANCO DE EXERCÍCIOS (IDs DISPONÍVEIS): 
         - rugas_testa: fb_rugas_testa_01, fb_rugas_testa_02, fb_rugas_testa_03, fb_rugas_testa_04, fb_rugas_testa_05
@@ -113,8 +117,8 @@ app.post('/api/analyze-face', async (req, res) => {
           "wrinkles": "0-100",
           "zones": { "Testa": 0, "Olhos": 0, "Sulco Nasogeniano": 0, "Mandíbula": 0, "Pescoço": 0 },
           "selectedExercises": ["id1", "id2", "id3", "id4", "id5"],
-          "mainIssue": "frase curta",
-          "summary": "parágrafo premium"
+          "mainIssue": "Diagnóstico preciso em uma frase curta (estilo clínico)",
+          "summary": "Resumo premium: descreva o estado da pele e o objetivo do protocolo de forma inspiradora e profissional, como um dermatologista."
         }`
       }
     ];

@@ -40,12 +40,9 @@ export default function PhoneFrame({ children, onBack, showBack }) {
                     <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8L10 4" stroke={colors.cream} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                   </button>
                 )}
-                <span style={{ color: colors.cream, fontSize: "11px", fontWeight: 500 }}>9:41</span>
               </div>
-              <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
-                <div style={{ width: "14px", height: "10px", border: `1.5px solid ${colors.cream}`, borderRadius: "2px", position: "relative" }}><div style={{ position: "absolute", inset: "1.5px", background: colors.cream, width: "70%" }} /></div>
-                <svg width="12" height="10" viewBox="0 0 12 10" fill={colors.cream}><path d="M0 7h2v3H0zM3 5h2v5H3zM6 3h2v7H6zM9 1h2v9H9z"/></svg>
-                <span>📶</span>
+              <div style={{ display: "flex", gap: "6px", alignItems: "center", opacity: 0 }}>
+                {/* Icons Removed */}
               </div>
             </div>
             <div style={{ height: "100%", position: "relative", display: "flex", flexDirection: "column", paddingTop: "50px" }}>

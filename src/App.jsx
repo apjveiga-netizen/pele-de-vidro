@@ -43,6 +43,8 @@ import PhoneFrame from "./components/PhoneFrame";
 import BottomNav from "./components/BottomNav";
 
 import { supabase } from "./lib/supabase";
+import { saveProtocol, getProtocol, isValidProtocol } from "./data/store";
+import { generateProtocol } from "./data/protocolEngine";
 
 export default function App() {
   const [screen, setScreen] = useState(SCREENS.SPLASH); 
@@ -93,7 +95,37 @@ export default function App() {
         if (data.email?.toLowerCase().trim() === "apjveiga@gmail.com") {
           localStorage.setItem("pdv_admin_bypass", data.email.toLowerCase().trim());
         }
+        
+        // --- AUTO-RESTORATION (V.8.2.4) ---
+        syncProtocolWithDatabase(userId);
       }
+  };
+
+  const syncProtocolWithDatabase = async (userId) => {
+    const existing = getProtocol();
+    if (isValidProtocol(existing)) return; // Já tem um protocolo válido localmente
+
+    console.log("App: Protocolo local ausente ou inválido. Buscando restauração no Supabase...");
+    
+    const { data: analysis, error } = await supabase
+      .from('analyses')
+      .select('result_json')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (analysis && analysis.result_json) {
+      console.log("App: Análise encontrada! Regenerando protocolo...");
+      const restoredProtocol = generateProtocol(analysis.result_json);
+      saveProtocol(restoredProtocol);
+      // Forçar atualização da UI se estiver no dashboard ou protocolo
+      if (screen === SCREENS.PROTOCOL || screen === SCREENS.DASHBOARD) {
+        window.location.reload(); // Simples e eficaz para garantir que o store recarregue
+      }
+    } else {
+      console.log("App: Nenhuma análise anterior encontrada para restauração.");
+    }
   };
 
   const refreshCredits = async (email) => {
@@ -172,14 +204,6 @@ export default function App() {
   return (
     <PhoneFrame onBack={() => setScreen(SCREENS.DASHBOARD)} showBack={isNavVisible && screen !== SCREENS.DASHBOARD}>
       <div style={{ height: "100%", display: "flex", flexDirection: "column", position: "relative" }}>
-        {/* Version Banner for Debugging */}
-        <div style={{ 
-          position: "absolute", top: 0, left: 0, right: 0, background: "rgba(0,0,0,0.8)", 
-          color: colors.gold, fontSize: "9px", textAlign: "center", zIndex: 9999,
-          pointerEvents: "none", padding: "2px"
-        }}>
-          DEBUG MODE: V.8.2.3 (Mobile Fix)
-        </div>
 
         <div style={{ flex: 1, overflowY: "auto", paddingBottom: isNavVisible ? "60px" : "0" }}>
           {renderScreen()}

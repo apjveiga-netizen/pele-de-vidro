@@ -10,14 +10,14 @@ async function listModels() {
     }
     const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
     try {
-        // There isn't a direct listModels in the JS SDK? 
-        // Let's try to just test a few variations.
         const models = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-2.5-flash", "gemini-2.0-flash-exp"];
         for (const m of models) {
             try {
+                console.log(`Testing model: ${m}...`);
                 const model = genAI.getGenerativeModel({ model: m });
-                await model.generateContent("test");
-                console.log(`Model ${m}: SUCCESS`);
+                const result = await model.generateContent("Respond only with 'OK' if you see this.");
+                const text = result.response.text();
+                console.log(`Model ${m}: SUCCESS - Response: "${text}"`);
             } catch (e) {
                 console.log(`Model ${m}: FAILED - ${e.message}`);
             }
