@@ -209,17 +209,7 @@ app.post('/api/webhook', async (req, res) => {
   }
 });
 
-app.get('/', (req, res) => {
-  res.send(`
-    <div style="font-family: sans-serif; text-align: center; padding: 50px; background: #0a0a0a; color: #c9a96e; min-height: 100vh;">
-      <h1>Produção: Pele de Vidro Ativa 🚀</h1>
-      <p style="color: #888;">IA Visual + Mercado Pago + Supabase</p>
-      <div style="margin-top: 20px; padding: 20px; border: 1px solid #c9a96e; display: inline-block; border-radius: 10px;">
-        Backend: <strong>Online</strong>
-      </div>
-    </div>
-  `);
-});
+// Production entry point managed by Vercel static routing
 
 // Export for Vercel
 // Heartbeat endpoint
