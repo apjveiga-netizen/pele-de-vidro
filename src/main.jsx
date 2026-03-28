@@ -7,10 +7,9 @@ import SalesPage from './screens/SalesPage'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter basename="/pele">
+    <BrowserRouter>
       <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/vendas" element={<SalesPage />} />
+        <Route path="/" element={<SalesPage />} />
         <Route path="/app" element={<App />} />
       </Routes>
     </BrowserRouter>

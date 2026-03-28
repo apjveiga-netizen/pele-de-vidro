@@ -35,7 +35,6 @@ const SCREENS = {
   SCANS: "scans",
   PROFILE: "profile",
   MENU: "menu",
-  SALES_PAGE: "sales_page",
 };
 
 // Import Components
@@ -194,7 +193,6 @@ export default function App() {
       case SCREENS.SCANS:       return <ScanHistoryScreen credits={credits} userEmail={userEmail} user={user} />;
       case SCREENS.PROFILE:     return <ProfileScreen user={user} profile={userEmail} credits={credits} />;
       case SCREENS.MENU:        return <MenuScreen onNavigate={setScreen} screens={SCREENS} />;
-      case SCREENS.SALES_PAGE:  return <SalesPage />;
       default: return null;
     }
   };
