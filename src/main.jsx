@@ -5,6 +5,26 @@ import './index.css'
 import App from './App'
 import SalesPage from './screens/SalesPage'
 
+// Forensics: confirm in console that JS is executing
+console.log("Forensics: main.jsx start.");
+
+// Forensics: Remove loader on successful hydration
+const clearLoader = () => {
+  const loader = document.getElementById('pdv-loader');
+  if (loader) {
+    loader.style.transition = 'opacity 0.5s';
+    loader.style.opacity = '0';
+    setTimeout(() => {
+      loader.parentNode?.removeChild(loader);
+      console.log("Forensics: Loader cleared.");
+    }, 500);
+  }
+};
+
+window.addEventListener('load', clearLoader);
+// Immediate attempt in case React renders before load event
+setTimeout(clearLoader, 3000); 
+
 import { Component } from 'react'
 
 class ErrorBoundary extends Component {
