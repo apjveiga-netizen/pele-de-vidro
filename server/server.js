@@ -36,6 +36,65 @@ const mpClient = new MercadoPagoConfig({
     options: { timeout: 5000 } 
 });
 
+// ─── META CONVERSIONS API (CAPI) ────────────────────────────────────────
+app.post('/api/meta-capi', async (req, res) => {
+  try {
+    const { event, data, eventTime, sourceUrl, fbp, fbc, userAgent } = req.body;
+
+    const pixelId = process.env.FB_PIXEL_ID || '1592455242002391';
+    const accessToken = process.env.FB_ACCESS_TOKEN;
+
+    if (!accessToken) {
+      console.warn('[CAPI] FB_ACCESS_TOKEN não configurado');
+      return res.status(200).json({ status: 'skipped', reason: 'no_token' });
+    }
+
+    const payload = {
+      data: [{
+        event_name: event,
+        event_time: eventTime || Math.floor(Date.now() / 1000),
+        event_source_url: sourceUrl || 'https://www.paravoce.online/analise',
+        action_source: 'website',
+        user_data: {
+          client_user_agent: userAgent || '',
+          fbp: fbp || '',
+          fbc: fbc || '',
+          ...(data?.name && { fn: await hashValue(data.name.toLowerCase().trim()) }),
+        },
+        custom_data: data || {}
+      }]
+    };
+
+    const response = await fetch(
+      `https://graph.facebook.com/v18.0/${pixelId}/events?access_token=${accessToken}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }
+    );
+
+    const result = await response.json();
+    if (result.error) {
+      console.error('[CAPI] Erro Meta:', result.error);
+    } else {
+      console.log(`[CAPI] Evento "${event}" enviado. events_received: ${result.events_received}`);
+    }
+
+    res.status(200).json({ status: 'ok', meta: result });
+  } catch (err) {
+    console.error('[CAPI] Exceção:', err.message);
+    res.status(200).json({ status: 'error', message: err.message }); // 200 para não bloquear UI
+  }
+});
+
+// Utilitário: SHA-256 hash simples para Node.js
+async function hashValue(value) {
+  if (!value) return '';
+  const { createHash } = await import('crypto');
+  return createHash('sha256').update(value).digest('hex');
+}
+
 // ─── AI ANALYSIS ENDPOINT ───────────────────────────────────────────
 
 app.post('/api/analyze-face', async (req, res) => {
