@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "vite build && cd quiz-standalone && npm install && npm run build",
+    "preview": "vite preview",
+    "build-quiz": "cd quiz-standalone && npm install && npm run build"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
@@ -27,5 +28,6 @@
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",
     "vite": "^6.0.1"
-  }
+  },
+  "outputDirectory": "quiz-standalone/dist"
 }

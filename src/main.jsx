@@ -3,7 +3,8 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './index.css'
 import App from './App'
-import SalesPage from './screens/SalesPage'
+import SalesPage from './pages/SalesPage'
+import QuizStandalone from './quiz/QuizStandalone'
 
 // Forensics: confirm in console that JS is executing
 console.log("Forensics: main.jsx start.");
@@ -55,14 +56,17 @@ class ErrorBoundary extends Component {
   }
 }
 
+// Forced redeploy: 2026-03-29T02:45:00Z - Clean build triggered
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <ErrorBoundary>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<SalesPage />} />
-          <Route path="/app" element={<App />} />
-          <Route path="*" element={<SalesPage />} />
+          <Route path="/" element={<QuizStandalone />} />
+          <Route path="/analise" element={<QuizStandalone />} />
+          <Route path="/vendas" element={<SalesPage />} />
+          <Route path="/pele" element={<App />} />
+          <Route path="*" element={<QuizStandalone />} />
         </Routes>
       </BrowserRouter>
     </ErrorBoundary>

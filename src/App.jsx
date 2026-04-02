@@ -2,22 +2,24 @@ import { useState, useEffect } from "react";
 import { colors } from "./theme";
 
 // Import Screens
-import SplashScreen from "./screens/SplashScreen";
-import OnboardingScreen from "./screens/OnboardingScreen";
-import UploadScreen from "./screens/UploadScreen";
-import ScanningScreen from "./screens/ScanningScreen";
-import ResultScreen from "./screens/ResultScreen";
-import ProtocolScreen from "./screens/ProtocolScreen";
-import OfferScreen from "./screens/OfferScreen";
-import UpsellScreen from "./screens/UpsellScreen";
-import DashboardScreen from "./screens/DashboardScreen";
-import ExerciseScreen from "./screens/ExerciseScreen";
-import ManageExercisesScreen from "./screens/ManageExercisesScreen";
-import ScanHistoryScreen from "./screens/ScanHistoryScreen";
-import ProfileScreen from "./screens/ProfileScreen";
-import LoginScreen from "./screens/LoginScreen";
-import MenuScreen from "./screens/MenuScreen";
-import SalesPage from "./screens/SalesPage";
+import SplashScreen from "./pages/SplashScreen";
+import OnboardingScreen from "./pages/OnboardingScreen";
+import UploadScreen from "./pages/UploadScreen";
+import ScanningScreen from "./pages/ScanningScreen";
+import ResultScreen from "./pages/ResultScreen";
+import ProtocolScreen from "./pages/ProtocolScreen";
+import OfferScreen from "./pages/OfferScreen";
+import UpsellScreen from "./pages/UpsellScreen";
+import DashboardScreen from "./pages/DashboardScreen";
+import ExerciseScreen from "./pages/ExerciseScreen";
+import ManageExercisesScreen from "./pages/ManageExercisesScreen";
+import ScanHistoryScreen from "./pages/ScanHistoryScreen";
+import ProfileScreen from "./pages/ProfileScreen";
+import LoginScreen from "./pages/LoginScreen";
+import MenuScreen from "./pages/MenuScreen";
+import SalesPage from "./pages/SalesPage";
+import QuizStandalone from "./quiz/QuizStandalone";
+import QuizScreen from "./quiz/QuizScreen";
 
 const SCREENS = {
   SPLASH: "splash",
@@ -35,6 +37,8 @@ const SCREENS = {
   SCANS: "scans",
   PROFILE: "profile",
   MENU: "menu",
+  QUIZ_STANDALONE: "quiz_standalone",
+  // QUIZ: "quiz",
 };
 
 // Import Components
@@ -46,31 +50,46 @@ import { saveProtocol, getProtocol, isValidProtocol } from "./data/store";
 import { generateProtocol } from "./data/protocolEngine";
 
 export default function App() {
-  const [screen, setScreen] = useState(SCREENS.SPLASH); 
+  const [screen, setScreen] = useState(SCREENS.QUIZ_STANDALONE); 
   const [credits, setCredits] = useState(0);
   const [userEmail, setUserEmail] = useState("");
   const [user, setUser] = useState(null);
   const [activeExerciseId, setActiveExerciseId] = useState(null);
+  const [isCheckingSession, setIsCheckingSession] = useState(true);
   const [photos, setPhotos] = useState(null);
 
   useEffect(() => {
-    // Check active sessions and sets the user
+    // Roteamento por Path (VSL/Analise)
+    if (window.location.pathname === "/analise") {
+      setScreen(SCREENS.QUIZ_STANDALONE);
+      setIsCheckingSession(false);
+      return;
+    }
+
+    // Check initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         setUser(session.user);
         fetchProfile(session.user.id);
       }
+      setIsCheckingSession(false);
     });
 
-    // Listen for changes on auth state (logged in, signed out, etc.)
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    // Listen for changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Supabase Auth Event:", event);
       if (session) {
         setUser(session.user);
         fetchProfile(session.user.id);
         if (screen === SCREENS.LOGIN || screen === SCREENS.SPLASH) {
           setScreen(SCREENS.DASHBOARD);
         }
-      } else {
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null);
+        setCredits(0);
+        setScreen(SCREENS.LOGIN);
+      } else if (!isCheckingSession) {
+        // Only go to login if we are not checking and session is null
         setUser(null);
         setCredits(0);
         setScreen(SCREENS.LOGIN);
@@ -78,7 +97,7 @@ export default function App() {
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [isCheckingSession, screen]);
 
   const fetchProfile = async (userId) => {
     const { data, error } = await supabase
@@ -178,7 +197,7 @@ export default function App() {
 
   const renderScreen = () => {
     switch (screen) {
-      case SCREENS.SPLASH:      return <SplashScreen onFinish={() => setScreen(SCREENS.LOGIN)} />;
+      case SCREENS.SPLASH:      return <SplashScreen onFinish={() => user ? setScreen(SCREENS.DASHBOARD) : setScreen(SCREENS.LOGIN)} />;
       case SCREENS.LOGIN:       return <LoginScreen onLogin={handleLogin} />;
       case SCREENS.ONBOARDING:  return <OnboardingScreen onFinish={() => setScreen(SCREENS.UPLOAD)} />;
       case SCREENS.UPLOAD:      return <UploadScreen onNext={(data) => { setPhotos(data.photos); setScreen(SCREENS.SCANNING); }} />;
@@ -193,11 +212,22 @@ export default function App() {
       case SCREENS.SCANS:       return <ScanHistoryScreen credits={credits} userEmail={userEmail} user={user} />;
       case SCREENS.PROFILE:     return <ProfileScreen user={user} profile={userEmail} credits={credits} />;
       case SCREENS.MENU:        return <MenuScreen onNavigate={setScreen} screens={SCREENS} />;
+      case SCREENS.QUIZ_STANDALONE: return <QuizStandalone />;
+      // case SCREENS.QUIZ:        return <QuizScreen onFinish={(data) => {
+      //   if (data.name) {
+      //     saveProfile({ name: data.name, age: data.answers.age || 30 });
+      //   }
+      //   setScreen(SCREENS.UPLOAD);
+      // }} />;
       default: return null;
     }
   };
 
-  const isNavVisible = ![SCREENS.SPLASH, SCREENS.LOGIN, SCREENS.ONBOARDING].includes(screen);
+  const isNavVisible = ![SCREENS.SPLASH, SCREENS.LOGIN, SCREENS.ONBOARDING, SCREENS.QUIZ_STANDALONE].includes(screen);
+
+  if (screen === SCREENS.QUIZ_STANDALONE) {
+    return <QuizStandalone />;
+  }
 
   return (
     <PhoneFrame onBack={() => setScreen(SCREENS.DASHBOARD)} showBack={isNavVisible && screen !== SCREENS.DASHBOARD}>

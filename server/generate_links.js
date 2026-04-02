@@ -40,6 +40,12 @@ async function generateLinks() {
                         failure: 'https://paravoce.online/sales',
                         pending: 'https://paravoce.online/sales'
                     },
+                    payment_methods: {
+                        excluded_payment_types: [
+                            { id: 'ticket' }
+                        ],
+                        installments: 12
+                    },
                     auto_return: 'approved',
                 }
             });

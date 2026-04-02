@@ -5,6 +5,18 @@
       "destination": "/api/index.js"
     },
     {
+      "source": "/assets/(.*)",
+      "destination": "/assets/$1"
+    },
+    {
+      "source": "/analise/(.*)",
+      "destination": "/quiz-standalone/$1"
+    },
+    {
+      "source": "/analise",
+      "destination": "/quiz-standalone/index.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
