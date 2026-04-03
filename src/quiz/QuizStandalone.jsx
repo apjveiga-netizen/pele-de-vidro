@@ -66,7 +66,7 @@ const QuizStandalone = () => {
         { text: "Afaste um pouco para enquadrar...", time: 2000, color: colors.stone },
         { text: "Aproxime seu rosto suavemente...", time: 2000, color: colors.rose },
         { text: "Quase lá... Mais um pouco...", time: 1500, color: colors.roseDark },
-        { text: "Perfeito! Fique parada...", time: 2000, color: "#2E7D32" } // Deep green
+        { text: "Perfeito! Fique parada...", time: 2000, color: "#2E7D32" }
       ];
 
       let currentStage = 0;
@@ -134,20 +134,17 @@ const QuizStandalone = () => {
 
   useEffect(() => {
     if (screen === SCREENS.PROCESSING) {
-      // Primeiras 3 etapas carregam rápido e sequencialmente
       const stages = [
         setTimeout(() => setProcessingStage(1), 1500),
         setTimeout(() => setProcessingStage(2), 3000),
         setTimeout(() => setProcessingStage(3), 4500)
       ];
       
-      // Carrega API do YouTube se não existir
       if (!window.YT) {
         const tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         const firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
         window.onYouTubeIframeAPIReady = () => {
           initYoutubePlayer();
         };
@@ -184,7 +181,6 @@ const QuizStandalone = () => {
       events: {
         onReady: (event) => {
           event.target.playVideo();
-          // Inicia intervalo de progresso
           progressInterval.current = setInterval(() => {
             const currentTime = event.target.getCurrentTime();
             const duration = event.target.getDuration();
@@ -195,13 +191,11 @@ const QuizStandalone = () => {
           }, 500);
         },
         onStateChange: (event) => {
-          // YT.PlayerState.ENDED = 0
           if (event.data === 0) {
             setIsVideoFinished(true);
             setVslProgress(100);
             if (progressInterval.current) clearInterval(progressInterval.current);
           }
-          // Se pausar (YT.PlayerState.PAUSED = 2), tenta dar play de novo se não acabou
           if (event.data === 2 && !isVideoFinished) {
             event.target.playVideo();
           }
@@ -351,56 +345,8 @@ const QuizStandalone = () => {
     );
   };
 
-  // 18 total steps (0-17)
+  // ── CORREÇÃO: totalSteps e steps declarados ANTES de handleNext e isSelectionMade ──
   const totalSteps = 18;
-
-  const handleNext = () => {
-    if (currentStep < totalSteps - 1) {
-      setCurrentStep(currentStep + 1);
-      window.scrollTo(0, 0);
-    } else {
-      // Quiz finalizado → câmera
-      QuizTracker.complete({ name, age });
-      setScreen(SCREENS.CAMERA);
-    }
-  };
-
-  const handleSelection = (key, value, multiple = false, autoAdvance = false) => {
-    if (multiple) {
-      const currentSelections = Array.isArray(answers[key]) ? answers[key] : [];
-      const newSelections = currentSelections.includes(value)
-        ? currentSelections.filter(v => v !== value)
-        : [...currentSelections, value];
-      setAnswers(prev => ({ ...prev, [key]: newSelections }));
-    } else {
-      setAnswers(prev => ({ ...prev, [key]: value }));
-      if (autoAdvance) {
-        setTimeout(() => {
-          if (currentStep < totalSteps - 1) {
-            setCurrentStep(currentStep + 1);
-            window.scrollTo(0, 0);
-          } else {
-            setScreen(SCREENS.CAMERA);
-          }
-        }, 300);
-      }
-    }
-  };
-
-  const isSelectionMade = () => {
-    if (currentStep === 0) return answers.gender;
-    if (currentStep === 1) return name.trim().length > 2;
-    if (currentStep === 2) return age.trim().length > 0 && !isNaN(age);
-    
-    const key = `q${currentStep - 2}`;
-    const value = answers[key];
-    const step = steps[currentStep];
-
-    if (step?.multiple) {
-      return Array.isArray(value) && value.length > 0;
-    }
-    return !!value;
-  };
 
   const steps = [
     {
@@ -601,6 +547,53 @@ const QuizStandalone = () => {
     }
   ];
 
+  const handleNext = () => {
+    if (currentStep < totalSteps - 1) {
+      setCurrentStep(currentStep + 1);
+      window.scrollTo(0, 0);
+    } else {
+      QuizTracker.complete({ name, age });
+      setScreen(SCREENS.CAMERA);
+    }
+  };
+
+  const handleSelection = (key, value, multiple = false, autoAdvance = false) => {
+    if (multiple) {
+      const currentSelections = Array.isArray(answers[key]) ? answers[key] : [];
+      const newSelections = currentSelections.includes(value)
+        ? currentSelections.filter(v => v !== value)
+        : [...currentSelections, value];
+      setAnswers(prev => ({ ...prev, [key]: newSelections }));
+    } else {
+      setAnswers(prev => ({ ...prev, [key]: value }));
+      if (autoAdvance) {
+        setTimeout(() => {
+          if (currentStep < totalSteps - 1) {
+            setCurrentStep(currentStep + 1);
+            window.scrollTo(0, 0);
+          } else {
+            setScreen(SCREENS.CAMERA);
+          }
+        }, 300);
+      }
+    }
+  };
+
+  const isSelectionMade = () => {
+    if (currentStep === 0) return answers.gender;
+    if (currentStep === 1) return name.trim().length > 2;
+    if (currentStep === 2) return age.trim().length > 0 && !isNaN(age);
+    
+    const key = `q${currentStep - 2}`;
+    const value = answers[key];
+    const step = steps[currentStep];
+
+    if (step?.multiple) {
+      return Array.isArray(value) && value.length > 0;
+    }
+    return !!value;
+  };
+
   const renderQuiz = () => {
     const step = steps[currentStep];
     const progress = ((currentStep) / (totalSteps)) * 100;
@@ -608,7 +601,6 @@ const QuizStandalone = () => {
     return (
       <div style={{ backgroundColor: colors.bg, minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <div style={{ width: '100%', maxWidth: '500px', padding: '40px 24px', boxSizing: 'border-box', flex: 1, display: 'flex', flexDirection: 'column' }}>
-          {/* Header */}
           <div style={{ textAlign: 'center', marginBottom: '40px' }}>
             <p style={{ color: colors.rose, letterSpacing: '0.4em', fontSize: '11px', fontWeight: 800, marginBottom: '10px' }}>PELE DE VIDRO</p>
             <div style={{ width: '100%', height: '4px', backgroundColor: colors.warm, borderRadius: '10px', overflow: 'hidden', marginTop: '15px' }}>
@@ -616,7 +608,6 @@ const QuizStandalone = () => {
             </div>
           </div>
 
-          {/* Question UI */}
           <div style={{ flex: 1 }}>
             {step.type === 'radio' ? (
               <div style={{ animation: 'fadeIn 0.5s ease' }}>
@@ -703,7 +694,6 @@ const QuizStandalone = () => {
             )}
           </div>
 
-          {/* Button UI (only if not autoAdvance or if input/checkbox) */}
           {(!step.autoAdvance || step.multiple) && (
             <div style={{ marginTop: '40px' }}>
               <button
@@ -729,8 +719,6 @@ const QuizStandalone = () => {
               </button>
             </div>
           )}
-          
-
         </div>
       </div>
     );
@@ -752,7 +740,6 @@ const QuizStandalone = () => {
           overflow: 'hidden',
           boxShadow: '0 20px 40px rgba(0,0,0,0.15)'
         }}>
-          {/* Real Camera Video */}
           <video 
             ref={videoRef}
             autoPlay 
@@ -761,11 +748,10 @@ const QuizStandalone = () => {
             style={{ 
               width: '100%', height: '100%', 
               objectFit: 'cover',
-              transform: 'scaleX(-1)' // Mirroring for selfie mode
+              transform: 'scaleX(-1)'
             }} 
           />
           
-          {/* Oval Mask Overlay */}
           <div style={{ 
             position: 'absolute', top: '10%', left: '10%', right: '10%', bottom: '20%', 
             border: `3px dashed ${colors.rose}`, borderRadius: '50%',
@@ -773,7 +759,6 @@ const QuizStandalone = () => {
             zIndex: 2
           }} />
 
-          {/* Instruction Overlay */}
           {scanMessage && (
             <div style={{
               position: 'absolute',
@@ -796,7 +781,6 @@ const QuizStandalone = () => {
             </div>
           )}
 
-          {/* Flash Effect */}
           {isCapturing && (
             <div style={{
               position: 'absolute', inset: 0,
@@ -806,7 +790,6 @@ const QuizStandalone = () => {
             }} />
           )}
 
-          {/* Scan Line */}
           <div style={{ 
             position: 'absolute', top: '0', left: '0', right: '0', height: '3px', 
             background: `linear-gradient(90deg, transparent, ${colors.rose}, transparent)`, 
@@ -815,7 +798,6 @@ const QuizStandalone = () => {
             zIndex: 3
           }} />
 
-          {/* Scan Dots/Grid simulation */}
           <div style={{
             position: 'absolute', inset: 0,
             backgroundImage: `radial-gradient(${colors.rose}33 1px, transparent 1px)`,
@@ -830,8 +812,8 @@ const QuizStandalone = () => {
             playShutterSound();
             setTimeout(() => {
               setIsVideoFinished(false);
-              setProcessingStage(0); // Reinicia estágios
-              setVslProgress(0); // Reinicia progresso do vídeo
+              setProcessingStage(0);
+              setVslProgress(0);
               setScreen(SCREENS.PROCESSING);
             }, 300);
           }}
@@ -902,7 +884,6 @@ const QuizStandalone = () => {
           <li>✓ Como reverter os sinais de envelhecimento (mesmo que você já tenha tentado tudo)</li>
         </ul>
 
-        {/* Player de Vídeo - YouTube VSL */}
         <div style={{ 
           width: '100%', maxWidth: '320px', aspectRatio: '9/16', 
           backgroundColor: '#000', borderRadius: '15px', overflow: 'hidden',
@@ -910,17 +891,15 @@ const QuizStandalone = () => {
           boxShadow: '0 10px 30px rgba(0,0,0,0.2)'
         }}>
           <div ref={vslContainerRef} style={{ width: '100%', height: '100%', pointerEvents: 'none' }} />
-          {/* Camada invisível para evitar cliques no YouTube */}
           <div style={{ position: 'absolute', inset: 0, zIndex: 10 }} />
         </div>
 
-        {/* Barras de Carregamento */}
         <div style={{ width: '100%', maxWidth: '400px', marginBottom: '40px' }}>
           {stages.map((stage, idx) => {
             const isLastStage = idx === stages.length - 1;
             const currentStageProgress = isLastStage 
               ? vslProgress 
-              : (processingStage > idx ? 100 : (processingStage === idx ? 70 : 0)); // 70% simulado enquanto carrega rápdo
+              : (processingStage > idx ? 100 : (processingStage === idx ? 70 : 0));
 
             return (
               <div key={idx} style={{ marginBottom: '15px', opacity: processingStage >= idx || isLastStage ? 1 : 0.3 }}>
@@ -939,7 +918,6 @@ const QuizStandalone = () => {
           })}
         </div>
 
-        {/* CTA Button */}
         <button 
           onClick={() => { QuizTracker.offer(); setScreen(SCREENS.SALES); }}
           disabled={!isVideoFinished}
@@ -978,7 +956,6 @@ const QuizStandalone = () => {
         `}</style>
 
         <div style={{ width: '100%', maxWidth: '600px', padding: '40px 24px' }}>
-          {/* Headline */}
           <div style={{ textAlign: 'center', marginBottom: '50px' }}>
             <h1 className="cormorant" style={{ fontSize: '2.8em', color: colors.ink, lineHeight: 1.1, marginBottom: '20px', fontWeight: 700 }}>
               Você Não Está Velha. <span style={{ color: colors.rose }}>Sua Pele é que Está Feia</span> — Vamos Recuperá-la
@@ -991,26 +968,13 @@ const QuizStandalone = () => {
             </p>
           </div>
 
-          {/* Personal Data Card */}
           <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '20px', 
-            backgroundColor: colors.white, 
-            padding: '20px', 
-            borderRadius: '20px', 
-            boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
-            marginBottom: '40px',
+            display: 'flex', alignItems: 'center', gap: '20px', 
+            backgroundColor: colors.white, padding: '20px', borderRadius: '20px', 
+            boxShadow: '0 10px 30px rgba(0,0,0,0.05)', marginBottom: '40px',
             border: `1px solid ${colors.roseLight}`
           }}>
-            <div style={{
-              width: '80px',
-              height: '80px',
-              borderRadius: '50%',
-              overflow: 'hidden',
-              border: `3px solid ${colors.rose}`,
-              flexShrink: 0
-            }}>
+            <div style={{ width: '80px', height: '80px', borderRadius: '50%', overflow: 'hidden', border: `3px solid ${colors.rose}`, flexShrink: 0 }}>
               {capturedImage ? (
                 <img src={capturedImage} alt="Sua Análise" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               ) : (
@@ -1026,30 +990,16 @@ const QuizStandalone = () => {
               <p style={{ color: colors.rose, margin: '5px 0', fontSize: '14px', fontWeight: 600 }}>
                 {age || '--'} anos • Análise Facial Concluída
               </p>
-              <div style={{ 
-                display: 'inline-flex', 
-                alignItems: 'center', 
-                gap: '5px', 
-                backgroundColor: '#E8F5E9', 
-                color: '#2E7D32', 
-                padding: '4px 10px', 
-                borderRadius: '10px', 
-                fontSize: '11px', 
-                fontWeight: 800,
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em'
-              }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', backgroundColor: '#E8F5E9', color: '#2E7D32', padding: '4px 10px', borderRadius: '10px', fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                 <span>✓ Protocolo Liberado</span>
               </div>
             </div>
           </div>
 
-          {/* Diagnostic Comparison Chart */}
           <div className="sales-card" style={{ padding: '40px 24px' }}>
             <h3 className="cormorant" style={{ color: colors.ink, marginBottom: '25px', fontSize: '1.8em', textAlign: 'center' }}>
               Seu Plano de Transformação em 14 Dias
             </h3>
-            
             <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginBottom: '35px', fontSize: '12px', fontWeight: 700 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <div style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: colors.roseDark }}></div>
@@ -1060,7 +1010,6 @@ const QuizStandalone = () => {
                 <span>Após 14 Dias (Meta)</span>
               </div>
             </div>
-
             <div style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
               {[
                 { label: "Rugas e Linhas", current: 90, goal: 15 },
@@ -1073,29 +1022,16 @@ const QuizStandalone = () => {
                     <span>{item.label}</span>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    {/* Current Bar */}
                     <div style={{ height: '10px', backgroundColor: colors.warm, borderRadius: '5px', overflow: 'hidden' }}>
-                      <div style={{ 
-                        width: `${item.current}%`, height: '100%', 
-                        backgroundColor: colors.roseDark, 
-                        animation: 'growBar 1.5s ease-out forwards',
-                        boxShadow: `0 0 10px ${colors.roseDark}44`
-                      }} />
+                      <div style={{ width: `${item.current}%`, height: '100%', backgroundColor: colors.roseDark, animation: 'growBar 1.5s ease-out forwards', boxShadow: `0 0 10px ${colors.roseDark}44` }} />
                     </div>
-                    {/* Goal Bar */}
                     <div style={{ height: '10px', backgroundColor: colors.warm, borderRadius: '5px', overflow: 'hidden' }}>
-                      <div style={{ 
-                        width: `${item.goal}%`, height: '100%', 
-                        backgroundColor: '#2E7D32', 
-                        animation: 'growBar 2s ease-out forwards',
-                        boxShadow: '0 0 10px rgba(46, 125, 50, 0.3)'
-                      }} />
+                      <div style={{ width: `${item.goal}%`, height: '100%', backgroundColor: '#2E7D32', animation: 'growBar 2s ease-out forwards', boxShadow: '0 0 10px rgba(46, 125, 50, 0.3)' }} />
                     </div>
                   </div>
                 </div>
               ))}
             </div>
-            
             <p style={{ marginTop: '30px', color: colors.stone, fontSize: '13px', fontStyle: 'italic', textAlign: 'center' }}>
               Resultados projetados com base no Protocolo Personalizado.
             </p>
@@ -1103,9 +1039,7 @@ const QuizStandalone = () => {
 
           <div className="sales-card" style={{ backgroundColor: colors.wine, color: colors.white }}>
             <h3 style={{ color: colors.goldLight, marginBottom: '20px', fontSize: '1.3em' }}>Seu Protocolo Personalizado:</h3>
-            <p style={{ fontSize: '15px', lineHeight: 1.6, opacity: 0.9 }}>
-              Com base na sua análise, criamos um protocolo exclusivo e personalizado:
-            </p>
+            <p style={{ fontSize: '15px', lineHeight: 1.6, opacity: 0.9 }}>Com base na sua análise, criamos um protocolo exclusivo e personalizado:</p>
             <div style={{ marginTop: '20px' }}>
               <p>✓ Exercícios faciais diários — 7 min/dia</p>
               <p>✓ Receitas Pele de Porcelana</p>
@@ -1114,90 +1048,48 @@ const QuizStandalone = () => {
             <p style={{ marginTop: '20px', fontWeight: 700, color: colors.goldLight }}>Resultados visíveis em apenas 2 semanas.</p>
           </div>
 
-          {/* Resultados Reais */}
           <div style={{ margin: '60px 0' }}>
             <h2 className="cormorant" style={{ textAlign: 'center', fontSize: '1.8em', marginBottom: '30px', color: colors.wine, lineHeight: 1.3 }}>
               Veja os resultados de quem trocou os cremes pelo protocolo personalizado:
             </h2>
-            
             <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
               <div className="sales-card" style={{ padding: '10px', overflow: 'hidden', border: `1px solid ${colors.gold}` }}>
-                <div style={{ textAlign: 'center', fontSize: '18px', fontWeight: 700, marginBottom: '15px', color: colors.wine }}>
-                  14 dias de protocolo
-                </div>
-                <img 
-                  src="/assets/14dias.jpg" 
-                  alt="14 dias" 
-                  style={{ width: '100%', borderRadius: '12px', display: 'block', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' }} 
-                />
+                <div style={{ textAlign: 'center', fontSize: '18px', fontWeight: 700, marginBottom: '15px', color: colors.wine }}>14 dias de protocolo</div>
+                <img src="/assets/14dias.jpg" alt="14 dias" style={{ width: '100%', borderRadius: '12px', display: 'block', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' }} />
               </div>
-
               <div className="sales-card" style={{ padding: '10px', overflow: 'hidden', border: `1px solid ${colors.gold}` }}>
-                <div style={{ textAlign: 'center', fontSize: '18px', fontWeight: 700, marginBottom: '15px', color: colors.wine }}>
-                  40 dias de protocolo
-                </div>
-                <img 
-                  src="/assets/40dias.jpg" 
-                  alt="40 dias" 
-                  style={{ width: '100%', borderRadius: '12px', display: 'block', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' }} 
-                />
+                <div style={{ textAlign: 'center', fontSize: '18px', fontWeight: 700, marginBottom: '15px', color: colors.wine }}>40 dias de protocolo</div>
+                <img src="/assets/40dias.jpg" alt="40 dias" style={{ width: '100%', borderRadius: '12px', display: 'block', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' }} />
               </div>
             </div>
           </div>
 
-          {/* Testimonials */}
           <div style={{ margin: '60px 0' }}>
             <h2 className="cormorant" style={{ textAlign: 'center', fontSize: '2.2em', marginBottom: '40px' }}>Histórias de Transformação</h2>
-            
-             {[
-               { 
-                 name: "Fernanda C. — 47 anos, São Paulo", 
-                 text: '"Minha filha tirou uma foto minha na festa de aniversário dela. Eu vi e quase chorei — de vergonha. Fiquei meses sem tirar fotos. Comecei o aplicativo sem muita expectativa. Quatro semanas depois, meu marido perguntou: \'O que você fez no rosto?\' Eu não tinha feito nada kkkk. Só os 7 minutinhos."',
-                 image: "/assets/fernanda.png"
-               },
-               { 
-                 name: "Renata M. — 41 anos, Belo Horizonte", 
-                 text: '"Desativava a câmera em toda reunião de trabalho. Tinha vergonha do meu próprio rosto numa tela. O scanner identificou exatamente os músculos que derretiam o meu rosto — que é o que mais me incomoda. Fiquei chocada com a precisão. E em 3 semanas já vi a diferença."',
-                 image: "/assets/renata.png"
-               },
-               { 
-                 name: "Carla S. — 52 anos, Curitiba", 
-                 text: '"Já joguei muito dinheiro fora em creme. Comprei o Pele de Vidro sem muita esperança. Dois meses depois minha colega de trabalho perguntou se eu tinha feito botox. Não fiz nada. Só os exercícios e as receitinhas."',
-                 image: "/assets/carla.png"
-               }
-             ].map((t, idx) => (
-               <div key={idx} className="sales-card" style={{ padding: '20px', display: 'flex', gap: '20px', alignItems: 'center' }}>
-                 <div style={{ flexShrink: 0 }}>
-                   <img 
-                     src={t.image} 
-                     alt={t.name} 
-                     style={{ 
-                       width: '80px', 
-                       height: '80px', 
-                       borderRadius: '50%', 
-                       objectFit: 'cover', 
-                       border: `2px solid ${colors.gold}`,
-                       boxShadow: '0 4px 10px rgba(0,0,0,0.1)'
-                     }} 
-                   />
-                 </div>
-                 <div style={{ flex: 1 }}>
-                   <div style={{ color: '#FFD700', marginBottom: '8px', fontSize: '14px' }}>⭐⭐⭐⭐⭐</div>
-                   <p style={{ fontStyle: 'italic', color: colors.ink, marginBottom: '10px', fontSize: '14px', lineHeight: 1.5 }}>{t.text}</p>
-                   <p style={{ fontWeight: 700, fontSize: '12px', color: colors.stone }}>{t.name}</p>
-                 </div>
-               </div>
-             ))}
+            {[
+              { name: "Fernanda C. — 47 anos, São Paulo", text: '"Minha filha tirou uma foto minha na festa de aniversário dela. Eu vi e quase chorei — de vergonha. Fiquei meses sem tirar fotos. Comecei o aplicativo sem muita expectativa. Quatro semanas depois, meu marido perguntou: \'O que você fez no rosto?\' Eu não tinha feito nada kkkk. Só os 7 minutinhos."', image: "/assets/fernanda.png" },
+              { name: "Renata M. — 41 anos, Belo Horizonte", text: '"Desativava a câmera em toda reunião de trabalho. Tinha vergonha do meu próprio rosto numa tela. O scanner identificou exatamente os músculos que derretiam o meu rosto — que é o que mais me incomoda. Fiquei chocada com a precisão. E em 3 semanas já vi a diferença."', image: "/assets/renata.png" },
+              { name: "Carla S. — 52 anos, Curitiba", text: '"Já joguei muito dinheiro fora em creme. Comprei o Pele de Vidro sem muita esperança. Dois meses depois minha colega de trabalho perguntou se eu tinha feito botox. Não fiz nada. Só os exercícios e as receitinhas."', image: "/assets/carla.png" }
+            ].map((t, idx) => (
+              <div key={idx} className="sales-card" style={{ padding: '20px', display: 'flex', gap: '20px', alignItems: 'center' }}>
+                <div style={{ flexShrink: 0 }}>
+                  <img src={t.image} alt={t.name} style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', border: `2px solid ${colors.gold}`, boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ color: '#FFD700', marginBottom: '8px', fontSize: '14px' }}>⭐⭐⭐⭐⭐</div>
+                  <p style={{ fontStyle: 'italic', color: colors.ink, marginBottom: '10px', fontSize: '14px', lineHeight: 1.5 }}>{t.text}</p>
+                  <p style={{ fontWeight: 700, fontSize: '12px', color: colors.stone }}>{t.name}</p>
+                </div>
+              </div>
+            ))}
           </div>
 
-          {/* Guarantee */}
           <div className="sales-card" style={{ textAlign: 'center', border: `2px solid ${colors.gold}` }}>
-             <img src="https://cdn-icons-png.flaticon.com/512/1000/1000958.png" width="80" style={{ marginBottom: '20px' }} />
-             <h3 style={{ color: colors.wine }}>Garantia de 7 dias</h3>
-             <p style={{ fontSize: '14px', color: colors.stone }}>Se em uma semana você não sentir diferença nos seus músculos faciais, devolvemos 100% do seu dinheiro sem perguntas.</p>
+            <img src="https://cdn-icons-png.flaticon.com/512/1000/1000958.png" width="80" style={{ marginBottom: '20px' }} />
+            <h3 style={{ color: colors.wine }}>Garantia de 7 dias</h3>
+            <p style={{ fontSize: '14px', color: colors.stone }}>Se em uma semana você não sentir diferença nos seus músculos faciais, devolvemos 100% do seu dinheiro sem perguntas.</p>
           </div>
 
-          {/* Pricing */}
           <div style={{ marginTop: '80px' }}>
             <h2 className="cormorant" style={{ textAlign: 'center', fontSize: '2.5em', marginBottom: '50px' }}>Escolha o seu nível de transformação</h2>
             
@@ -1210,10 +1102,7 @@ const QuizStandalone = () => {
                 <li>✦ Exercícios diários</li>
                 <li>✦ Receitas Pele de Porcelana</li>
               </ul>
-              <button 
-                onClick={() => { QuizTracker.checkout('Básico'); window.location.href = 'https://www.mercadopago.com.br/checkout/v1/redirect?pref_id=3266402800-e7329e19-5ee0-4851-8076-951541d1ea64'; }}
-                style={{ width: '100%', marginTop: '30px', padding: '15px', background: colors.stone, color: '#fff', border: 'none', borderRadius: '50px', fontWeight: 700, cursor: 'pointer' }}
-              >
+              <button onClick={() => { QuizTracker.checkout('Básico'); window.location.href = 'https://www.mercadopago.com.br/checkout/v1/redirect?pref_id=3266402800-e7329e19-5ee0-4851-8076-951541d1ea64'; }} style={{ width: '100%', marginTop: '30px', padding: '15px', background: colors.stone, color: '#fff', border: 'none', borderRadius: '50px', fontWeight: 700, cursor: 'pointer' }}>
                 Comprar Agora
               </button>
             </div>
@@ -1228,10 +1117,7 @@ const QuizStandalone = () => {
                 <li>✦ Exercícios diários + Receitas</li>
                 <li>✦ <b>BÔNUS:</b> Protocolo Adeus Papada</li>
               </ul>
-              <button 
-                onClick={() => { QuizTracker.checkout('Pró'); window.location.href = 'https://www.mercadopago.com.br/checkout/v1/redirect?pref_id=3266402800-2323deb7-5efe-4c81-b67d-7d6e44e27a94'; }}
-                style={{ width: '100%', marginTop: '30px', padding: '20px', background: colors.rose, color: '#fff', border: 'none', borderRadius: '50px', fontWeight: 800, cursor: 'pointer' }}
-              >
+              <button onClick={() => { QuizTracker.checkout('Pró'); window.location.href = 'https://www.mercadopago.com.br/checkout/v1/redirect?pref_id=3266402800-2323deb7-5efe-4c81-b67d-7d6e44e27a94'; }} style={{ width: '100%', marginTop: '30px', padding: '20px', background: colors.rose, color: '#fff', border: 'none', borderRadius: '50px', fontWeight: 800, cursor: 'pointer' }}>
                 Eu Quero o Pró
               </button>
             </div>
@@ -1246,21 +1132,16 @@ const QuizStandalone = () => {
                 <li>✦ <b>BÔNUS:</b> Protocolo Adeus Papada</li>
                 <li>✦ <b>BÔNUS:</b> Protocolo Pescoço e Colo</li>
               </ul>
-              <button 
-                onClick={() => { QuizTracker.checkout('Premium'); window.location.href = 'https://www.mercadopago.com.br/checkout/v1/redirect?pref_id=3266402800-a7336747-c1f9-4a6b-886b-12db980e2b6b'; }}
-                style={{ width: '100%', marginTop: '30px', padding: '15px', background: colors.gold, color: colors.wine, border: 'none', borderRadius: '50px', fontWeight: 700, cursor: 'pointer' }}
-              >
+              <button onClick={() => { QuizTracker.checkout('Premium'); window.location.href = 'https://www.mercadopago.com.br/checkout/v1/redirect?pref_id=3266402800-a7336747-c1f9-4a6b-886b-12db980e2b6b'; }} style={{ width: '100%', marginTop: '30px', padding: '15px', background: colors.gold, color: colors.wine, border: 'none', borderRadius: '50px', fontWeight: 700, cursor: 'pointer' }}>
                 Comprar Agora
               </button>
             </div>
           </div>
 
-          {/* Security */}
           <p style={{ textAlign: 'center', fontSize: '12px', color: colors.stone, marginTop: '20px', marginBottom: '80px' }}>
             "Pagamento único e seguro. Sem mensalidade. Sem renovação automática. Acesso imediato."
           </p>
 
-          {/* FAQ */}
           <div style={{ marginBottom: '80px' }}>
             <h2 className="cormorant" style={{ textAlign: 'center', fontSize: '2.2em', marginBottom: '40px' }}>Perguntas Frequentes</h2>
             {[
@@ -1277,18 +1158,14 @@ const QuizStandalone = () => {
             ))}
           </div>
 
-          {/* Final CTA */}
           <div style={{ textAlign: 'center', padding: '60px 0', borderTop: `1px solid ${colors.warm}` }}>
-             <h2 className="cormorant" style={{ fontSize: '2.5em', marginBottom: '30px' }}>Qual mulher você escolhe ser hoje?</h2>
-             <button 
-               onClick={() => { QuizTracker.checkout('Pró - Final CTA'); window.location.href = 'https://www.mercadopago.com.br/checkout/v1/redirect?pref_id=3266402800-2323deb7-5efe-4c81-b67d-7d6e44e27a94'; }}
-               style={{ padding: '20px 40px', background: colors.rose, color: '#fff', border: 'none', borderRadius: '50px', fontWeight: 800, fontSize: '1.2em', cursor: 'pointer', boxShadow: `0 15px 30px ${colors.roseDark}44` }}
-             >
-               Quero meu protocolo personalizado
-             </button>
-             <p style={{ marginTop: '20px', color: colors.stone, fontSize: '14px' }}>
-               Análise em menos de 1 minuto. Protocolo em segundos. Resultado em 2 semanas.
-             </p>
+            <h2 className="cormorant" style={{ fontSize: '2.5em', marginBottom: '30px' }}>Qual mulher você escolhe ser hoje?</h2>
+            <button onClick={() => { QuizTracker.checkout('Pró - Final CTA'); window.location.href = 'https://www.mercadopago.com.br/checkout/v1/redirect?pref_id=3266402800-2323deb7-5efe-4c81-b67d-7d6e44e27a94'; }} style={{ padding: '20px 40px', background: colors.rose, color: '#fff', border: 'none', borderRadius: '50px', fontWeight: 800, fontSize: '1.2em', cursor: 'pointer', boxShadow: `0 15px 30px ${colors.roseDark}44` }}>
+              Quero meu protocolo personalizado
+            </button>
+            <p style={{ marginTop: '20px', color: colors.stone, fontSize: '14px' }}>
+              Análise em menos de 1 minuto. Protocolo em segundos. Resultado em 2 semanas.
+            </p>
           </div>
         </div>
       </div>
@@ -1305,9 +1182,6 @@ const QuizStandalone = () => {
       {screen === SCREENS.SALES && renderSales()}
     </div>
   );
-
-
-
 };
 
 export default QuizStandalone;
