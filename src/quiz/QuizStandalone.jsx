@@ -41,6 +41,7 @@ const QuizStandalone = () => {
   const [isCapturing, setIsCapturing] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
   const [isVideoFinished, setIsVideoFinished] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
   const videoRef = useRef(null);
   const vslPlayerRef = useRef(null);
   const vslContainerRef = useRef(null);
@@ -140,20 +141,23 @@ const QuizStandalone = () => {
         setTimeout(() => setProcessingStage(3), 4500)
       ];
       
+      const checkYT = setInterval(() => {
+        if (window.YT && window.YT.Player) {
+          clearInterval(checkYT);
+          initYoutubePlayer();
+        }
+      }, 100);
+
       if (!window.YT) {
         const tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         const firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-        window.onYouTubeIframeAPIReady = () => {
-          initYoutubePlayer();
-        };
-      } else {
-        initYoutubePlayer();
       }
 
       return () => {
         stages.forEach(clearTimeout);
+        clearInterval(checkYT);
         if (progressInterval.current) clearInterval(progressInterval.current);
         if (vslPlayerRef.current) {
           try { vslPlayerRef.current.destroy(); } catch(e) {}
@@ -170,6 +174,7 @@ const QuizStandalone = () => {
       videoId: 'SooSEqjUsCE',
       playerVars: {
         autoplay: 1,
+        mute: 1,
         controls: 0,
         modestbranding: 1,
         rel: 0,
@@ -256,8 +261,8 @@ const QuizStandalone = () => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
-        padding: '40px 24px',
+        justifyContent: 'space-evenly',
+        padding: '30px 24px',
         textAlign: 'center',
         backgroundImage: 'radial-gradient(circle at top right, #FFF0F0, transparent), radial-gradient(circle at bottom left, #FDF8F5, transparent)'
       }}>
@@ -266,7 +271,8 @@ const QuizStandalone = () => {
           letterSpacing: '0.4em', 
           fontSize: '12px', 
           fontWeight: 800, 
-          marginBottom: '50px',
+          marginTop: '4vh',
+          marginBottom: '10px',
           opacity: 0.8
         }}>
           PELE DE VIDRO
@@ -277,7 +283,7 @@ const QuizStandalone = () => {
           fontSize: '2.5em',
           fontWeight: '700',
           lineHeight: '1.1',
-          marginBottom: '20px',
+          marginBottom: '15px',
           maxWidth: '320px'
         }}>
           Não seja mais <span style={{ color: colors.rose }}>Escrava</span> de Cremes, Maquiagem e Botox.
@@ -287,7 +293,7 @@ const QuizStandalone = () => {
           color: colors.stone,
           fontSize: '1.2em',
           lineHeight: '1.5',
-          marginBottom: '30px',
+          marginBottom: '15px',
           maxWidth: '300px',
           fontWeight: '500'
         }}>
@@ -298,7 +304,7 @@ const QuizStandalone = () => {
           color: colors.roseDark,
           fontSize: '0.9em',
           fontStyle: 'italic',
-          marginBottom: '40px',
+          marginBottom: '20px',
           fontWeight: '600'
         }}>
           ⚠️ Apenas 1 análise por pessoa.
@@ -345,7 +351,6 @@ const QuizStandalone = () => {
     );
   };
 
-  // ── CORREÇÃO: totalSteps e steps declarados ANTES de handleNext e isSelectionMade ──
   const totalSteps = 18;
 
   const steps = [
@@ -608,10 +613,10 @@ const QuizStandalone = () => {
             </div>
           </div>
 
-          <div style={{ flex: 1 }}>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             {step.type === 'radio' ? (
               <div style={{ animation: 'fadeIn 0.5s ease' }}>
-                <h2 className="cormorant" style={{ color: colors.ink, fontSize: '2.2em', marginBottom: '30px', fontWeight: 600, lineHeight: 1.1 }}>{step.question}</h2>
+                <h2 className="cormorant" style={{ color: colors.ink, fontSize: '1.8em', marginBottom: '20px', fontWeight: 600, lineHeight: 1.1 }}>{step.question}</h2>
                 <div>
                   {step.options.map((option) => {
                     const key = currentStep === 0 ? 'gender' : (currentStep === 2 ? 'age' : `q${currentStep - 2}`);
@@ -627,8 +632,8 @@ const QuizStandalone = () => {
                           display: 'flex',
                           alignItems: 'center',
                           backgroundColor: isSelected ? colors.roseLight + "22" : colors.white,
-                          padding: '22px',
-                          marginBottom: '14px',
+                          padding: '16px',
+                          marginBottom: '10px',
                           borderRadius: '16px',
                           cursor: 'pointer',
                           border: `1px solid ${isSelected ? colors.rose : colors.roseLight + "44"}`,
@@ -695,20 +700,22 @@ const QuizStandalone = () => {
           </div>
 
           {(!step.autoAdvance || step.multiple) && (
-            <div style={{ marginTop: '40px' }}>
+            <div style={{ marginTop: '20px' }}>
               <button
-                onClick={handleNext}
-                disabled={!isSelectionMade()}
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (isSelectionMade()) handleNext();
+                }}
                 style={{
                   width: '100%',
-                  padding: '22px',
+                  padding: '18px',
                   backgroundColor: isSelectionMade() ? colors.rose : colors.stone + "33",
                   color: colors.white,
                   border: 'none',
                   borderRadius: '20px',
                   fontSize: '1.1em',
                   fontWeight: '700',
-                  cursor: isSelectionMade() ? 'pointer' : 'not-allowed',
+                  cursor: isSelectionMade() ? 'pointer' : 'default',
                   transition: 'all 0.3s ease',
                   boxShadow: isSelectionMade() ? `0 12px 25px ${colors.rose}44` : 'none',
                   textTransform: 'uppercase',
@@ -891,7 +898,31 @@ const QuizStandalone = () => {
           boxShadow: '0 10px 30px rgba(0,0,0,0.2)'
         }}>
           <div ref={vslContainerRef} style={{ width: '100%', height: '100%', pointerEvents: 'none' }} />
-          <div style={{ position: 'absolute', inset: 0, zIndex: 10 }} />
+          {isMuted && (
+            <div 
+              onClick={() => {
+                if (vslPlayerRef.current && vslPlayerRef.current.unMute) {
+                  vslPlayerRef.current.unMute();
+                  vslPlayerRef.current.playVideo();
+                  setIsMuted(false);
+                }
+              }}
+              style={{
+                position: 'absolute', inset: 0, zIndex: 20, 
+                backgroundColor: 'rgba(0,0,0,0.4)', display: 'flex', 
+                alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
+                flexDirection: 'column', gap: '15px'
+              }}
+            >
+              <div style={{ 
+                fontSize: '40px', background: colors.rose, borderRadius: '50%', 
+                width: '80px', height: '80px', display: 'flex', alignItems: 'center', 
+                justifyContent: 'center', boxShadow: `0 0 30px ${colors.rose}` 
+              }}>🔊</div>
+              <div style={{ color: colors.white, fontWeight: 800, letterSpacing: '1px', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>CLIQUE PARA OUVIR</div>
+            </div>
+          )}
+          <div style={{ position: 'absolute', inset: 0, zIndex: 10, pointerEvents: 'none' }} />
         </div>
 
         <div style={{ width: '100%', maxWidth: '400px', marginBottom: '40px' }}>
