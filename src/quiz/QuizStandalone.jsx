@@ -256,24 +256,18 @@ const QuizStandalone = () => {
 
   const renderLanding = () => {
     return (
-      <div style={{
-        backgroundColor: colors.bg,
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'space-evenly',
-        padding: '30px 24px',
+        justifyContent: 'flex-start',
+        padding: '15px 20px',
         textAlign: 'center',
-        backgroundImage: 'radial-gradient(circle at top right, #FFF0F0, transparent), radial-gradient(circle at bottom left, #FDF8F5, transparent)'
+        backgroundImage: 'radial-gradient(circle at top right, #FFF5F5, transparent), radial-gradient(circle at bottom left, #FDF8F5, transparent)'
       }}>
         <p style={{ 
           color: colors.rose, 
           letterSpacing: '0.4em', 
-          fontSize: '12px', 
+          fontSize: '9px', 
           fontWeight: 800, 
-          marginTop: '4vh',
-          marginBottom: '10px',
+          marginTop: '5px',
+          marginBottom: '5px',
           opacity: 0.8
         }}>
           PELE DE VIDRO
@@ -281,60 +275,79 @@ const QuizStandalone = () => {
 
         <h1 className="cormorant" style={{
           color: colors.ink,
-          fontSize: '2.5em',
+          fontSize: '1.9rem',
           fontWeight: '700',
-          lineHeight: '1.1',
-          marginBottom: '15px',
+          lineHeight: '1.05',
+          marginBottom: '10px',
           maxWidth: '320px'
         }}>
           Não seja mais <span style={{ color: colors.rose }}>Escrava</span> de Cremes, Maquiagem e Botox.
         </h1>
 
-        <p style={{
-          color: colors.stone,
-          fontSize: '1.2em',
-          lineHeight: '1.5',
-          marginBottom: '15px',
-          maxWidth: '300px',
-          fontWeight: '500'
+        <div style={{
+          textAlign: 'left',
+          width: '100%',
+          maxWidth: '310px',
+          margin: '0 auto 10px auto',
+          background: 'rgba(255,255,255,0.6)',
+          padding: '12px 15px',
+          borderRadius: '18px',
+          border: '1px solid #FADADD',
+          boxShadow: '0 4px 10px rgba(0,0,0,0.02)'
         }}>
-          A IA vai analisar sua pele e entregar um protocolo personalizado que levanta e rejuvenesce!
-        </p>
+          {[
+            "✓ Por que nenhum creme funcionou pra você",
+            "✓ O que sua pele REALMENTE precisa",
+            "✓ Reverter os sinais de envelhecimento"
+          ].map((bullet, i) => (
+            <p key={i} style={{ color: colors.ink, fontSize: '0.85rem', marginBottom: '5px', lineHeight: '1.2', fontWeight: '600' }}>{bullet}</p>
+          ))}
+        </div>
 
         <p style={{
-          color: colors.roseDark,
-          fontSize: '0.9em',
-          fontStyle: 'italic',
-          marginBottom: '20px',
-          fontWeight: '600'
+          color: colors.stone,
+          fontSize: '0.95rem',
+          lineHeight: '1.3',
+          marginBottom: '12px',
+          maxWidth: '280px',
+          fontWeight: '500'
         }}>
-          ⚠️ Apenas 1 análise por pessoa.
+          A IA analisa sua pele e entrega seu protocolo personalizado!
         </p>
 
         <button
           onClick={() => { QuizTracker.startQuiz(); setScreen(SCREENS.QUIZ); }}
           style={{
             width: '100%',
-            maxWidth: '320px',
-            padding: '22px',
+            maxWidth: '310px',
+            padding: '18px',
             backgroundColor: colors.rose,
             color: colors.white,
             border: 'none',
             borderRadius: '50px',
-            fontSize: '1.3em',
+            fontSize: '1.1rem',
             fontWeight: '800',
             cursor: 'pointer',
-            boxShadow: `0 15px 35px ${colors.rose}44`,
+            boxShadow: `0 12px 30px ${colors.rose}44`,
             transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
             textTransform: 'uppercase',
             letterSpacing: '1px',
             animation: 'pulseBtn 2s infinite'
           }}
-          onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
-          onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
         >
-          Começar
+          Começar Análise →
         </button>
+
+        <p style={{
+          color: colors.roseDark,
+          fontSize: '0.8rem',
+          fontStyle: 'italic',
+          marginTop: '10px',
+          fontWeight: '600',
+          opacity: 0.7
+        }}>
+          ⚠️ Apenas 1 análise facial gratuita por pessoa.
+        </p>
 
         <style>{`
           @keyframes float {
@@ -1060,24 +1073,6 @@ const QuizStandalone = () => {
             <h3 className="cormorant" style={{ color: colors.ink, marginBottom: '25px', fontSize: '1.8em', textAlign: 'center' }}>
               Seu Plano de Transformação em 14 Dias
             </h3>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginBottom: '35px', fontSize: '12px', fontWeight: 700 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <div style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: colors.roseDark }}></div>
-                <span>Hoje (Sinais Identificados)</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <div style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: '#2E7D32' }}></div>
-                <span>Após 14 Dias (Meta)</span>
-              </div>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
-              {[
-                { label: "Rugas e Linhas", current: 90, goal: 15 },
-                { label: "Firmeza (Efeito Lift)", current: 85, goal: 10 },
-                { label: "Uniformidade (Manchas)", current: 75, goal: 20 },
-                { label: "Bigode Chinês", current: 95, goal: 25 }
-              ].map((item, idx) => (
-                <div key={idx}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '14px', fontWeight: 600, color: colors.ink }}>
                     <span>{item.label}</span>
                   </div>
@@ -1097,61 +1092,98 @@ const QuizStandalone = () => {
             </p>
           </div>
 
-          <div className="sales-card" style={{ backgroundColor: colors.wine, color: colors.white }}>
-            <h3 style={{ color: colors.goldLight, marginBottom: '20px', fontSize: '1.3em' }}>Seu Protocolo Personalizado:</h3>
-            <p style={{ fontSize: '15px', lineHeight: 1.6, opacity: 0.9 }}>Com base na sua análise, criamos um protocolo exclusivo e personalizado:</p>
-            <div style={{ marginTop: '20px' }}>
-              <p>✓ Exercícios faciais diários — 7 min/dia</p>
-              <p>✓ Receitas Pele de Porcelana</p>
-              <p>✓ Cronograma personalizado</p>
+          <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+            <button 
+              onClick={() => {
+                const el = document.getElementById('price-section');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}
+              style={{
+                background: colors.rose,
+                color: colors.white,
+                padding: '20px 30px',
+                borderRadius: '50px',
+                fontSize: '1.2em',
+                fontWeight: 800,
+                border: 'none',
+                cursor: 'pointer',
+                boxShadow: `0 10px 25px ${colors.rose}44`,
+                width: '100%',
+                textTransform: 'uppercase',
+                animation: 'pulseBtn 2s infinite'
+              }}
+            >
+              Eu Quero Meu Protocolo Agora
+            </button>
+          </div>
+
+          <div className="sales-card" style={{ backgroundColor: colors.white, border: `2px solid ${colors.roseLight}` }}>
+            <h3 style={{ color: colors.ink, marginBottom: '20px', fontSize: '1.3em', fontWeight: 800 }}>Seu Protocolo Personalizado:</h3>
+            <p style={{ fontSize: '15px', lineHeight: 1.6, color: colors.stone }}>Com base na sua análise, criamos um protocolo exclusivo e personalizado:</p>
+            <div style={{ marginTop: '20px', color: colors.ink }}>
+              <p style={{ margin: '10px 0' }}>✓ Exercícios faciais diários — 7 min/day</p>
+              <p style={{ margin: '10px 0' }}>✓ Receitas Pele de Porcelana</p>
+              <p style={{ margin: '10px 0' }}>✓ Cronograma personalizado</p>
             </div>
-            <p style={{ marginTop: '20px', fontWeight: 700, color: colors.goldLight }}>Resultados visíveis em apenas 2 semanas.</p>
+            <p style={{ marginTop: '20px', fontWeight: 800, color: colors.rose }}>Resultados visíveis em apenas 2 semanas.</p>
           </div>
 
           <div style={{ margin: '60px 0' }}>
             <h2 className="cormorant" style={{ textAlign: 'center', fontSize: '1.8em', marginBottom: '30px', color: colors.wine, lineHeight: 1.3 }}>
-              Veja os resultados de quem trocou os cremes pelo protocolo personalizado:
+              Resultados Reais: Protocolo Personalizado vs. Cremes Comuns
             </h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
               <div className="sales-card" style={{ padding: '10px', overflow: 'hidden', border: `1px solid ${colors.gold}` }}>
-                <div style={{ textAlign: 'center', fontSize: '18px', fontWeight: 700, marginBottom: '15px', color: colors.wine }}>14 dias de protocolo</div>
+                <div style={{ textAlign: 'center', fontSize: '18px', fontWeight: 700, marginBottom: '15px', color: colors.wine }}>Transformação em 14 dias</div>
                 <img src="/assets/14dias.jpg" alt="14 dias" style={{ width: '100%', borderRadius: '12px', display: 'block', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' }} />
               </div>
               <div className="sales-card" style={{ padding: '10px', overflow: 'hidden', border: `1px solid ${colors.gold}` }}>
-                <div style={{ textAlign: 'center', fontSize: '18px', fontWeight: 700, marginBottom: '15px', color: colors.wine }}>40 dias de protocolo</div>
+                <div style={{ textAlign: 'center', fontSize: '18px', fontWeight: 700, marginBottom: '15px', color: colors.wine }}>Transformação em 40 dias</div>
                 <img src="/assets/40dias.jpg" alt="40 dias" style={{ width: '100%', borderRadius: '12px', display: 'block', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' }} />
               </div>
             </div>
           </div>
 
           <div style={{ margin: '60px 0' }}>
-            <h2 className="cormorant" style={{ textAlign: 'center', fontSize: '2.2em', marginBottom: '40px' }}>Histórias de Transformação</h2>
+            <h2 className="cormorant" style={{ textAlign: 'center', fontSize: '2.2em', marginBottom: '40px', color: colors.ink }}>Histórias de Quem Já Recobrou a Autoestima</h2>
             {[
-              { name: "Fernanda C. — 47 anos, São Paulo", text: '"Minha filha tirou uma foto minha na festa de aniversário dela. Eu vi e quase chorei — de vergonha. Fiquei meses sem tirar fotos. Comecei o aplicativo sem muita expectativa. Quatro semanas depois, meu marido perguntou: \'O que você fez no rosto?\' Eu não tinha feito nada kkkk. Só os 7 minutinhos."', image: "/assets/fernanda.png" },
-              { name: "Renata M. — 41 anos, Belo Horizonte", text: '"Desativava a câmera em toda reunião de trabalho. Tinha vergonha do meu próprio rosto numa tela. O scanner identificou exatamente os músculos que derretiam o meu rosto — que é o que mais me incomoda. Fiquei chocada com a precisão. E em 3 semanas já vi a diferença."', image: "/assets/renata.png" },
-              { name: "Carla S. — 52 anos, Curitiba", text: '"Já joguei muito dinheiro fora em creme. Comprei o Pele de Vidro sem muita esperança. Dois meses depois minha colega de trabalho perguntou se eu tinha feito botox. Não fiz nada. Só os exercícios e as receitinhas."', image: "/assets/carla.png" }
+              { name: "Fernanda C. — 47 anos, São Paulo", text: '"Minha filha tirou uma foto minha na festa de aniversário dela. Eu vi e quase chorei — de vergonha. Comecei o aplicativo sem muita expectativa. Quatro semanas depois, meu marido perguntou: \'O que você fez no rosto?\'"', image: "/assets/fernanda.png" },
+              { name: "Renata M. — 41 anos, Belo Horizonte", text: '"Desativava a câmera em toda reunião de trabalho. Tinha vergonha do meu próprio rosto numa tela. O scanner identificou exatamente os músculos que derretiam o meu rosto. Em 3 semanas já vi a diferença."', image: "/assets/renata.png" },
+              { name: "Carla S. — 52 anos, Curitiba", text: '"Já joguei muito dinheiro fora em creme. Comprei o Pele de Vidro sem muita esperança. Dois meses depois minha colega de trabalho perguntou se eu tinha feito botox. Não fiz nada. Só os exercícios."', image: "/assets/carla.png" }
             ].map((t, idx) => (
               <div key={idx} className="sales-card" style={{ padding: '20px', display: 'flex', gap: '20px', alignItems: 'center' }}>
                 <div style={{ flexShrink: 0 }}>
-                  <img src={t.image} alt={t.name} style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', border: `2px solid ${colors.gold}`, boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }} />
+                  <img src={t.image} alt={t.name} style={{ width: '85px', height: '85px', borderRadius: '50%', objectFit: 'cover', border: `2px solid ${colors.gold}`, boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }} />
                 </div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ color: '#FFD700', marginBottom: '8px', fontSize: '14px' }}>⭐⭐⭐⭐⭐</div>
-                  <p style={{ fontStyle: 'italic', color: colors.ink, marginBottom: '10px', fontSize: '14px', lineHeight: 1.5 }}>{t.text}</p>
-                  <p style={{ fontWeight: 700, fontSize: '12px', color: colors.stone }}>{t.name}</p>
+                  <div style={{ color: '#FFD700', marginBottom: '5px', fontSize: '14px' }}>⭐⭐⭐⭐⭐</div>
+                  <p style={{ fontStyle: 'italic', color: colors.ink, marginBottom: '8px', fontSize: '14px', lineHeight: 1.4 }}>{t.text}</p>
+                  <p style={{ fontWeight: 800, fontSize: '12px', color: colors.rose }}>{t.name}</p>
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="sales-card" style={{ textAlign: 'center', border: `2px solid ${colors.gold}` }}>
-            <img src="https://cdn-icons-png.flaticon.com/512/1000/1000958.png" width="80" style={{ marginBottom: '20px' }} />
-            <h3 style={{ color: colors.wine }}>Garantia de 7 dias</h3>
+          <div className="sales-card" style={{ textAlign: 'center', border: `2px solid ${colors.gold}`, background: '#FFFDF0', position: 'relative', overflow: 'visible' }}>
+            <div style={{ 
+              position: 'absolute', top: '-15px', right: '-10px', 
+              width: '80px', height: '80px', 
+              background: colors.gold, borderRadius: '50%', 
+              display: 'flex', alignItems: 'center', justifyContent: 'center', 
+              color: colors.wine, fontSize: '10px', fontWeight: 800, 
+              textAlign: 'center', lineHeight: 1, padding: '5px',
+              border: '3px double white', boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
+              transform: 'rotate(15deg)'
+            }}>
+              7 DIAS DE GARANTIA
+            </div>
+            <img src="https://cdn-icons-png.flaticon.com/512/1000/1000958.png" width="60" style={{ marginBottom: '15px' }} />
+            <h3 style={{ color: colors.wine, fontWeight: 800 }}>Sua Satisfação ou Seu Dinheiro de Volta</h3>
             <p style={{ fontSize: '14px', color: colors.stone }}>Se em uma semana você não sentir diferença nos seus músculos faciais, devolvemos 100% do seu dinheiro sem perguntas.</p>
           </div>
 
-          <div style={{ marginTop: '80px' }}>
-            <h2 className="cormorant" style={{ textAlign: 'center', fontSize: '2.5em', marginBottom: '50px' }}>Escolha o seu nível de transformação</h2>
+          <div id="price-section" style={{ marginTop: '80px' }}>
+            <h2 className="cormorant" style={{ textAlign: 'center', fontSize: '2.5em', marginBottom: '50px', color: colors.wine }}>Escolha o seu nível de transformação</h2>
             
             <div className="price-card" style={{ backgroundColor: colors.white }}>
               <h3 style={{ color: colors.stone }}>BÁSICO</h3>
