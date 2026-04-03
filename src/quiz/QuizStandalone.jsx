@@ -42,6 +42,7 @@ const QuizStandalone = () => {
   const [capturedImage, setCapturedImage] = useState(null);
   const [isVideoFinished, setIsVideoFinished] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
+  const [shake, setShake] = useState(false);
   const videoRef = useRef(null);
   const vslPlayerRef = useRef(null);
   const vslContainerRef = useRef(null);
@@ -553,12 +554,17 @@ const QuizStandalone = () => {
   ];
 
   const handleNext = () => {
-    if (currentStep < totalSteps - 1) {
-      setCurrentStep(currentStep + 1);
-      window.scrollTo(0, 0);
+    if (isSelectionMade()) {
+      if (currentStep < totalSteps - 1) {
+        setCurrentStep(currentStep + 1);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        QuizTracker.complete({ name, age });
+        setScreen(SCREENS.CAMERA);
+      }
     } else {
-      QuizTracker.complete({ name, age });
-      setScreen(SCREENS.CAMERA);
+      setShake(true);
+      setTimeout(() => setShake(false), 500);
     }
   };
 
@@ -605,18 +611,27 @@ const QuizStandalone = () => {
 
     return (
       <div style={{ backgroundColor: colors.bg, minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <div style={{ width: '100%', maxWidth: '500px', padding: '40px 24px', boxSizing: 'border-box', flex: 1, display: 'flex', flexDirection: 'column' }}>
-          <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-            <p style={{ color: colors.rose, letterSpacing: '0.4em', fontSize: '11px', fontWeight: 800, marginBottom: '10px' }}>PELE DE VIDRO</p>
-            <div style={{ width: '100%', height: '4px', backgroundColor: colors.warm, borderRadius: '10px', overflow: 'hidden', marginTop: '15px' }}>
+        <div style={{ 
+          width: '100%', 
+          maxWidth: '500px', 
+          padding: '20px 20px', 
+          boxSizing: 'border-box', 
+          flex: 1, 
+          display: 'flex', 
+          flexDirection: 'column',
+          justifyContent: 'space-between' 
+        }}>
+          <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+            <p style={{ color: colors.rose, letterSpacing: '0.4em', fontSize: '10px', fontWeight: 800, marginBottom: '5px' }}>PELE DE VIDRO</p>
+            <div style={{ width: '100%', height: '4px', backgroundColor: colors.warm, borderRadius: '10px', overflow: 'hidden', marginTop: '10px' }}>
               <div style={{ width: `${progress}%`, height: '100%', backgroundColor: colors.rose, transition: 'width 0.4s ease' }} />
             </div>
           </div>
 
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', marginBottom: '20px' }}>
             {step.type === 'radio' ? (
               <div style={{ animation: 'fadeIn 0.5s ease' }}>
-                <h2 className="cormorant" style={{ color: colors.ink, fontSize: '1.8em', marginBottom: '20px', fontWeight: 600, lineHeight: 1.1 }}>{step.question}</h2>
+                <h2 className="cormorant" style={{ color: colors.ink, fontSize: '1.6em', marginBottom: '15px', fontWeight: 600, lineHeight: 1.1 }}>{step.question}</h2>
                 <div>
                   {step.options.map((option) => {
                     const key = currentStep === 0 ? 'gender' : (currentStep === 2 ? 'age' : `q${currentStep - 2}`);
@@ -628,17 +643,21 @@ const QuizStandalone = () => {
                     return (
                       <label
                         key={option.id}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleSelection(key, option.value, step.multiple, step.autoAdvance);
+                        }}
                         style={{
                           display: 'flex',
                           alignItems: 'center',
                           backgroundColor: isSelected ? colors.roseLight + "22" : colors.white,
-                          padding: '16px',
-                          marginBottom: '10px',
+                          padding: '14px 16px',
+                          marginBottom: '8px',
                           borderRadius: '16px',
                           cursor: 'pointer',
                           border: `1px solid ${isSelected ? colors.rose : colors.roseLight + "44"}`,
                           color: isSelected ? colors.roseDark : colors.stone,
-                          fontSize: '1em',
+                          fontSize: '0.95em',
                           fontWeight: isSelected ? 600 : 400,
                           transition: 'all 0.2s ease',
                           boxShadow: '0 2px 8px rgba(0,0,0,0.02)'
@@ -664,10 +683,10 @@ const QuizStandalone = () => {
                           name={key}
                           value={option.value}
                           checked={isSelected}
-                          onChange={() => handleSelection(key, option.value, step.multiple, step.autoAdvance)}
+                          onChange={() => {}} // Handled by label onClick
                           style={{ display: 'none' }}
                         />
-                        {option.label}
+                        <span style={{ flex: 1 }}>{option.label}</span>
                       </label>
                     );
                   })}
@@ -700,11 +719,11 @@ const QuizStandalone = () => {
           </div>
 
           {(!step.autoAdvance || step.multiple) && (
-            <div style={{ marginTop: '20px' }}>
+            <div style={{ paddingBottom: '20px' }}>
               <button
                 onClick={(e) => {
                   e.preventDefault();
-                  if (isSelectionMade()) handleNext();
+                  handleNext();
                 }}
                 style={{
                   width: '100%',
@@ -715,15 +734,25 @@ const QuizStandalone = () => {
                   borderRadius: '20px',
                   fontSize: '1.1em',
                   fontWeight: '700',
-                  cursor: isSelectionMade() ? 'pointer' : 'default',
+                  cursor: 'pointer',
                   transition: 'all 0.3s ease',
                   boxShadow: isSelectionMade() ? `0 12px 25px ${colors.rose}44` : 'none',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.05em'
+                  letterSpacing: '0.05em',
+                  animation: shake ? 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both' : 'none',
+                  transform: shake ? 'translate3d(0, 0, 0)' : 'none'
                 }}
               >
                 {step.buttonLabel || 'Continuar'}
               </button>
+              <style>{`
+                @keyframes shake {
+                  10%, 90% { transform: translate3d(-1px, 0, 0); }
+                  20%, 80% { transform: translate3d(2px, 0, 0); }
+                  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+                  40%, 60% { transform: translate3d(4px, 0, 0); }
+                }
+              `}</style>
             </div>
           )}
         </div>
