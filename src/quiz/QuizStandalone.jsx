@@ -27,19 +27,8 @@ const SCREENS = {
 };
 
 const QuizStandalone = () => {
+  // ── Todos os estados declarados primeiro (evita TDZ no bundle minificado) ──
   const [screen, setScreen] = useState(SCREENS.LANDING);
-
-  // ── Tracking: ViewContent na montagem ──
-  useEffect(() => { QuizTracker.viewContent(); }, []);
-
-  // ── Tracking: QuizStep a cada pergunta ──
-  const trackedSteps = useRef(new Set());
-  useEffect(() => {
-    if (screen === SCREENS.QUIZ && !trackedSteps.current.has(currentStep)) {
-      trackedSteps.current.add(currentStep);
-      QuizTracker.step(currentStep + 1);
-    }
-  }, [screen, currentStep]);
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState({});
   const [name, setName] = useState('');
@@ -57,6 +46,18 @@ const QuizStandalone = () => {
   const vslContainerRef = useRef(null);
   const progressInterval = useRef(null);
   const timeouts = useRef([]);
+  const trackedSteps = useRef(new Set());
+
+  // ── Tracking: ViewContent na montagem ──
+  useEffect(() => { QuizTracker.viewContent(); }, []);
+
+  // ── Tracking: QuizStep a cada pergunta ──
+  useEffect(() => {
+    if (screen === SCREENS.QUIZ && !trackedSteps.current.has(currentStep)) {
+      trackedSteps.current.add(currentStep);
+      QuizTracker.step(currentStep + 1);
+    }
+  }, [screen, currentStep]);
 
   useEffect(() => {
     if (screen === SCREENS.CAMERA) {
