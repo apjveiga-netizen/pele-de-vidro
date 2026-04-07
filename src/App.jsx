@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+// Version: 1.0.0-rollback (Force Redeploy to Stable)
 import { colors } from "./theme";
 
 // Import Screens
@@ -59,16 +60,11 @@ export default function App() {
   const [photos, setPhotos] = useState(null);
 
   useEffect(() => {
-    // Roteamento por Path (VSL/Analise/App)
-    if (window.location.pathname === "/analise" || window.location.pathname === "/vsl") {
+    // Roteamento por Path (VSL/Analise)
+    if (window.location.pathname === "/analise") {
       setScreen(SCREENS.QUIZ_STANDALONE);
       setIsCheckingSession(false);
       return;
-    }
-
-    if (window.location.pathname === "/app") {
-      // Clear checking state to allow natural flow to Login/Dashboard
-      setIsCheckingSession(false);
     }
 
     // Check initial session
