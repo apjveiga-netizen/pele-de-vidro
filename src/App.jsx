@@ -61,15 +61,16 @@ export default function App() {
 
   useEffect(() => {
     // Roteamento por Path Absoluto (/app, /login, /analise)
-    const path = window.location.pathname;
+    const path = window.location.pathname.toLowerCase().replace(/\/$/, "");
+    
     if (path === "/analise" || path === "/vsl") {
       setScreen(SCREENS.QUIZ_STANDALONE);
       setIsCheckingSession(false);
       return;
     }
 
-    if (path === "/app" || path === "/login" || path === "/dashboard") {
-      // Prioritize Login if no session is set yet
+    if (path === "/app" || path === "/login" || path === "/dashboard" || path === "/pele") {
+      // Forçar tela de login se estiver no caminho do app
       setScreen(SCREENS.LOGIN);
       setIsCheckingSession(false);
     }
