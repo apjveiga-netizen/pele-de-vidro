@@ -64,8 +64,12 @@ createRoot(document.getElementById('root')).render(
         <Routes>
           <Route path="/" element={<QuizStandalone />} />
           <Route path="/analise" element={<QuizStandalone />} />
+          <Route path="/vsl" element={<QuizStandalone />} />
           <Route path="/vendas" element={<SalesPage />} />
           <Route path="/app" element={<App />} />
+          <Route path="/login" element={<App />} />
+          <Route path="/dashboard" element={<App />} />
+          <Route path="/pele" element={<App />} />
           <Route path="*" element={<QuizStandalone />} />
         </Routes>
       </BrowserRouter>
