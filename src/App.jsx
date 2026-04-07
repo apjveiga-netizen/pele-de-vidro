@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-// Version: 1.0.0-rollback (Force Redeploy to Stable)
+// Version: 1.0.1-STABLE (Final Connectivity Fix - 2026-04-07)
 import { colors } from "./theme";
 
 // Import Screens
@@ -60,14 +60,16 @@ export default function App() {
   const [photos, setPhotos] = useState(null);
 
   useEffect(() => {
-    // Roteamento por Path (VSL/Analise/App)
-    if (window.location.pathname === "/analise" || window.location.pathname === "/vsl") {
+    // Roteamento por Path Absoluto (/app, /login, /analise)
+    const path = window.location.pathname;
+    if (path === "/analise" || path === "/vsl") {
       setScreen(SCREENS.QUIZ_STANDALONE);
       setIsCheckingSession(false);
       return;
     }
 
-    if (window.location.pathname === "/app" || window.location.pathname === "/login") {
+    if (path === "/app" || path === "/login" || path === "/dashboard") {
+      // Prioritize Login if no session is set yet
       setScreen(SCREENS.LOGIN);
       setIsCheckingSession(false);
     }
