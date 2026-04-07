@@ -65,7 +65,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="/" element={<QuizStandalone />} />
           <Route path="/analise" element={<QuizStandalone />} />
           <Route path="/vendas" element={<SalesPage />} />
-          <Route path="/pele" element={<App />} />
+          <Route path="/app" element={<App />} />
           <Route path="*" element={<QuizStandalone />} />
         </Routes>
       </BrowserRouter>
