@@ -10,13 +10,6 @@ const products = [
     checkoutUrl: "https://www.mercadopago.com.br/checkout/v1/redirect?pref_id=3266402800-30352ce8-6286-457a-b620-3c8c0dfec0c0"
   },
   {
-    icon: "💇‍♀️",
-    title: "Corte e Estilo de Cabelo Ideal",
-    desc: "Sugestão de cortes que valorizam o formato do seu rosto, alongando ou suavizando os traços conforme sua estrutura facial, além de cores que combinam com o seu tom de pele!",
-    price: "R$ 47,00",
-    checkoutUrl: "https://www.mercadopago.com.br/checkout/v1/redirect?pref_id=3266402800-31d7c773-8f17-40f8-936c-84e5a46f3cae"
-  },
-  {
     icon: "🥗",
     title: "Alimentação Anti-Idade",
     desc: "Receitas com antioxidantes, colágeno natural e vitaminas específicas para a saúde da sua pele de dentro para fora. Nutrição e saúde a um clique!",

@@ -57,59 +57,62 @@ export default function App() {
   const [activeExerciseId, setActiveExerciseId] = useState(null);
   const [isCheckingSession, setIsCheckingSession] = useState(true);
   const [photos, setPhotos] = useState(null);
+  const [dataVersion, setDataVersion] = useState(0);
 
   // Track if initial path routing has been handled
   const [initialPathHandled, setInitialPathHandled] = useState(false);
 
+  // 1. Initial Path Routing (Only once on mount)
   useEffect(() => {
-    // 1. Initial Routing by Path (Only once)
-    if (!initialPathHandled) {
-      const path = window.location.pathname;
-      console.log("App: Initial path detection:", path);
+    const path = window.location.pathname;
+    console.log("App: Initial path detection:", path);
 
-      if (path === "/analise" || path === "/quiz") {
-        setScreen(SCREENS.QUIZ_STANDALONE);
-        setIsCheckingSession(false);
-      } else {
-        // Default to checking session for / or /app
-        setIsCheckingSession(true);
-      }
-      setInitialPathHandled(true);
-      return;
+    if (path === "/analise" || path === "/quiz") {
+      setScreen(SCREENS.QUIZ_STANDALONE);
+      setIsCheckingSession(false); // No session check needed for quiz
     }
+  }, []);
 
-    // 2. Authentication Flow
-    if (isCheckingSession) {
-      supabase.auth.getSession().then(({ data: { session } }) => {
-        if (session) {
-          setUser(session.user);
-          fetchProfile(session.user.id);
-          // If we are at root, go to dashboard
-          if (window.location.pathname === "/" || window.location.pathname === "/app") {
+  // 2. Authentication Flow & Listener (Only once on mount)
+  useEffect(() => {
+    let active = true;
+
+    // Check Initial Session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!active) return;
+      
+      if (session) {
+        setUser(session.user);
+        fetchProfile(session.user.id);
+        // Direct to dashboard if at root
+        const path = window.location.pathname;
+        if (path === "/" || path === "/app" || path === "/pele") {
+          setScreen(SCREENS.DASHBOARD);
+        }
+      } else {
+        // Local Session Fallback
+        const localSessionStr = localStorage.getItem("pele_de_vidro_session");
+        if (localSessionStr) {
+          try {
+            const ls = JSON.parse(localSessionStr);
+            setUser(ls);
+            fetchProfile(ls.id);
             setScreen(SCREENS.DASHBOARD);
-          }
-        } else {
-          const localSessionStr = localStorage.getItem("pele_de_vidro_session");
-          if (localSessionStr) {
-            try {
-              const ls = JSON.parse(localSessionStr);
-              setUser(ls);
-              fetchProfile(ls.id);
-              setScreen(SCREENS.DASHBOARD);
-            } catch(e) {
-              setScreen(SCREENS.LOGIN);
-            }
-          } else {
+          } catch(e) {
             setScreen(SCREENS.LOGIN);
           }
+        } else {
+          setScreen(SCREENS.LOGIN);
         }
-        setIsCheckingSession(false);
-      });
-    }
+      }
+      setIsCheckingSession(false);
+    });
 
-    // 3. Auth Listener
+    // Subscriptions
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       console.log("Supabase Auth Event:", event);
+      if (!active) return;
+
       if (event === 'SIGNED_OUT') {
         resetAllData();
         localStorage.removeItem("pele_de_vidro_session");
@@ -124,14 +127,16 @@ export default function App() {
         // Force protocol sync on fresh login
         syncProtocolWithDatabase(session.user.id, true);
         
-        if (screen === SCREENS.LOGIN || screen === SCREENS.SPLASH) {
-          setScreen(SCREENS.DASHBOARD);
-        }
+        // Only auto-navigate to Dashboard if coming from Login/Splash
+        setScreen(current => (current === SCREENS.LOGIN || current === SCREENS.SPLASH) ? SCREENS.DASHBOARD : current);
       }
     });
 
-    return () => subscription.unsubscribe();
-  }, [isCheckingSession, initialPathHandled]);
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
+  }, []);
 
   const fetchProfile = async (userId) => {
     const { data, error } = await supabase
@@ -171,10 +176,8 @@ export default function App() {
       console.log("App: Análise encontrada! Regenerando protocolo...");
       const restoredProtocol = generateProtocol(analysis.result_json);
       saveProtocol(restoredProtocol);
-      // Forçar atualização da UI se estiver no dashboard ou protocolo
-      if (screen === SCREENS.PROTOCOL || screen === SCREENS.DASHBOARD) {
-        window.location.reload(); // Simples e eficaz para garantir que o store recarregue
-      }
+      // Notificamos as telas de que os dados mudaram sem recarregar a página
+      setDataVersion(v => v + 1);
     } else {
       console.log("App: Nenhuma análise anterior encontrada para restauração.");
     }
@@ -245,10 +248,10 @@ export default function App() {
       case SCREENS.UPLOAD:      return <UploadScreen onNext={(data) => { setPhotos(data.photos); setScreen(SCREENS.SCANNING); }} />;
       case SCREENS.SCANNING:    return <ScanningScreen onNext={(aiResult) => navigateTo(SCREENS.RESULT, { aiResult })} userEmail={userEmail} credits={credits} useCredit={handleUseCredit} goToOffer={() => setScreen(SCREENS.OFFER)} userPhotos={photos} user={user} />;
       case SCREENS.RESULT:      return <ResultScreen onNext={() => setScreen(SCREENS.OFFER)} goToProtocol={() => setScreen(SCREENS.PROTOCOL)} aiData={screenData?.aiResult} />;
-      case SCREENS.PROTOCOL:    return <ProtocolScreen onExercise={goToExercise} onBack={() => setScreen(SCREENS.DASHBOARD)} credits={credits} onUseCredit={handleUseCredit} onBuyCredits={() => setScreen(SCREENS.OFFER)} user={user} />;
+      case SCREENS.PROTOCOL:    return <ProtocolScreen key={`prot-${dataVersion}`} onExercise={goToExercise} onBack={() => setScreen(SCREENS.DASHBOARD)} credits={credits} onUseCredit={handleUseCredit} onBuyCredits={() => setScreen(SCREENS.OFFER)} user={user} />;
       case SCREENS.OFFER:       return <OfferScreen onNext={() => setScreen(SCREENS.DASHBOARD)} credits={credits} userEmail={userEmail} />;
       case SCREENS.UPSELL:      return <UpsellScreen onDecline={() => setScreen(SCREENS.DASHBOARD)} />;
-      case SCREENS.DASHBOARD:   return <DashboardScreen credits={credits} userEmail={userEmail} onExercise={goToExercise} onNavigate={setScreen} screens={SCREENS} refreshCredits={refreshCredits} />;
+      case SCREENS.DASHBOARD:   return <DashboardScreen key={`dash-${dataVersion}`} credits={credits} userEmail={userEmail} onExercise={goToExercise} onNavigate={setScreen} screens={SCREENS} refreshCredits={refreshCredits} />;
       case SCREENS.EXERCISE:    return <ExerciseScreen exerciseId={activeExerciseId} onBack={() => setScreen(SCREENS.PROTOCOL)} />;
       case SCREENS.MANAGE_EXERCISES: return <ManageExercisesScreen onBack={() => setScreen(SCREENS.DASHBOARD)} />;
       case SCREENS.SCANS:       return <ScanHistoryScreen credits={credits} userEmail={userEmail} user={user} />;
