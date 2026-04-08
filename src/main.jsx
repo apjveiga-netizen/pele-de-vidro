@@ -62,11 +62,13 @@ createRoot(document.getElementById('root')).render(
     <ErrorBoundary>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<QuizStandalone />} />
+          <Route path="/" element={<App />} />
           <Route path="/analise" element={<QuizStandalone />} />
+          <Route path="/quiz" element={<QuizStandalone />} />
           <Route path="/vendas" element={<SalesPage />} />
+          <Route path="/app" element={<App />} />
           <Route path="/pele" element={<App />} />
-          <Route path="*" element={<QuizStandalone />} />
+          <Route path="*" element={<App />} />
         </Routes>
       </BrowserRouter>
     </ErrorBoundary>

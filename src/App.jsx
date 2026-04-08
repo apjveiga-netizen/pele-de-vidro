@@ -58,65 +58,80 @@ export default function App() {
   const [isCheckingSession, setIsCheckingSession] = useState(true);
   const [photos, setPhotos] = useState(null);
 
-  useEffect(() => {
-    // Roteamento por Path (V.9.0)
-    const path = window.location.pathname;
+  // Track if initial path routing has been handled
+  const [initialPathHandled, setInitialPathHandled] = useState(false);
 
-    if (path === "/app") {
-      // Forçar fluxo do Aplicativo
-      setIsCheckingSession(true); // Deixa o auth listener decidir
-    } else if (path === "/" || path === "/analise") {
-      // Forçar fluxo do Quiz/Venda
-      setScreen(SCREENS.QUIZ_STANDALONE);
-      setIsCheckingSession(false);
+  useEffect(() => {
+    // 1. Initial Routing by Path (Only once)
+    if (!initialPathHandled) {
+      const path = window.location.pathname;
+      console.log("App: Initial path detection:", path);
+
+      if (path === "/analise" || path === "/quiz") {
+        setScreen(SCREENS.QUIZ_STANDALONE);
+        setIsCheckingSession(false);
+      } else {
+        // Default to checking session for / or /app
+        setIsCheckingSession(true);
+      }
+      setInitialPathHandled(true);
       return;
     }
 
-    // Check initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        setUser(session.user);
-        fetchProfile(session.user.id);
-      } else {
-        const localSessionStr = localStorage.getItem("pele_de_vidro_session");
-        if (localSessionStr) {
-          try {
-            const ls = JSON.parse(localSessionStr);
-            setUser(ls);
-            fetchProfile(ls.id);
-            if (window.location.pathname !== "/analise") {
-               setScreen(SCREENS.DASHBOARD);
+    // 2. Authentication Flow
+    if (isCheckingSession) {
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session) {
+          setUser(session.user);
+          fetchProfile(session.user.id);
+          // If we are at root, go to dashboard
+          if (window.location.pathname === "/" || window.location.pathname === "/app") {
+            setScreen(SCREENS.DASHBOARD);
+          }
+        } else {
+          const localSessionStr = localStorage.getItem("pele_de_vidro_session");
+          if (localSessionStr) {
+            try {
+              const ls = JSON.parse(localSessionStr);
+              setUser(ls);
+              fetchProfile(ls.id);
+              setScreen(SCREENS.DASHBOARD);
+            } catch(e) {
+              setScreen(SCREENS.LOGIN);
             }
-          } catch(e) {}
+          } else {
+            setScreen(SCREENS.LOGIN);
+          }
         }
-      }
-      setIsCheckingSession(false);
-    });
+        setIsCheckingSession(false);
+      });
+    }
 
-    // Listen for changes
+    // 3. Auth Listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       console.log("Supabase Auth Event:", event);
       if (event === 'SIGNED_OUT') {
+        resetAllData();
         localStorage.removeItem("pele_de_vidro_session");
+        localStorage.removeItem("pele_de_vidro_email");
+        localStorage.removeItem("pdv_admin_bypass");
         setUser(null);
         setCredits(0);
         setScreen(SCREENS.LOGIN);
       } else if (session) {
         setUser(session.user);
         fetchProfile(session.user.id);
+        // Force protocol sync on fresh login
+        syncProtocolWithDatabase(session.user.id, true);
+        
         if (screen === SCREENS.LOGIN || screen === SCREENS.SPLASH) {
           setScreen(SCREENS.DASHBOARD);
         }
-      } else if (!isCheckingSession && !localStorage.getItem("pele_de_vidro_session")) {
-        // Only go to login if we are not checking, and there's no local bypass session
-        setUser(null);
-        setCredits(0);
-        setScreen(SCREENS.LOGIN);
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [isCheckingSession, screen]);
+  }, [isCheckingSession, initialPathHandled]);
 
   const fetchProfile = async (userId) => {
     const { data, error } = await supabase
@@ -138,9 +153,9 @@ export default function App() {
       }
   };
 
-  const syncProtocolWithDatabase = async (userId) => {
+  const syncProtocolWithDatabase = async (userId, force = false) => {
     const existing = getProtocol();
-    if (isValidProtocol(existing)) return; // Já tem um protocolo válido localmente
+    if (!force && isValidProtocol(existing)) return; // Já tem um protocolo válido localmente e não forçamos a atualização
 
     console.log("App: Protocolo local ausente ou inválido. Buscando restauração no Supabase...");
     
@@ -178,6 +193,7 @@ export default function App() {
     }
     setUser(userData);
     fetchProfile(userData.id);
+    syncProtocolWithDatabase(userData.id, true);
     setScreen(SCREENS.DASHBOARD);
   };
 
