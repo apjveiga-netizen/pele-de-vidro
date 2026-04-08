@@ -59,8 +59,14 @@ export default function App() {
   const [photos, setPhotos] = useState(null);
 
   useEffect(() => {
-    // Roteamento por Path (VSL/Analise)
-    if (window.location.pathname === "/analise") {
+    // Roteamento por Path (V.9.0)
+    const path = window.location.pathname;
+
+    if (path === "/app") {
+      // Forçar fluxo do Aplicativo
+      setIsCheckingSession(true); // Deixa o auth listener decidir
+    } else if (path === "/" || path === "/analise") {
+      // Forçar fluxo do Quiz/Venda
       setScreen(SCREENS.QUIZ_STANDALONE);
       setIsCheckingSession(false);
       return;
