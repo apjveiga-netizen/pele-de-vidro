@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-// Version: 1.0.1-STABLE (Final Connectivity Fix - 2026-04-07)
 import { colors } from "./theme";
 
 // Import Screens
@@ -51,7 +50,7 @@ import { saveProtocol, getProtocol, isValidProtocol } from "./data/store";
 import { generateProtocol } from "./data/protocolEngine";
 
 export default function App() {
-  const [screen, setScreen] = useState(SCREENS.QUIZ_STANDALONE); 
+  const [screen, setScreen] = useState(SCREENS.SPLASH); 
   const [credits, setCredits] = useState(0);
   const [userEmail, setUserEmail] = useState("");
   const [user, setUser] = useState(null);
@@ -60,19 +59,11 @@ export default function App() {
   const [photos, setPhotos] = useState(null);
 
   useEffect(() => {
-    // Roteamento por Path Absoluto (/app, /login, /analise)
-    const path = window.location.pathname.toLowerCase().replace(/\/$/, "");
-    
-    if (path === "/analise" || path === "/vsl") {
+    // Roteamento por Path (VSL/Analise)
+    if (window.location.pathname === "/analise") {
       setScreen(SCREENS.QUIZ_STANDALONE);
       setIsCheckingSession(false);
       return;
-    }
-
-    if (path === "/app" || path === "/login" || path === "/dashboard" || path === "/pele") {
-      // Forçar tela de login se estiver no caminho do app
-      setScreen(SCREENS.LOGIN);
-      setIsCheckingSession(false);
     }
 
     // Check initial session
@@ -80,6 +71,18 @@ export default function App() {
       if (session) {
         setUser(session.user);
         fetchProfile(session.user.id);
+      } else {
+        const localSessionStr = localStorage.getItem("pele_de_vidro_session");
+        if (localSessionStr) {
+          try {
+            const ls = JSON.parse(localSessionStr);
+            setUser(ls);
+            fetchProfile(ls.id);
+            if (window.location.pathname !== "/analise") {
+               setScreen(SCREENS.DASHBOARD);
+            }
+          } catch(e) {}
+        }
       }
       setIsCheckingSession(false);
     });
@@ -87,18 +90,19 @@ export default function App() {
     // Listen for changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       console.log("Supabase Auth Event:", event);
-      if (session) {
+      if (event === 'SIGNED_OUT') {
+        localStorage.removeItem("pele_de_vidro_session");
+        setUser(null);
+        setCredits(0);
+        setScreen(SCREENS.LOGIN);
+      } else if (session) {
         setUser(session.user);
         fetchProfile(session.user.id);
         if (screen === SCREENS.LOGIN || screen === SCREENS.SPLASH) {
           setScreen(SCREENS.DASHBOARD);
         }
-      } else if (event === 'SIGNED_OUT') {
-        setUser(null);
-        setCredits(0);
-        setScreen(SCREENS.LOGIN);
-      } else if (!isCheckingSession) {
-        // Only go to login if we are not checking and session is null
+      } else if (!isCheckingSession && !localStorage.getItem("pele_de_vidro_session")) {
+        // Only go to login if we are not checking, and there's no local bypass session
         setUser(null);
         setCredits(0);
         setScreen(SCREENS.LOGIN);
@@ -161,7 +165,14 @@ export default function App() {
   };
 
   const handleLogin = (userData) => {
-    // Supabase Listener handles the state update
+    // Fallback or override logic setting user locally when Supabase Auth is bypassed.
+    localStorage.setItem("pele_de_vidro_session", JSON.stringify(userData));
+    if (userData.email) {
+      localStorage.setItem("pele_de_vidro_email", userData.email.toLowerCase().trim());
+    }
+    setUser(userData);
+    fetchProfile(userData.id);
+    setScreen(SCREENS.DASHBOARD);
   };
 
   const handleUseCredit = async () => {
@@ -206,7 +217,7 @@ export default function App() {
 
   const renderScreen = () => {
     switch (screen) {
-      case SCREENS.SPLASH:      return <SplashScreen onFinish={() => user ? setScreen(SCREENS.DASHBOARD) : setScreen(SCREENS.LOGIN)} />;
+      case SCREENS.SPLASH:      return <SplashScreen onFinish={() => (user || localStorage.getItem("pele_de_vidro_session")) ? setScreen(SCREENS.DASHBOARD) : setScreen(SCREENS.LOGIN)} />;
       case SCREENS.LOGIN:       return <LoginScreen onLogin={handleLogin} />;
       case SCREENS.ONBOARDING:  return <OnboardingScreen onFinish={() => setScreen(SCREENS.UPLOAD)} />;
       case SCREENS.UPLOAD:      return <UploadScreen onNext={(data) => { setPhotos(data.photos); setScreen(SCREENS.SCANNING); }} />;

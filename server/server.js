@@ -257,14 +257,57 @@ app.post('/api/analyze-face', async (req, res) => {
 
 // ─── MERCADO PAGO ───────────────────────────────────────────────────
 
+// ─── CELETUS WEBHOOK (ROBUST) ────────────────────────────────────────
+
 app.post('/api/webhook', async (req, res) => {
   try {
-    console.log("Webhook received:", req.body);
-    // Real implementation: logic to update Supabase credits based on MP payment event
+    const payload = req.body;
+    console.log('[Webhook] Recebido payload:', JSON.stringify(payload, null, 2));
+
+    const { event, data } = payload;
+
+    // Capture email from multiple possible fields
+    const email = (
+      data?.customer?.email || 
+      data?.client?.email || 
+      payload?.customer?.email ||
+      data?.email
+    )?.toLowerCase()?.trim();
+
+    const orderStatus = data?.order?.status || data?.status;
+
+    // Identificar aprovação
+    if (event === 'compra_aprovada' || orderStatus === 'approved' || orderStatus === 'paid') {
+      if (!email) {
+        console.warn('[Webhook] Aviso: E-mail não localizado no payload');
+        return res.status(400).json({ error: 'Email missing' });
+      }
+
+      console.log(`[Webhook] Liberando acesso para: ${email}`);
+
+      const { data: profile, error } = await supabase
+        .from('profiles')
+        .upsert({ 
+          email: email, 
+          credits: 3, 
+          updated_at: new Date().toISOString() 
+        }, { 
+          onConflict: 'email' 
+        });
+
+      if (error) {
+        console.error('[Webhook] ERRO SUPABASE:', error.message);
+        return res.status(500).json({ error: 'DB Upsert failed', message: error.message });
+      }
+
+      console.log(`[Webhook] Sucesso! Acesso liberado para ${email}.`);
+      return res.status(200).json({ status: 'success', email });
+    }
+
     res.sendStatus(200);
-  } catch (error) {
-    console.error(error);
-    res.sendStatus(500);
+  } catch (err) {
+    console.error('[Webhook] Erro Exceção:', err.message);
+    res.status(500).json({ error: err.message });
   }
 });
 
