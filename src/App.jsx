@@ -46,16 +46,16 @@ import PhoneFrame from "./components/PhoneFrame";
 import BottomNav from "./components/BottomNav";
 
 import { supabase } from "./lib/supabase";
-import { saveProtocol, getProtocol, isValidProtocol } from "./data/store";
+import { saveProtocol, getProtocol, isValidProtocol, CURRENT_SCHEMA_VERSION } from "./data/store";
 import { generateProtocol } from "./data/protocolEngine";
 
 export default function App() {
-  const [screen, setScreen] = useState(SCREENS.SPLASH); 
+  const [screen, setScreen] = useState(SCREENS.DASHBOARD); 
   const [credits, setCredits] = useState(0);
   const [userEmail, setUserEmail] = useState("");
   const [user, setUser] = useState(null);
   const [activeExerciseId, setActiveExerciseId] = useState(null);
-  const [isCheckingSession, setIsCheckingSession] = useState(true);
+  const [isCheckingSession, setIsCheckingSession] = useState(false);
   const [photos, setPhotos] = useState(null);
   const [dataVersion, setDataVersion] = useState(0);
 
@@ -160,7 +160,17 @@ export default function App() {
 
   const syncProtocolWithDatabase = async (userId, force = false) => {
     const existing = getProtocol();
-    if (!force && isValidProtocol(existing)) return; // Já tem um protocolo válido localmente e não forçamos a atualização
+    
+    // --- CACHE INVALIDATION LOGIC (V.8.3) ---
+    const storedVersion = localStorage.getItem("pdv_schema_version");
+    const isOldVersion = storedVersion !== CURRENT_SCHEMA_VERSION;
+    
+    if (!force && isValidProtocol(existing) && !isOldVersion) return; 
+
+    if (isOldVersion) {
+      console.log("App: Versão de ativos antiga detectada (", storedVersion, "). Forçando regeneração...");
+      localStorage.setItem("pdv_schema_version", CURRENT_SCHEMA_VERSION);
+    }
 
     console.log("App: Protocolo local ausente ou inválido. Buscando restauração no Supabase...");
     

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { colors } from "../theme";
 import { getExerciseById, toggleExerciseDone, isExerciseDone, getProtocol } from "../data/store";
 import ZoneIcon from "../components/ZoneIcon";
+import VideoPlayer from "../components/VideoPlayer";
 
 export default function ExerciseScreen({ exerciseId, onBack }) {
   const [exercise, setExercise] = useState(null);
@@ -44,13 +45,21 @@ export default function ExerciseScreen({ exerciseId, onBack }) {
     return () => clearInterval(interval);
   }, [phase, rep]);
 
+  // Controle do Passo-a-passo (Cadência Contínua e Lenta)
   useEffect(() => {
-    if (phase !== "active" || !exercise?.videoSteps?.length) return;
-    const stepInterval = setInterval(() => {
-      setActiveVideoStep((s) => (s + 1) % exercise.videoSteps.length);
-    }, 3000);
-    return () => clearInterval(stepInterval);
-  }, [phase, exercise]);
+    if (!exercise?.videoSteps?.length || phase === "done" || phase === "ready") return;
+    
+    // Rotação contínua de 6s, independente das repetições/descanso
+    const totalSteps = exercise.videoSteps.length;
+    const intervalRef = setInterval(() => {
+      // Avança o passo apenas se NÃO estiver pausado
+      if (phase !== "paused") {
+        setActiveVideoStep((s) => (s + 1) % totalSteps);
+      }
+    }, 6000); 
+
+    return () => clearInterval(intervalRef);
+  }, [exercise?.id, phase === "done", phase === "ready"]); 
 
   const handleDone = () => {
     if (exercise && !isExerciseDone(exercise.id)) {
@@ -77,7 +86,19 @@ export default function ExerciseScreen({ exerciseId, onBack }) {
             VOLTAR
           </button>
 
-          {exercise.image ? (
+          {exercise.video ? (
+            <div style={{ marginBottom: "20px" }}>
+              <VideoPlayer src={exercise.video} poster={exercise.image} />
+              <div style={{ marginTop: "12px", textAlign: "center" }}>
+                <div style={{ color: colors.gold, fontSize: "10px", letterSpacing: "0.2em", marginBottom: "4px" }}>
+                  #{exercise.zone.toUpperCase()}
+                </div>
+                <div className="cormorant" style={{ fontSize: "24px", color: colors.cream, fontWeight: 300 }}>
+                  {exercise.name}
+                </div>
+              </div>
+            </div>
+          ) : exercise.image ? (
             <div style={{
               borderRadius: "16px", overflow: "hidden", marginBottom: "16px",
               height: "180px", position: "relative",

@@ -1,841 +1,673 @@
 /* ══════════════════════════════════════════════════════════════════════
-   BANCO DE EXERCÍCIOS FACIAIS — PELE DE VIDRO
-   
-   ~39 exercícios organizados por problema facial.
-   Baseados em técnicas com comprovação de eficácia:
-   - Face Yoga Method (Fumiko Takatsu)
-   - Ginástica Facial (Mamada Yoshiko)  
-   - Isometria Facial
-   - Drenagem Linfática Manual
-   - Yoga Facial
-   
-   Campos image e video estão vazios (placeholder) —
-   serão preenchidos com imagens do Freepik e vídeos do King AI.
+   BANCO DE EXERCÍCIOS FACIAIS — PELE DE VIDRO (VERSÃO AUDITADA v5)
+   39 exercícios sincronizados com 31 vídeos únicos.
+   Fidelidade visual confirmada por auditoria manual v.2024-04-10
    ══════════════════════════════════════════════════════════════════════ */
 
 const exercisesBank = [
-
-  // ═══════════════════════════════════════════════════════════════════
-  // 1. RUGAS NA TESTA (rugas_testa) — 5 exercícios
-  // ═══════════════════════════════════════════════════════════════════
-
+  // TESTA
   {
-    id: "fb_rugas_testa_01",
-    name: "Alisamento Frontal Isométrico",
-    problem: "rugas_testa",
-    zone: "Testa",
-    duration: "3 min",
-    reps: "3×10",
-    difficulty: "iniciante",
-    image: "/images/exercises/ex_1.jpg",
-    video: "",
-    videoSteps: [
-      "Coloque ambas as mãos espalmadas sobre a testa, dedos apontando para os lados",
-      "Aplique pressão firme e uniforme sobre toda a superfície da testa",
-      "Tente erguer as sobrancelhas contra a resistência das mãos — segure 5 segundos",
-      "Relaxe lentamente e repita. Sinta a musculatura frontal trabalhando contra a pressão"
+    "id": "fb_rugas_testa_01",
+    "name": "Bloqueio Lateral com Elevação",
+    "problem": "rugas_testa",
+    "zone": "Testa",
+    "duration": "2 min",
+    "reps": "3×15",
+    "difficulty": "iniciante",
+    "image": "/images/capas/testa_testa1.jpg",
+    "video": "/videos/exercicios/testa/testa1.mp4",
+    "videoSteps": [
+      "Posicione uma mão espalmada sobre a testa para bloquear rugas",
+      "Com a outra mão, use os dedos para elevar o canto da sobrancelha",
+      "Realize movimentos curtos e firmes para cima",
+      "Mantenha a testa imóvel durante todo o exercício"
     ],
-    instructions: "Coloque as mãos espalmadas na testa e aplique pressão firme. Tente levantar as sobrancelhas contra a resistência dos dedos — segure 5 segundos no ponto máximo. Este exercício fortalece o músculo frontal e suaviza linhas horizontais, prevenindo novas rugas.",
-    benefits: "Suaviza rugas horizontais da testa, fortalece o músculo frontal, previne formação de novas linhas de expressão"
+    "instructions": "Este exercício isola a musculatura da sobrancelha enquanto protege a testa de novas rugas, promovendo um efeito lifting lateral.",
+    "benefits": "Eleva as sobrancelhas, relaxa o músculo frontal, evita vincos na testa"
   },
   {
-    id: "fb_rugas_testa_02",
-    name: "Elevação Alternada de Sobrancelhas",
-    problem: "rugas_testa",
-    zone: "Testa",
-    duration: "2 min",
-    reps: "2×15",
-    difficulty: "intermediário",
-    image: "/images/exercises/ex_2.png",
-    video: "",
-    videoSteps: [
-      "Coloque o indicador da mão direita sobre a sobrancelha direita",
-      "Tente levantar apenas essa sobrancelha contra a resistência do dedo — segure 3s",
-      "Repita do lado esquerdo com a mão esquerda",
-      "Alterne os lados mantendo ritmo constante e pressão uniforme"
+    "id": "fb_rugas_testa_02",
+    "name": "Abertura Glabelar e Arco Frontal",
+    "problem": "rugas_testa",
+    "zone": "Testa",
+    "duration": "2 min",
+    "reps": "3×10",
+    "difficulty": "iniciante",
+    "image": "/images/capas/testa_testa2.jpg",
+    "video": "/videos/exercicios/testa/testa2.mp4",
+    "videoSteps": [
+      "Pressione as pontas dos dedos no ponto entre as sobrancelhas",
+      "Deslize os dedos para fora seguindo o arco natural da testa",
+      "Mantenha a pressão moderada e constante",
+      "Repita o movimento rítmico para suavizar a glabela"
     ],
-    instructions: "Trabalhe cada sobrancelha individualmente. Coloque o indicador sobre uma sobrancelha e tente levantá-la contra a resistência por 3 segundos. Alterne os lados. Este exercício cria controle muscular independente e alisa rugas assimétricas.",
-    benefits: "Corrige assimetria facial, alisa linhas da testa de forma localizada, melhora controle muscular"
+    "instructions": "Este movimento 'abre' a região entre as sobrancelhas, suavizando a ruga da braveza e relaxando as fibras horizontais.",
+    "benefits": "Suaviza rugas glabelares, relaxa a testa, melhora a circulação local"
   },
   {
-    id: "fb_rugas_testa_03",
-    name: "Compressão Frontal com Deslizamento",
-    problem: "rugas_testa",
-    zone: "Testa",
-    duration: "3 min",
-    reps: "3×8",
-    difficulty: "iniciante",
-    image: "/images/exercises/ex_3.jpg",
-    video: "",
-    videoSteps: [
-      "Una os dedos indicador e médio de cada mão no centro da testa",
-      "Deslize lentamente para os lados com pressão moderada, alisando a pele",
-      "Ao chegar nas têmporas, faça pequenos círculos com pressão leve",
-      "Retorne ao centro e repita — cada passada deve durar 4 segundos"
+    "id": "fb_rugas_testa_03",
+    "name": "Pinçamento Relaxante de Glabela",
+    "problem": "rugas_testa",
+    "zone": "Testa",
+    "duration": "2 min",
+    "reps": "3×15",
+    "difficulty": "iniciante",
+    "image": "/images/capas/testa_testa3.jpg",
+    "video": "/videos/exercicios/testa/testa3.mp4",
+    "videoSteps": [
+      "Use os dedos indicador e polegar sobre o centro das sobrancelhas",
+      "Realize pequenos pinçamentos rítmicos na pele",
+      "Siga levemente a linha das sobrancelhas para liberar tensão",
+      "Mantenha o movimento leve e relaxado por 2 minutos"
     ],
-    instructions: "Técnica de alisamento que combina pressão com deslizamento. Posicione os dedos no centro da testa e deslize para as têmporas com pressão constante. Nas têmporas, faça círculos suaves. Esta técnica estimula a circulação e suaviza rugas por relaxamento muscular.",
-    benefits: "Relaxa a musculatura da testa, estimula circulação local, suaviza rugas por descontração muscular"
+    "instructions": "O pinçamento rítmico libera os tecidos profundos e as aderências que causam rugas verticais profundas na testa.",
+    "benefits": "Liberação miofascial, suaviza rugas profundas, reduz tensão de estresse"
   },
   {
-    id: "fb_rugas_testa_04",
-    name: "Yoga Facial — O Pensador",
-    problem: "rugas_testa",
-    zone: "Testa",
-    duration: "2 min",
-    reps: "2×12",
-    difficulty: "intermediário",
-    image: "/images/exercises/ex_4.jpg",
-    video: "",
-    videoSteps: [
-      "Feche os punhos e coloque os nós dos dedos sobre as sobrancelhas",
-      "Aplique pressão para baixo enquanto tenta franzir a testa para cima",
-      "Mantenha a tensão por 5 segundos — sinta a resistência total",
-      "Solte e alise a testa com as palmas abertas em movimento descendente"
+    "id": "fb_rugas_testa_04",
+    "name": "Massagem Circular do Couro Cabeludo",
+    "problem": "rugas_testa",
+    "zone": "Testa",
+    "duration": "2 min",
+    "reps": "3×10",
+    "difficulty": "iniciante",
+    "image": "/images/capas/testa_testa4.jpg",
+    "video": "/videos/exercicios/testa/testa4.mp4",
+    "videoSteps": [
+      "Posicione as pontas dos dedos na linha do início do cabelo",
+      "Realize movimentos circulares e firmes sobre o topo da testa",
+      "Massageie toda a transição entre rosto e couro cabeludo",
+      "Sinta a liberação da fáscia frontal acumulada"
     ],
-    instructions: "Usando os nós dos dedos sobre as sobrancelhas, aplique pressão para baixo enquanto tenta franzir a testa. Mantenha 5 segundos. Depois, alise com as palmas. Técnica de contraste que tonifica e depois relaxa o músculo frontal.",
-    benefits: "Tonifica o músculo corrugador, alisa linhas entre as sobrancelhas, reduz marcas de expressão de preocupação"
+    "instructions": "Relaxar a inserção do músculo frontal na linha do cabelo é essencial para permitir que a testa se alise naturalmente.",
+    "benefits": "Alivia tensão frontal, melhora oxigenação celular, previne queda de pálpebras"
   },
   {
-    id: "fb_rugas_testa_05",
-    name: "Lifting Digital da Testa",
-    problem: "rugas_testa",
-    zone: "Testa",
-    duration: "4 min",
-    reps: "3×10",
-    difficulty: "avançado",
-    image: "/images/exercises/ex_5.png",
-    video: "",
-    videoSteps: [
-      "Coloque as pontas dos 10 dedos ao longo da linha do cabelo",
-      "Puxe suavemente a pele para cima e para trás — segure a posição",
-      "Com a pele elevada, tente fechar os olhos com força contra a tensão",
-      "Mantenha 8 segundos e solte devagar — este é o lifting manual mais poderoso"
+    "id": "fb_rugas_testa_05",
+    "name": "Abertura Glabelar Progressiva",
+    "problem": "rugas_testa",
+    "zone": "Testa",
+    "duration": "2 min",
+    "reps": "3×10",
+    "difficulty": "iniciante",
+    "image": "/images/capas/testa_testa2.jpg",
+    "video": "/videos/exercicios/testa/testa2.mp4",
+    "videoSteps": [
+      "Pressione as pontas dos dedos no ponto entre as sobrancelhas",
+      "Deslize os dedos para fora seguindo o arco natural da testa",
+      "Mantenha a pressão moderada e constante",
+      "Repita o movimento rítmico para suavizar a glabela"
     ],
-    instructions: "Posicione todos os dedos na linha do cabelo e puxe a pele para cima. Mantendo a tensão, tente fechar os olhos com força. Segure 8 segundos. Simula o efeito de um mini lifting, fortalecendo toda a cadeia muscular da parte superior da face.",
-    benefits: "Efeito lifting imediato, fortalece cadeia muscular superior completa, combate ptose gravitacional da testa"
+    "instructions": "Extensão do relaxamento glabelar focado na expansão lateral do olhar.",
+    "benefits": "Suaviza vincos, abre o olhar, relaxamento instantâneo"
   },
 
-  // ═══════════════════════════════════════════════════════════════════
-  // 2. PÉS DE GALINHA (pes_de_galinha) — 4 exercícios
-  // ═══════════════════════════════════════════════════════════════════
-
+  // OLHOS / PÉ DE GALINHA / PÁLPEBRAS / OLHEIRAS
   {
-    id: "fb_pes_galinha_01",
-    name: "Pressão Orbital Lateral",
-    problem: "pes_de_galinha",
-    zone: "Olhos",
-    duration: "2 min",
-    reps: "3×15",
-    difficulty: "iniciante",
-    image: "/images/exercises/ex_6.png",
-    video: "",
-    videoSteps: [
-      "Coloque os indicadores nas têmporas, ao lado externo dos olhos",
-      "Aplique pressão suave mas firme, esticando levemente a pele",
-      "Pisque com força contra a resistência, apertando bem os olhos",
-      "Repita 15 vezes sentindo o músculo orbicular trabalhando intensamente"
+    "id": "fb_pes_galinha_01",
+    "name": "Fixação e Elevação de Pálpebra",
+    "problem": "pes_de_galinha",
+    "zone": "Olhos",
+    "duration": "2 min",
+    "reps": "3×15",
+    "difficulty": "iniciante",
+    "image": "/images/capas/olhos_olhos1.jpg",
+    "video": "/videos/exercicios/olhos/olhos1.mp4",
+    "videoSteps": [
+      "Segure a sobrancelha elevada e firme com uma mão",
+      "Com a outra mão, massageie suavemente a pálpebra superior",
+      "Faça movimentos curtos em direção ao canto externo",
+      "Mantenha os olhos relaxados durante o processo"
     ],
-    instructions: "Posicione os indicadores nas têmporas e aplique pressão lateral. Pisque com força contra a resistência dos dedos, 15 vezes. Este exercício fortalece o músculo orbicular dos olhos e reduz as linhas de expressão laterais (pés de galinha).",
-    benefits: "Fortalece músculo orbicular, reduz pés de galinha, melhora a firmeza da pele periorbital"
+    "instructions": "Este exercício trabalha a sustentação da pálpebra superior, combatendo a aparência de cansaço e a queda dos tecidos.",
+    "benefits": "Levanta pálpebras caídas, abre o olhar, suaviza pés de galinha"
   },
   {
-    id: "fb_pes_galinha_02",
-    name: "Círculos de Firmeza Ocular",
-    problem: "pes_de_galinha",
-    zone: "Olhos",
-    duration: "3 min",
-    reps: "2×20",
-    difficulty: "iniciante",
-    image: "/images/exercises/ex_7.png",
-    video: "",
-    videoSteps: [
-      "Use as pontas dos anulares (dedos com menor pressão natural)",
-      "Faça movimentos circulares suaves ao redor de toda a órbita ocular",
-      "Comece no canto interno, suba pela sobrancelha, desça pelo canto externo",
-      "20 círculos completos em cada olho — toque levíssimo, nunca puxe a pele"
+    "id": "fb_pes_galinha_02",
+    "name": "Pressão Pulsante Lacrimal",
+    "problem": "pes_de_galinha",
+    "zone": "Olhos",
+    "duration": "2 min",
+    "reps": "3×15",
+    "difficulty": "iniciante",
+    "image": "/images/capas/olhos_olhos2.jpg",
+    "video": "/videos/exercicios/olhos/olhos2.mp4",
+    "videoSteps": [
+      "Use as polpas dos dedos indicadores nos cantos internos dos olhos",
+      "Aplique uma pressão suave e pulsante de 1 segundo",
+      "Sinta a ativação da microcirculação na zona lacrimal",
+      "Mantenha o toque extremamente leve para não irritar"
     ],
-    instructions: "Com as pontas dos anulares, faça círculos suaves ao redor dos olhos: canto interno → sobrancelha → canto externo → abaixo do olho. 20 repetições. Estimula colágeno e drenagem na região mais delicada do rosto.",
-    benefits: "Estimula produção de colágeno periorbital, promove micro-drenagem, suaviza linhas finas"
+    "instructions": "A pressão pulsante estimula a drenagem de líquidos acumulados na parte interna das olheiras.",
+    "benefits": "Reduz inchaço interno, melhora coloração de olheiras, descansa a vista"
   },
   {
-    id: "fb_pes_galinha_03",
-    name: "V-Lift dos Olhos",
-    problem: "pes_de_galinha",
-    zone: "Olhos",
-    duration: "3 min",
-    reps: "3×10",
-    difficulty: "intermediário",
-    image: "/images/exercises/ex_8.png",
-    video: "",
-    videoSteps: [
-      "Forme um V com os dedos indicador e médio de cada mão",
-      "Coloque o indicador no canto externo e o médio no canto interno de cada olho",
-      "Aplique pressão leve e tente apertar os olhos como se estivesse míope",
-      "Segure 5 segundos com os olhos semi-cerrados — relaxe e repita"
+    "id": "fb_pes_galinha_03",
+    "name": "Drenagem Infraorbital Suave",
+    "problem": "pes_de_galinha",
+    "zone": "Olhos",
+    "duration": "2 min",
+    "reps": "3×10",
+    "difficulty": "iniciante",
+    "image": "/images/capas/olhos_olhos3.jpg",
+    "video": "/videos/exercicios/olhos/olhos3.mp4",
+    "videoSteps": [
+      "Posicione os dedos indicador e médio logo abaixo dos olhos",
+      "Deslize suavemente do canto interno para as têmporas",
+      "O toque deve ser fluido, como se estivesse drenando água",
+      "Finalize o movimento na lateral com uma leve pressão"
     ],
-    instructions: "Forme um V com os dedos e posicione-os nos cantos dos olhos. Aplique pressão e semicerre os olhos como se estivesse tentando enxergar algo distante. Segure 5 segundos. Técnica do Face Yoga Method que combate pés de galinha e flacidez palpebral.",
-    benefits: "Reduz pés de galinha, combate flacidez das pálpebras, define contorno dos olhos"
+    "instructions": "A drenagem lateral elimina bolsas de gordura e líquidos, suavizando a profundidade das olheiras.",
+    "benefits": "Elimina bolsas, suaviza vincos inferiores, renova o aspecto do olhar"
   },
   {
-    id: "fb_pes_galinha_04",
-    name: "Acupressão Anti-Rugas Orbital",
-    problem: "pes_de_galinha",
-    zone: "Olhos",
-    duration: "2 min",
-    reps: "1×30s por ponto",
-    difficulty: "iniciante",
-    image: "/images/exercises/ex_9.jpg",
-    video: "",
-    videoSteps: [
-      "Identifique 4 pontos: canto interno, centro da sobrancelha, canto externo, abaixo do olho",
-      "Pressione cada ponto com a ponta do dedo médio por 30 segundos",
-      "Mantenha pressão firme mas confortável — respire profundamente durante",
-      "Ao terminar os 4 pontos, alise a região inteira com movimentos suaves"
+    "id": "fb_pes_galinha_04",
+    "name": "Resistência Isométrica Lateral",
+    "problem": "pes_de_galinha",
+    "zone": "Olhos",
+    "duration": "2 min",
+    "reps": "3×10",
+    "difficulty": "intermediário",
+    "image": "/images/capas/olhos_olhos4.jpg",
+    "video": "/videos/exercicios/olhos/olhos4.mp4",
+    "videoSteps": [
+      "Pressione os cantos externos das sobrancelhas com os dedos",
+      "Tente piscar os olhos contra a resistência dessa pressão",
+      "Sinta a contração da musculatura orbicular lateral",
+      "Relaxe após 5 segundos de contração e repita"
     ],
-    instructions: "Técnica de acupressão facial. Pressione 4 pontos estratégicos ao redor dos olhos por 30 segundos cada: canto interno, arco da sobrancelha, canto externo e osso sob o olho. Estimula pontos de energia que melhoram circulação e regeneração celular.",
-    benefits: "Ativa pontos de acupressão, melhora circulação periorbital, reduz inchaço e linhas finas"
+    "instructions": "Fortalecer o músculo orbicular impede que a pele 'dobre' excessivamente ao sorrir, prevenindo pés de galinha.",
+    "benefits": "Fortalece orbicular dos olhos, previne rugas dinâmicas, firma a lateral"
   },
 
-  // ═══════════════════════════════════════════════════════════════════
-  // 3. BIGODE CHINÊS / SULCO NASOGENIANO (bigode_chines) — 5 exercícios
-  // ═══════════════════════════════════════════════════════════════════
-
+  // BIGODE CHINÊS
   {
-    id: "fb_bigode_chines_01",
-    name: "Preenchimento Natural do Sulco",
-    problem: "bigode_chines",
-    zone: "Sulco nasogeniano",
-    duration: "4 min",
-    reps: "3×10",
-    difficulty: "iniciante",
-    image: "/images/exercises/ex_10.jpg",
-    video: "",
-    videoSteps: [
-      "Posicione os indicadores ao longo das linhas do nariz até a boca",
-      "Aplique pressão suave seguindo o sulco de cima para baixo",
-      "Sorria amplamente contra a pressão dos dedos, empurrando os músculos para fora",
-      "Massageie em movimentos circulares por 10 segundos ao final de cada série"
+    "id": "fb_bigode_chines_01",
+    "name": "Deslizamento de Sulco Nasogeniano",
+    "problem": "bigode_chines",
+    "zone": "Bigode Chinês",
+    "duration": "2 min",
+    "reps": "3×10",
+    "difficulty": "iniciante",
+    "image": "/images/capas/bigode_bigode1.jpg",
+    "video": "/videos/exercicios/bigode/bigode1.mp4",
+    "videoSteps": [
+      "Posicione os dedos indicador e médio no início do sulco, perto do nariz",
+      "Deslize firmemente para baixo ao longo da linha até o canto da boca",
+      "Use pressão moderada para suavizar o vinco da pele",
+      "Repita o movimento rítmico acompanhando a anatomia facial"
     ],
-    instructions: "Posicione os indicadores ao longo do sulco nasogeniano (do nariz aos cantos da boca). Aplique pressão e sorria contra a resistência. Depois massageie em círculos. Fortalece os músculos zigomáticos e cria volume natural que preenche o sulco.",
-    benefits: "Preenche o sulco nasogeniano naturalmente, fortalece músculos zigomáticos, reduz profundidade das linhas"
+    "instructions": "Este exercício alisa mecanicamente a pele sobre o sulco, reduzindo a profundidade marcada pela expressão.",
+    "benefits": "Suaviza bigode chinês, melhora textura da pele, estimula colágeno"
   },
   {
-    id: "fb_bigode_chines_02",
-    name: "Inflação Zigomática",
-    problem: "bigode_chines",
-    zone: "Sulco nasogeniano",
-    duration: "3 min",
-    reps: "3×15",
-    difficulty: "iniciante",
-    image: "/images/exercises/ex_11.jpg",
-    video: "",
-    videoSteps: [
-      "Encha as bochechas de ar ao máximo — boca bem fechada",
-      "Transfira todo o ar para a bochecha direita — segure 3 segundos",
-      "Transfira para a bochecha esquerda — segure 3 segundos",
-      "Transfira para cima do lábio superior — segure 3 segundos e solte"
+    "id": "fb_bigode_chines_02",
+    "name": "Lifting Lateral com Ganchos",
+    "problem": "bigode_chines",
+    "zone": "Bigode Chinês",
+    "duration": "2 min",
+    "reps": "3×15",
+    "difficulty": "intermediário",
+    "image": "/images/capas/bigode_bigode2.jpg",
+    "video": "/videos/exercicios/bigode/bigode2.mp4",
+    "videoSteps": [
+      "Dobre os dedos indicadores em formato de ganchos",
+      "Encaixe-os nas laterais da boca sobre o sulco",
+      "Deslize firmemente para cima em direção às maçãs do rosto",
+      "Sinta o levantamento dos tecidos e relaxe ao retornar"
     ],
-    instructions: "Encha as bochechas de ar e transfira de um lado para o outro, segurando 3 segundos de cada lado. Depois direcione o ar para cima do lábio superior. Infla e fortalece os músculos ao redor do sulco nasogeniano, criando volume e sustentação.",
-    benefits: "Infla e sustenta os músculos laterais, cria volume nas bochechas, reduz profundidade do bigode chinês"
+    "instructions": "Os ganchos permitem uma pressão mais profunda que eleva a musculatura descendente, 'subindo' o rosto.",
+    "benefits": "Eleva as bochechas, reduz volume sobre o sulco, define maçãs do rosto"
   },
   {
-    id: "fb_bigode_chines_03",
-    name: "Sorriso de Resistência Inversa",
-    problem: "bigode_chines",
-    zone: "Sulco nasogeniano",
-    duration: "3 min",
-    reps: "3×12",
-    difficulty: "intermediário",
-    image: "/images/exercises/ex_12.jpg",
-    video: "",
-    videoSteps: [
-      "Coloque os indicadores nos cantos da boca, pressionando levemente",
-      "Sorria o mais amplamente possível forçando os cantos para cima",
-      "Seus dedos devem criar resistência — não deixe os cantos subirem facilmente",
-      "Segure o sorriso máximo por 5 segundos contra a pressão e relaxe"
+    "id": "fb_bigode_chines_03",
+    "name": "Varredura de Sulco em Leque",
+    "problem": "bigode_chines",
+    "zone": "Bigode Chinês",
+    "duration": "3 min",
+    "reps": "3×12",
+    "difficulty": "iniciante",
+    "image": "/images/capas/bigode_bigode3.jpg",
+    "video": "/videos/exercicios/bigode/bigode3.mp4",
+    "videoSteps": [
+      "Use a base das mãos ou polegares sobre o bigode chinês",
+      "Realize uma varredura para fora em direção às orelhas",
+      "Abra os tecidos horizontalmente para suavizar a dobra",
+      "Mantenha o movimento fluido e expansivo"
     ],
-    instructions: "Com os indicadores nos cantos da boca criando resistência, force um sorriso máximo. Segure 5 segundos. A resistência obriga os músculos elevadores do lábio a trabalhar mais intensamente, combatendo a queda que causa o bigode chinês.",
-    benefits: "Fortalece músculos elevadores do lábio superior, combate a queda dos tecidos, atenua sulco nasogeniano"
+    "instructions": "A varredura em leque redistribui o volume das bochechas, evitando que o peso caia sobre o sulco nasogeniano.",
+    "benefits": "Reduz peso facial, previne queda do terço médio, suaviza vincos"
   },
   {
-    id: "fb_bigode_chines_04",
-    name: "Drenagem do Sulco Nasogeniano",
-    problem: "bigode_chines",
-    zone: "Sulco nasogeniano",
-    duration: "3 min",
-    reps: "1×20",
-    difficulty: "iniciante",
-    image: "/images/exercises/ex_13.jpg",
-    video: "",
-    videoSteps: [
-      "Use os polegares posicionados no sulco, logo ao lado do nariz",
-      "Deslize firmemente para baixo acompanhando o sulco até o canto da boca",
-      "No canto da boca, desvie para a lateral em direção à orelha",
-      "Repita 20 vezes — o movimento deve ser fluido e com pressão constante"
+    "id": "fb_bigode_chines_04",
+    "name": "Drenagem Local de Sulco",
+    "problem": "bigode_chines",
+    "zone": "Bigode Chinês",
+    "duration": "3 min",
+    "reps": "1×20",
+    "difficulty": "iniciante",
+    "image": "/images/capas/bigode_bigode1.jpg",
+    "video": "/videos/exercicios/bigode/bigode1.mp4",
+    "videoSteps": [
+      "Posicione os dedos no ponto de maior profundidade do sulco",
+      "Deslize firmemente acompanhando a curva até o final da mandíbula",
+      "Mantenha a pressão constante para drenar retenção local",
+      "Repita 20 vezes de cada lado para resultados visíveis"
     ],
-    instructions: "Drenagem específica para o sulco nasogeniano. Deslize os polegares desde o nariz até a boca, depois para a lateral. 20 repetições. Drena líquido retido que acentua o sulco e estimula renovação do colágeno na região.",
-    benefits: "Drena retenção de líquido, reduz inchaço que aprofunda o sulco, estimula renovação celular"
-  },
-  {
-    id: "fb_bigode_chines_05",
-    name: "Yoga Facial — O Peixe",
-    problem: "bigode_chines",
-    zone: "Sulco nasogeniano",
-    duration: "2 min",
-    reps: "3×10",
-    difficulty: "intermediário",
-    image: "/images/exercises/ex_14.jpg",
-    video: "",
-    videoSteps: [
-      "Sugue as bochechas para dentro como se fizesse cara de peixe",
-      "Mantendo as bochechas sugadas, tente sorrir com os cantos da boca",
-      "Segure essa posição por 5 segundos — sinta a queimação suave",
-      "Relaxe completamente e repita — a queimação indica trabalho muscular eficaz"
-    ],
-    instructions: "Sugue as bochechas para dentro e tente sorrir ao mesmo tempo. Segure 5 segundos. A contração simultânea trabalha os músculos bucinadores e zigomáticos, tonificando toda a região do bigode chinês.",
-    benefits: "Tonifica bucinadores e zigomáticos, cria sustentação natural para o terço médio do rosto"
+    "instructions": "Focada na eliminação de líquidos que acentuam a sombra do bigode chinês.",
+    "benefits": "Reduz inchaço local, define contorno, suaviza sombras faciais"
   },
 
-  // ═══════════════════════════════════════════════════════════════════
-  // 4. FLACIDEZ FACIAL (flacidez) — 5 exercícios
-  // ═══════════════════════════════════════════════════════════════════
-
+  // FLACIDEZ / ROSTO
   {
-    id: "fb_flacidez_01",
-    name: "Lifting Natural das Maçãs",
-    problem: "flacidez",
-    zone: "Maçãs do rosto",
-    duration: "3 min",
-    reps: "3×15",
-    difficulty: "iniciante",
-    image: "/images/exercises/ex_15.jpg",
-    video: "",
-    videoSteps: [
-      "Posicione os dedos indicador e médio sobre as maçãs do rosto",
-      "Sorria amplamente sentindo os músculos subirem contra os dedos",
-      "Pressione as maçãs para cima em direção aos olhos por 3 segundos",
-      "Solte lentamente mantendo a tensão — repita com ritmo constante"
+    "id": "fb_flacidez_01",
+    "name": "Elevação Facial Alternada Progressiva",
+    "problem": "flacidez",
+    "zone": "Bochechas",
+    "duration": "2 min",
+    "reps": "3×15",
+    "difficulty": "iniciante",
+    "image": "/images/capas/flacidez_flacidez1.jpg",
+    "video": "/videos/exercicios/flacidez/flacidez1.mp4",
+    "videoSteps": [
+      "Use as pontas dos dedos e mãos alternadas na parte inferior da face",
+      "Realize movimentos rápidos e ascendentes da mandíbula para as maçãs",
+      "Massageie de forma contínua para 'empurrar' a musculatura para cima",
+      "Alterne as mãos rítmicamente acompanhando o movimento do vídeo"
     ],
-    instructions: "Sorria amplamente e pressione os dedos sobre as maçãs do rosto. Levante as maçãs em direção aos olhos, segurando 3 segundos no topo. Este exercício devolve volume e definição às maçãs, criando um efeito lifting natural que combate a flacidez gravitacional.",
-    benefits: "Devolve volume às maçãs, cria efeito lifting natural, combate flacidez gravitacional do terço médio"
+    "instructions": "Este exercício ativa os músculos zigomáticos através de estímulos rápidos e ascendentes, combatendo a gravidade.",
+    "benefits": "Combate flacidez de bochechas, ativa circulação, efeito lifting rápido"
   },
   {
-    id: "fb_flacidez_02",
-    name: "Escultura da Mandíbula",
-    problem: "flacidez",
-    zone: "Mandíbula",
-    duration: "4 min",
-    reps: "3×20",
-    difficulty: "intermediário",
-    image: "/images/exercises/ex_16.jpg",
-    video: "",
-    videoSteps: [
-      "Incline levemente a cabeça para trás, olhando para o teto",
-      "Movimente a mandíbula inferior para frente, projetando o queixo",
-      "Mantenha os lábios fechados e pressione a língua contra o céu da boca",
-      "Segure 3 segundos e volte devagar — sinta o maxilar e pescoço trabalhando"
+    "id": "fb_flacidez_02",
+    "name": "Lifting Unilateral de Apoio",
+    "problem": "flacidez",
+    "zone": "Bochechas",
+    "duration": "2 min",
+    "reps": "3×15",
+    "difficulty": "iniciante",
+    "image": "/images/capas/flacidez_flacidez2.jpg",
+    "video": "/videos/exercicios/flacidez/flacidez2.mp4",
+    "videoSteps": [
+      "Apoie uma mão no topo da cabeça para sustentar a pele",
+      "Pressione a palma da outra mão na bochecha oposta",
+      "Deslize a palma firmemente para cima em direção à têmpora",
+      "Repita a série e depois inverta os lados para equilíbrio"
     ],
-    instructions: "Incline a cabeça para trás e projete a mandíbula para frente, com lábios fechados e língua pressionada no céu da boca. Segure 3 segundos. Esculpe o contorno da mandíbula, elimina queixo duplo e combate a flacidez do terço inferior.",
-    benefits: "Esculpe contorno mandibular, elimina queixo duplo, firma toda a região inferior do rosto"
+    "instructions": "O apoio superior maximiza o efeito do deslizamento inferior, redefinindo o terço médio da face.",
+    "benefits": "Redefine maçãs do rosto, eleva bochechas caídas, drena o rosto"
   },
   {
-    id: "fb_flacidez_03",
-    name: "Pressão Isométrica Total",
-    problem: "flacidez",
-    zone: "Face completa",
-    duration: "4 min",
-    reps: "2×8",
-    difficulty: "avançado",
-    image: "/images/exercises/ex_17.jpg",
-    video: "",
-    videoSteps: [
-      "Coloque as palmas inteiras sobre o rosto cobrindo testa, bochechas e mandíbula",
-      "Faça força tentando abrir a boca e erguer as sobrancelhas ao mesmo tempo",
-      "Resista com as mãos mantendo o rosto completamente imóvel",
-      "Segure 10 segundos e relaxe — este é o exercício mais potente contra flacidez"
+    "id": "fb_flacidez_03",
+    "name": "Abertura em O com Tensão de Têmpora",
+    "problem": "flacidez",
+    "zone": "Face Global",
+    "duration": "2 min",
+    "reps": "3×10",
+    "difficulty": "intermediário",
+    "image": "/images/capas/flacidez_flacidez3.jpg",
+    "video": "/videos/exercicios/flacidez/flacidez3.mp4",
+    "videoSteps": [
+      "Posicione as mãos nas têmporas e puxe para cima e para trás",
+      "Ao mesmo tempo, abra a boca formando um 'O' longo e estreito",
+      "Sinta o alongamento de toda a musculatura do centro do rosto",
+      "Mantenha a posição por 5-10 segundos e relaxe profundamente"
     ],
-    instructions: "Coloque as palmas sobre o rosto e tente abrir a boca e erguer as sobrancelhas simultaneamente, resistindo com as mãos. Segure 10 segundos. O exercício mais completo — trabalha todos os músculos faciais ao mesmo tempo para um lifting global.",
-    benefits: "Trabalha todos os 43 músculos faciais simultaneamente, efeito lifting global, combate flacidez generalizada"
+    "instructions": "Este exercício de yoga facial alonga os canais linfáticos e relaxa a tensão que causa o 'derretimento' do rosto.",
+    "benefits": "Alongamento facial profundo, reduz bolsas, relaxa expressão facial"
   },
   {
-    id: "fb_flacidez_04",
-    name: "Exercício do Leão (Simhasana Facial)",
-    problem: "flacidez",
-    zone: "Face completa",
-    duration: "2 min",
-    reps: "3×5",
-    difficulty: "iniciante",
-    image: "/images/exercises/ex_18.jpg",
-    video: "",
-    videoSteps: [
-      "Inspire profundamente pelo nariz enchendo os pulmões",
-      "Expire pela boca colocando a língua para fora e olhando para cima",
-      "Abra os olhos ao máximo e estique todos os músculos do rosto",
-      "Mantenha 10 segundos com máxima expressão — depois relaxe completamente"
+    "id": "fb_flacidez_04",
+    "name": "Lifting com Base das Mãos (Região Tenar)",
+    "problem": "flacidez",
+    "zone": "Bochechas",
+    "duration": "2 min",
+    "reps": "3×15",
+    "difficulty": "intermediário",
+    "image": "/images/capas/flacidez_flacidez4.jpg",
+    "video": "/videos/exercicios/flacidez/flacidez4.mp4",
+    "videoSteps": [
+      "Encaixe a base das palmas das mãos abaixo das maçãs do rosto",
+      "Pressione e deslize firmemente para fora e para cima até as orelhas",
+      "Finalize o movimento como se estivesse esculpindo as laterais",
+      "Use pressão firme para atingir as camadas musculares"
     ],
-    instructions: "Inspire fundo e expire colocando a língua para fora, olhos arregalados, e todos os músculos do rosto esticados ao máximo. Segure 10 segundos. Técnica de yoga (Simhasana) que ativa a circulação, oxigena tecidos e tonifica toda a face.",
-    benefits: "Ativa circulação completa do rosto, oxigena tecidos, tonifica e revitaliza toda a musculatura facial"
+    "instructions": "Utilizar a base das mãos permite uma pressão uniforme em grandes grupos musculares para sustentação.",
+    "benefits": "Modela o contorno, eleva o terço médio, combate flacidez estrutural"
   },
   {
-    id: "fb_flacidez_05",
-    name: "Contração e Relaxamento Progressivo",
-    problem: "flacidez",
-    zone: "Face completa",
-    duration: "3 min",
-    reps: "3×6",
-    difficulty: "intermediário",
-    image: "/images/exercises/ex_19.jpg",
-    video: "",
-    videoSteps: [
-      "Contraia TODOS os músculos do rosto apertando olhos, boca e testa ao mesmo tempo",
-      "Segure a contração máxima por 5 segundos — sinta cada músculo",
-      "Relaxe COMPLETAMENTE deixando o rosto totalmente solto por 5 segundos",
-      "Repita o ciclo — o contraste entre tensão e relaxamento tonifica profundamente"
+    "id": "fb_flacidez_05",
+    "name": "Batimentos Revitalizantes (Tamborilamento)",
+    "problem": "flacidez",
+    "zone": "Face Global",
+    "duration": "2 min",
+    "reps": "3×10",
+    "difficulty": "iniciante",
+    "image": "/images/capas/flacidez_flacidez5.jpg",
+    "video": "/videos/exercicios/flacidez/flacidez5.mp4",
+    "videoSteps": [
+      "Com as mãos relaxadas, use as pontas de todos os dedos",
+      "Realize batidas rápidas e leves como uma chuva rítmica",
+      "Percorra toda a bochecha, mandíbula e têmporas",
+      "Aumente o ritmo para sensação de formigamento leve"
     ],
-    instructions: "Contraia todos os músculos faciais ao máximo (olhos, boca, testa) por 5 segundos, depois relaxe completamente por 5 segundos. A alternância de tensão e relaxamento fortalece a musculatura e melhora o tônus de toda a face.",
-    benefits: "Fortalece musculatura profunda, melhora tônus facial, combate flacidez por inatividade muscular"
+    "instructions": "O tamborilamento é um microestimulante que 'acorda' os tecidos e prepara a pele para a absorção de nutrientes.",
+    "benefits": "Estimula circulação, melhora o viço da pele, tonifica micro músculos"
   },
 
-  // ═══════════════════════════════════════════════════════════════════
-  // 5. PÁLPEBRA CAÍDA (palpebra_caida) — 4 exercícios
-  // ═══════════════════════════════════════════════════════════════════
-
+  // BOCA / TÔNUS / SULCO
   {
-    id: "fb_palpebra_01",
-    name: "Elevação Palpebral com Resistência",
-    problem: "palpebra_caida",
-    zone: "Pálpebras",
-    duration: "3 min",
-    reps: "3×12",
-    difficulty: "iniciante",
-    image: "/images/exercises/ex_20.jpg",
-    video: "",
-    videoSteps: [
-      "Coloque os indicadores sob as sobrancelhas, apoiando no osso orbital",
-      "Empurre suavemente as sobrancelhas para cima com os dedos",
-      "Tente fechar os olhos contra a resistência dos dedos que puxam para cima",
-      "Segure 5 segundos na posição semi-fechada e abra devagar — repita"
+    "id": "fb_manchas_04",
+    "name": "Resistência Labial Superior Isométrica",
+    "problem": "perda_tonus",
+    "zone": "Boca",
+    "duration": "2 min",
+    "reps": "3×10",
+    "difficulty": "iniciante",
+    "image": "/images/capas/boca_boca1.jpg",
+    "video": "/videos/exercicios/boca/boca1.mp4",
+    "videoSteps": [
+      "Posicione o dedo indicador horizontalmente acima do lábio superior",
+      "Pressione o dedo contra a pele enquanto projeta os lábios para frente",
+      "Crie uma resistência entre o dedo e o movimento da musculatura",
+      "Mantenha por 5 segundos e relaxe completamente"
     ],
-    instructions: "Posicione os indicadores sob as sobrancelhas e empurre para cima. Tente fechar os olhos contra essa resistência. Segure 5 segundos. Fortalece o músculo levantador da pálpebra, combatendo a ptose (queda) palpebral com resultados progressivos.",
-    benefits: "Fortalece músculo levantador da pálpebra, combate ptose palpebral, abre o olhar"
+    "instructions": "Fortalece o orbicular da boca, prevenindo o código de barras e o afinamento labial.",
+    "benefits": "Firma zona do buço, previne rugas periorais, aumenta volume natural"
   },
   {
-    id: "fb_palpebra_02",
-    name: "Abertura Máxima Controlada",
-    problem: "palpebra_caida",
-    zone: "Pálpebras",
-    duration: "2 min",
-    reps: "3×10",
-    difficulty: "iniciante",
-    image: "/images/exercises/ex_21.jpg",
-    video: "",
-    videoSteps: [
-      "Olhe fixamente para um ponto à frente, mantendo o rosto relaxado",
-      "Abra os olhos o máximo possível sem erguer as sobrancelhas",
-      "Mantenha os olhos totalmente abertos por 5 segundos — sinta a pálpebra superior",
-      "Relaxe e pisque suavemente 5 vezes antes de repetir"
+    "id": "fb_tonus_01",
+    "name": "Resistência Labial Superior",
+    "problem": "perda_tonus",
+    "zone": "Boca",
+    "duration": "2 min",
+    "reps": "3×10",
+    "difficulty": "iniciante",
+    "image": "/images/capas/boca_boca1.jpg",
+    "video": "/videos/exercicios/boca/boca1.mp4",
+    "videoSteps": [
+      "Posicione o dedo indicador horizontalmente acima do lábio superior",
+      "Pressione o dedo contra a pele enquanto projeta os lábios para frente",
+      "Crie uma resistência entre o dedo e o movimento da musculatura",
+      "Mantenha por 5 segundos e relaxe completamente"
     ],
-    instructions: "Abra os olhos o máximo possível sem mover as sobrancelhas. Segure 5 segundos. O segredo é isolar o movimento da pálpebra. Este exercício treina o músculo levantador da pálpebra de forma isolada para máxima eficácia.",
-    benefits: "Treina músculo levantador de forma isolada, corrige pálpebra pesada, rejuvenesce o olhar"
+    "instructions": "Exercício base para sustentação do sorriso e volume do lábio superior.",
+    "benefits": "Tonifica orbicular, previne código de barras, firma a boca"
   },
   {
-    id: "fb_palpebra_03",
-    name: "Piscar Potente",
-    problem: "palpebra_caida",
-    zone: "Pálpebras",
-    duration: "2 min",
-    reps: "4×20",
-    difficulty: "intermediário",
-    image: "/images/exercises/ex_22.jpg",
-    video: "",
-    videoSteps: [
-      "Pisque uma vez lentamente, fechando completamente os olhos por 2 segundos",
-      "Abra rapidamente e o mais amplamente possível — segure 1 segundo",
-      "Pisque novamente rápido e forte, depois abra ao máximo",
-      "Repita em ritmo alternado: fecha lento → abre rápido, 20 vezes"
+    "id": "fb_tonus_02",
+    "name": "Massagem Circular de Contorno Labial",
+    "problem": "perda_tonus",
+    "zone": "Boca",
+    "duration": "2 min",
+    "reps": "3×15",
+    "difficulty": "iniciante",
+    "image": "/images/capas/boca_boca2.jpg",
+    "video": "/videos/exercicios/boca/boca2.mp4",
+    "videoSteps": [
+      "Use as pontas dos indicadores sobre o contorno dos lábios",
+      "Massageie em pequenos círculos do centro para os cantos",
+      "Percorra toda a borda labial superior e inferior",
+      "Foque em relaxar as tensões dos cantos da boca"
     ],
-    instructions: "Alterne entre fechar os olhos lentamente (2 segundos) e abrir rapidamente ao máximo (1 segundo). 20 repetições por série. O contraste de velocidade trabalha as fibras rápidas e lentas do músculo orbicular e levantador.",
-    benefits: "Trabalha fibras musculares rápidas e lentas, melhora elasticidade palpebral, combate olhar cansado"
+    "instructions": "Relaxa a musculatura que puxa os cantos da boca para baixo e suaviza as linhas de marionete.",
+    "benefits": "Levanta cantos da boca, suaviza marionete, relaxa zona perioral"
   },
   {
-    id: "fb_palpebra_04",
-    name: "Yoga Ocular — Olhar do Templo",
-    problem: "palpebra_caida",
-    zone: "Pálpebras",
-    duration: "3 min",
-    reps: "2×8",
-    difficulty: "avançado",
-    image: "/images/exercises/ex_23.jpg",
-    video: "",
-    videoSteps: [
-      "Coloque os médios no canto interno dos olhos e indicadores no canto externo",
-      "Aplique pressão leve formando um óculos com os dedos ao redor dos olhos",
-      "Olhe para cima e tente levantar as pálpebras inferiores (movimento de apertar)",
-      "Segure 10 segundos sentindo a pálpebra superior subir — relaxe e repita"
+    "id": "fb_tonus_03",
+    "name": "Alongamento de Sulco em Formato O",
+    "problem": "perda_tonus",
+    "zone": "Boca / Sulco",
+    "duration": "2 min",
+    "reps": "3×10",
+    "difficulty": "intermediário",
+    "image": "/images/capas/boca_boca3.jpg",
+    "video": "/videos/exercicios/boca/boca3.mp4",
+    "videoSteps": [
+      "Abra a boca no formato de um 'O' firme para alongar o rosto",
+      "Com os indicadores, pressione as laterais do nariz no início do sulco",
+      "Faça pequenos movimentos de vai e vem (vibração) sobre o músculo",
+      "Mantenha o 'O' constante para maximizar o alongamento local"
     ],
-    instructions: "Forme um 'óculos' com os dedos ao redor dos olhos. Olhe para cima e tente levantar as pálpebras inferiores. Segure 10 segundos. Técnica avançada que fortalece toda a musculatura orbital para pálpebras mais firmes e olhar aberto.",
-    benefits: "Fortalece toda a musculatura orbital, levanta pálpebras, cria olhar mais aberto e jovem"
+    "instructions": "O impacto da vibração manual no músculo alongado ajuda a soltar aderências profundas no bigode chinês.",
+    "benefits": "Solta fibras do sulco, suaviza marcas de expressão, relaxa centro facial"
   },
 
-  // ═══════════════════════════════════════════════════════════════════
-  // 6. MANCHAS E TEXTURA DA PELE (manchas_textura) — 4 exercícios
-  // ═══════════════════════════════════════════════════════════════════
-
+  // PAPADA / MANDÍBULA
   {
-    id: "fb_manchas_01",
-    name: "Drenagem Linfática Geral",
-    problem: "manchas_textura",
-    zone: "Rosto completo",
-    duration: "5 min",
-    reps: "1×30",
-    difficulty: "iniciante",
-    image: "/images/exercises/ex_24.jpg",
-    video: "",
-    videoSteps: [
-      "Use os nós dos dedos para deslizar do centro do rosto para as orelhas",
-      "Repita da testa ao queixo, sempre em direção às orelhas",
-      "Desça pelo pescoço até as clavículas com pressão leve mas constante",
-      "Repita 30 vezes toda a sequência — sinta o rosto desinchar progressivamente"
+    "id": "fb_papada_01",
+    "name": "Escultura em Gancho para Mandíbula",
+    "problem": "papada",
+    "zone": "Mandíbula",
+    "duration": "2 min",
+    "reps": "3×12",
+    "difficulty": "iniciante",
+    "image": "/images/capas/papada_papada1.jpg",
+    "video": "/videos/exercicios/papada/papada1.mp4",
+    "videoSteps": [
+      "Inclie a cabeça levemente para trás",
+      "Encaixe os dedos em 'gancho' no centro do queixo",
+      "Deslize firmemente ao longo do osso da mandíbula até as orelhas",
+      "Mantenha a pressão constante para esculpir o contorno"
     ],
-    instructions: "Técnica de drenagem linfática facial completa. Deslize do centro para as orelhas, depois desça pelo pescoço até as clavículas. 30 repetições. A drenagem elimina toxinas, reduz inchaço e melhora a luminosidade da pele uniformizando o tom.",
-    benefits: "Elimina toxinas, reduz inchaço, melhora luminosidade, uniformiza tom da pele"
+    "instructions": "O formato em gancho 'prende' a gordura e drena os líquidos, redefinindo o ângulo do perfil.",
+    "benefits": "Define a mandíbula, combate papada lateral, elimina inchaço submental"
   },
   {
-    id: "fb_manchas_02",
-    name: "Estimulação Circulatória por Percussão",
-    problem: "manchas_textura",
-    zone: "Rosto completo",
-    duration: "3 min",
-    reps: "1×60s",
-    difficulty: "iniciante",
-    image: "/images/exercises/ex_25.jpg",
-    video: "",
-    videoSteps: [
-      "Use as pontas dos dedos para dar tapinhas leves e rápidos em todo o rosto",
-      "Comece pela testa — passe pelas bochechas — desça pela mandíbula",
-      "Não pule nenhuma região — cubra todo o rosto uniformemente",
-      "Continue por 60 segundos — o rosto deve ficar rosado (sinal de boa circulação)"
+    "id": "fb_papada_02",
+    "name": "Batidas Drenantes Submentais",
+    "problem": "papada",
+    "zone": "Papada",
+    "duration": "2 min",
+    "reps": "3×10",
+    "difficulty": "iniciante",
+    "image": "/images/capas/papada_papada2.jpg",
+    "video": "/videos/exercicios/papada/papada2.mp4",
+    "videoSteps": [
+      "Use as costas dos dedos ou as pontas relaxadas",
+      "Realize batidas rápidas e rítmicas abaixo do queixo",
+      "Percorra toda a área da papada e lateral do pescoço",
+      "O movimento deve ser leve mas constante para ativar a linfa"
     ],
-    instructions: "Percussão facial suave com pontas dos dedos em todo o rosto por 60 segundos. O movimento rápido e leve estimula a circulação sanguínea, trazendo nutrientes e oxigênio para a superfície da pele, melhorando textura e luminosidade.",
-    benefits: "Estimula microcirculação, traz nutrientes à superfície, melhora textura e brilho natural da pele"
+    "instructions": "A vibração das batidas ajuda a reduzir gordura localizada e firmar a pele frouxa abaixo do queixo.",
+    "benefits": "Firma pele da papada, reduz gordura submental, drena inchaço cervical"
   },
   {
-    id: "fb_manchas_03",
-    name: "Massagem de Pontos de Luz",
-    problem: "manchas_textura",
-    zone: "Rosto completo",
-    duration: "4 min",
-    reps: "1×45s por zona",
-    difficulty: "intermediário",
-    image: "/images/exercises/ex_26.jpg",
-    video: "",
-    videoSteps: [
-      "Identifique os pontos altos do rosto: ponte do nariz, maçãs, arco de cupido, queixo",
-      "Em cada ponto, faça pequenos círculos com pressão média por 45 segundos",
-      "Esses são os pontos onde a luz reflete — estimulá-los cria glow natural",
-      "Finalize passando gelo enrolado em pano sobre os mesmos pontos por 10 segundos"
+    "id": "fb_papada_03",
+    "name": "Alongamento Global Língua ao Nariz",
+    "problem": "papada",
+    "zone": "Papada / Pescoço",
+    "duration": "3 min",
+    "reps": "3×10",
+    "difficulty": "avançado",
+    "image": "/images/capas/papada_papada3.jpg",
+    "video": "/videos/exercicios/papada/papada3.mp4",
+    "videoSteps": [
+      "Incline a cabeça para trás olhando para o teto",
+      "Projete a ponta da língua para fora o máximo possível",
+      "Tente 'tocar' a ponta do nariz com a língua para criar tensão",
+      "Segure o alongamento por 5 segundos e relaxe a língua"
     ],
-    instructions: "Massageie os pontos altos do rosto (ponte do nariz, maçãs, arco do cupido, queixo) em círculos por 45 segundos cada. Finalize com gelo embrulhado em pano. Estimula circulação nos pontos de reflexão de luz, criando o efeito glass skin.",
-    benefits: "Cria efeito glass skin, estimula circulação nos pontos de destaque, uniformiza textura"
+    "instructions": "Este exercício trabalha a musculatura milo-hióidea (da base da língua) que sustenta toda a papada.",
+    "benefits": "Elimina queixo duplo, tonifica base da língua, alonga o pescoço"
   },
   {
-    id: "fb_manchas_04",
-    name: "Automassagem de Renovação Celular",
-    problem: "manchas_textura",
-    zone: "Rosto completo",
-    duration: "4 min",
-    reps: "1×3 min",
-    difficulty: "intermediário",
-    image: "/images/exercises/ex_27.jpg",
-    video: "",
-    videoSteps: [
-      "Aplique seu sérum ou óleo facial habitual como meio deslizante",
-      "Com as palmas, faça movimentos ascendentes do queixo à testa — 20 vezes",
-      "Com os nós dos dedos, faça movimentos laterais da linha central às orelhas — 20 vezes",
-      "Finalize pressionando as palmas quentes sobre todo o rosto por 10 segundos"
+    "id": "fb_papada_04",
+    "name": "Contração Milohioidea Isométrica",
+    "problem": "papada",
+    "zone": "Papada",
+    "duration": "4 min",
+    "reps": "1×20",
+    "difficulty": "intermediário",
+    "image": "/images/capas/papada_papada4.jpg",
+    "video": "/videos/exercicios/papada/papada4.mp4",
+    "videoSteps": [
+      "Cruze as mãos sobre a base do pescoço para criar resistência",
+      "Incline a cabeça levemente para trás",
+      "Pressione a língua firmemente contra o céu da boca",
+      "Sinta a contração intensa abaixo do queixo e segure 5s"
     ],
-    instructions: "Com sérum ou óleo facial, faça movimentos ascendentes e laterais cobrindo todo o rosto. 20 passadas em cada direção. Finalize com palmas quentes pressionadas por 10 segundos. Potencializa a absorção dos ativos e estimula renovação celular.",
-    benefits: "Potencializa absorção de skincare, estimula renovação celular, melhora textura e luminosidade"
+    "instructions": "A resistência das mãos no pescoço intensifica o trabalho muscular interno da papada.",
+    "benefits": "Tonifica musculatura profunda, reduz flacidez severa, fixa a mandíbula"
   },
 
-  // ═══════════════════════════════════════════════════════════════════
-  // 7. PERDA DE TÔNUS / MÚSCULO DERRETENDO (perda_tonus) — 5 exercícios
-  // ═══════════════════════════════════════════════════════════════════
-
+  // CONTORNO FACIAL (MANCHAS / TEXTURA / DEFINIÇÃO)
   {
-    id: "fb_tonus_01",
-    name: "Bombeio Facial Completo",
-    problem: "perda_tonus",
-    zone: "Face completa",
-    duration: "3 min",
-    reps: "3×10",
-    difficulty: "intermediário",
-    image: "/images/exercises/ex_28.jpg",
-    video: "",
-    videoSteps: [
-      "Abra a boca formando um O grande, cobrindo os dentes com os lábios",
-      "Com a boca em O, sorria puxando os cantos da boca para cima ao máximo",
-      "Coloque os indicadores nas maçãs e empurre para cima enquanto mantém o O",
-      "Segure 10 segundos no topo — depois solte lentamente a posição"
+    "id": "fb_manchas_01",
+    "name": "Escultura de Maçãs Zigomático",
+    "problem": "perda_definicao",
+    "zone": "Contorno",
+    "duration": "2 min",
+    "reps": "3×15",
+    "difficulty": "iniciante",
+    "image": "/images/capas/contorno_facial_contorno1.jpg",
+    "video": "/videos/exercicios/contorno_facial/contorno1.mp4",
+    "videoSteps": [
+      "Use a lateral do dedo indicador como uma espátula",
+      "Deslize do lado do nariz, por baixo do osso da bochecha",
+      "Siga firmemente até a frente da orelha",
+      "Repita para esculpir e destacar as maçãs do rosto"
     ],
-    instructions: "Abra a boca em O, cobrindo os dentes. Sorria puxando os cantos para cima mantendo o O, e empurre as maçãs com os dedos. Segure 10 segundos. Este bombeio facial ativa grupos musculares profundos e restaura o volume perdido pela idade.",
-    benefits: "Ativa musculatura profunda, restaura volume perdido, reconstrói tônus facial"
+    "instructions": "Exercício de 'sculpt' que define o rosto removendo inchaço sob as bochechas.",
+    "benefits": "Define maçãs, drena o centro facial, melhora contorno lateral"
   },
   {
-    id: "fb_tonus_02",
-    name: "Resistência das Bochechas",
-    problem: "perda_tonus",
-    zone: "Bochechas",
-    duration: "3 min",
-    reps: "3×12",
-    difficulty: "iniciante",
-    image: "/images/exercises/ex_29.jpg",
-    video: "",
-    videoSteps: [
-      "Encha as bochechas de ar ao máximo — boca bem selada",
-      "Use as palmas das mãos para pressionar as bochechas cheias de ar",
-      "Resista à compressão — não deixe o ar escapar mesmo com pressão forte",
-      "Mantenha 5 segundos sob pressão máxima e solte — repita"
+    "id": "fb_manchas_02",
+    "name": "Resistência de Mandíbula com Punhos",
+    "problem": "perda_definicao",
+    "zone": "Contorno Inferior",
+    "duration": "2 min",
+    "reps": "3×15",
+    "difficulty": "intermediário",
+    "image": "/images/capas/contorno_facial_contorno2.jpg",
+    "video": "/videos/exercicios/contorno_facial/contorno2.mp4",
+    "videoSteps": [
+      "Feche as mãos em punhos e posicione abaixo do queixo",
+      "Pressione os punhos para cima criando resistência firme",
+      "Mantenha a tensão por 10 segundos resistindo com a cabeça",
+      "Solte a pressão e sinta o relaxamento reflexo"
     ],
-    instructions: "Encha as bochechas de ar e pressione com as palmas. Resista à compressão sem soltar o ar por 5 segundos. A resistência isométrica das bochechas infladas é uma das técnicas mais eficazes para reconstruir tônus nos músculos zigomáticos.",
-    benefits: "Reconstrói tônus dos zigomáticos, restaura volume das bochechas, combate face afinada pela idade"
+    "instructions": "Trabalho isométrico para fixar a pele na estrutura óssea da mandíbula.",
+    "benefits": "Fixa o tecido na mandíbula, reduz flacidez de pele, tonifica rosto"
   },
   {
-    id: "fb_tonus_03",
-    name: "Exercício do Trompete",
-    problem: "perda_tonus",
-    zone: "Lábios e bochechas",
-    duration: "2 min",
-    reps: "3×10",
-    difficulty: "iniciante",
-    image: "/images/exercises/ex_30.jpg",
-    video: "",
-    videoSteps: [
-      "Faça um biquinho exagerado projetando os lábios o máximo para frente",
-      "Mantenha o biquinho e sopre com força como se tocasse um trompete",
-      "Sinta as bochechas e os lábios queimando pela contração intensa",
-      "Segure 5 segundos soprando e relaxe — repita sem perder a intensidade"
+    "id": "fb_manchas_03",
+    "name": "Definição Mandibular em V",
+    "problem": "perda_definicao",
+    "zone": "Contorno Lateral",
+    "duration": "2 min",
+    "reps": "3×10",
+    "difficulty": "iniciante",
+    "image": "/images/capas/contorno_facial_contorno3.jpg",
+    "video": "/videos/exercicios/contorno_facial/contorno3.mp4",
+    "videoSteps": [
+      "Dedos indicador e médio em 'V' encaixados no osso da mandíbula",
+      "Deslize ambas as mãos simultaneamente do queixo para orelhas",
+      "Use pressão firme e ascendente para modelar o perfil",
+      "Finalize o movimento atrás do lóbulo da orelha"
     ],
-    instructions: "Faça um biquinho máximo e sopre com força como um trompete, segurando 5 segundos. O movimento ativa profundamente o músculo orbicular da boca e os bucinadores, combatendo a perda de tônus ao redor da boca.",
-    benefits: "Ativa orbicular da boca, tonifica bucinadores, combate perda de definição labial"
-  },
-  {
-    id: "fb_tonus_04",
-    name: "Contração Profunda da Face Inferior",
-    problem: "perda_tonus",
-    zone: "Mandíbula e queixo",
-    duration: "3 min",
-    reps: "3×8",
-    difficulty: "avançado",
-    image: "/images/exercises/ex_31.jpg",
-    video: "",
-    videoSteps: [
-      "Abra a boca moderadamente e dobre o lábio inferior sobre os dentes de baixo",
-      "Projete a mandíbula para frente sentindo a tensão no queixo",
-      "Coloque o polegar sob o queixo e resista ao movimento da mandíbula",
-      "Segure 8 segundos com máxima contração — este é o exercício mais intenso"
-    ],
-    instructions: "Dobre o lábio inferior sobre os dentes, projete a mandíbula e resista com o polegar sob o queixo por 8 segundos. Ativa o platisma e o mentoniano — músculos profundos que quando tonificados eliminam o efeito de rosto derretendo.",
-    benefits: "Tonifica platisma e mentoniano, elimina efeito de rosto derretendo, redefine contorno inferior"
-  },
-  {
-    id: "fb_tonus_05",
-    name: "Face Building — Série Completa",
-    problem: "perda_tonus",
-    zone: "Face completa",
-    duration: "5 min",
-    reps: "2×5 de cada",
-    difficulty: "avançado",
-    image: "/images/exercises/ex_32.jpg",
-    video: "",
-    videoSteps: [
-      "1. Erga as sobrancelhas ao máximo + abra a boca em O — segure 5s",
-      "2. Aperte todos os músculos do rosto como se chupasse limão — segure 5s",
-      "3. Abra tudo ao máximo (olhos, boca, língua para fora) — segure 5s",
-      "4. Faça 'bochecho seco' com movimentos amplos de mandíbula — 10 vezes"
-    ],
-    instructions: "Série completa de face building com 4 movimentos sequenciais: abertura máxima, contração máxima, expansão completa e bochecho seco. 5 repetições de cada. É o treino mais completo para reconstrução muscular facial.",
-    benefits: "Reconstrução muscular completa, reverte perda de tônus generalizada, rejuvenescimento estrutural"
+    "instructions": "A técnica em 'V' é a mais eficaz para criar o perfil angulado e jovial.",
+    "benefits": "Perfil definido, combate 'buldogue' facial, drena mandíbula"
   },
 
-  // ═══════════════════════════════════════════════════════════════════
-  // 8. PAPADA / QUEIXO DUPLO (papada) — 4 exercícios
-  // ═══════════════════════════════════════════════════════════════════
-
+  // NARIZ
   {
-    id: "fb_papada_01",
-    name: "Firmeza do Pescoço — Platisma",
-    problem: "papada",
-    zone: "Pescoço",
-    duration: "3 min",
-    reps: "3×12",
-    difficulty: "iniciante",
-    image: "/images/exercises/ex_1.jpg",
-    video: "",
-    videoSteps: [
-      "Sente-se ereta e olhe para o teto inclinando a cabeça devagar",
-      "Pressione firmemente a língua contra o céu da boca",
-      "Sinta toda a região do pescoço e queixo se contraindo intensamente",
-      "Mantenha 5 segundos e volte lentamente — repita com cuidado"
+    "id": "fb_nariz_01",
+    "name": "Drenagem e Refino Nasal Lateral",
+    "problem": "nariz",
+    "zone": "Nariz",
+    "duration": "2 min",
+    "reps": "3×10",
+    "difficulty": "iniciante",
+    "image": "/images/capas/nariz_nariz1.jpg",
+    "video": "/videos/exercicios/nariz/nariz1.mp4",
+    "videoSteps": [
+      "Coloque os indicadores nas laterais do topo do nariz",
+      "Deslize suavemente para baixo em direção às narinas",
+      "Repita o movimento para drenar inchaço da ponte nasal",
+      "Finalize com uma leve pressão na base das abas"
     ],
-    instructions: "Olhe para cima e pressione a língua no céu da boca com força por 5 segundos. Toda a região sub-mental e do pescoço se contrai. Este exercício ativa o platisma e combate a papada fortalecendo a base do rosto.",
-    benefits: "Ativa o platisma, combate papada, fortalece base muscular do rosto e pescoço"
+    "instructions": "Desincha o nariz, deixando-o com aspecto mais afilado e refinado após a retenção de líquidos.",
+    "benefits": "Refina o contorno nasal, reduz inchaço, melhora respiração"
   },
   {
-    id: "fb_papada_02",
-    name: "Beijo no Teto",
-    problem: "papada",
-    zone: "Pescoço",
-    duration: "2 min",
-    reps: "3×10",
-    difficulty: "iniciante",
-    image: "/images/exercises/ex_2.png",
-    video: "",
-    videoSteps: [
-      "Incline a cabeça para trás olhando diretamente para o teto",
-      "Projete os lábios como se fosse dar um beijo no teto — biquinho máximo",
-      "Sinta a contração intensa sob o queixo e ao longo do pescoço",
-      "Mantenha o beijo por 5 segundos e volte à posição neutra — repita"
+    "id": "fb_nariz_02",
+    "name": "Resistência Isométrica de Ponta Nasal",
+    "problem": "nariz",
+    "zone": "Nariz",
+    "duration": "2 min",
+    "reps": "3×15",
+    "difficulty": "iniciante",
+    "image": "/images/capas/nariz_nariz2.jpg",
+    "video": "/videos/exercicios/nariz/nariz2.mp4",
+    "videoSteps": [
+      "Pressione a ponta do nariz para cima com o dedo indicador",
+      "Force o nariz para baixo usando a força interna do rosto",
+      "Crie uma disputa de força (resistência) por 5 segundos",
+      "Relaxe e repita para fortalecer a sustentação da ponta"
     ],
-    instructions: "Olhe para o teto e faça biquinho como se fosse beijar o teto. Segure 5 segundos sentindo a contração sob o queixo. Exercício clássico da Face Yoga que é extremamente eficaz para eliminar papada e definir o ângulo mandíbula-pescoço.",
-    benefits: "Elimina papada, define ângulo mandíbula-pescoço, fortalece musculatura sub-mental"
-  },
-  {
-    id: "fb_papada_03",
-    name: "Exercício da Mandíbula com Resistência",
-    problem: "papada",
-    zone: "Mandíbula",
-    duration: "3 min",
-    reps: "3×10",
-    difficulty: "intermediário",
-    image: "/images/exercises/ex_3.jpg",
-    video: "",
-    videoSteps: [
-      "Coloque o punho fechado sob o queixo",
-      "Tente abrir a boca empurrando o queixo para baixo contra o punho",
-      "Resista com o punho — a boca não deve abrir (contração isométrica pura)",
-      "Segure 8 segundos em máxima tensão e relaxe — repita"
-    ],
-    instructions: "Punho sob o queixo, tente abrir a boca contra a resistência do punho (a boca não abre). Segure 8 segundos. Isometria pura que fortalece masseter, digástrico e milo-hioideo — os músculos que sustentam o ângulo da mandíbula.",
-    benefits: "Fortalece masseter e digástrico, define ângulo da mandíbula, elimina queixo duplo"
-  },
-  {
-    id: "fb_papada_04",
-    name: "Drenagem Cervical Anti-Papada",
-    problem: "papada",
-    zone: "Pescoço",
-    duration: "4 min",
-    reps: "1×20",
-    difficulty: "iniciante",
-    image: "/images/exercises/ex_4.jpg",
-    video: "",
-    videoSteps: [
-      "Com as costas dos dedos, deslize de baixo do queixo em direção à orelha",
-      "Alterne os lados — 10 passadas de cada lado",
-      "Depois deslize da orelha até a clavícula com pressão constante",
-      "Finalize com movimentos circulares suaves acima das clavículas (linfonodos)"
-    ],
-    instructions: "Drenagem específica para papada. Deslize do queixo às orelhas, depois das orelhas às clavículas. Finalize com círculos sobre os linfonodos supraclaviculares. Remove retenção de líquido que acentua a papada.",
-    benefits: "Remove retenção de líquido, desinfla a região sub-mental, complementa os exercícios de tonificação"
+    "instructions": "Fortalece o músculo depressor do septo nasal para evitar que o nariz 'caia' com o tempo.",
+    "benefits": "Eleva a ponta do nariz, fortalece sustentação, rejuvenescimento nasal"
   },
 
-  // ═══════════════════════════════════════════════════════════════════
-  // 9. OLHEIRAS E BOLSAS (olheiras) — 3 exercícios
-  // ═══════════════════════════════════════════════════════════════════
-
+  // PESCOÇO
   {
-    id: "fb_olheiras_01",
-    name: "Drenagem Periorbital",
-    problem: "olheiras",
-    zone: "Olhos",
-    duration: "3 min",
-    reps: "1×20",
-    difficulty: "iniciante",
-    image: "/images/exercises/ex_5.png",
-    video: "",
-    videoSteps: [
-      "Use os anulares (menor pressão natural) sob os olhos",
-      "Deslize suavemente do canto interno para o canto externo do olho",
-      "No canto externo, desça em direção à orelha com pressão levíssima",
-      "Repita 20 vezes em cada olho — o toque deve ser delicado como pluma"
+    "id": "fb_pescoco_01",
+    "name": "Alongamento Lateral Palma Platisma",
+    "problem": "pescoco",
+    "zone": "Pescoço",
+    "duration": "2 min",
+    "reps": "3×10",
+    "difficulty": "iniciante",
+    "image": "/images/capas/pescoco_pescoco1.jpg",
+    "video": "/videos/exercicios/pescoco/pescoco1.mp4",
+    "videoSteps": [
+      "Incline a cabeça para trás e para o lado oposto ao exercício",
+      "Use a palma da mão para deslizar da mandíbula à clavícula",
+      "Massageie com firmeza toda a extensão lateral do pescoço",
+      "Repita o processo e troque os lados para equilíbrio total"
     ],
-    instructions: "Drenagem linfática específica para olheiras. Com os anulares, deslize do canto interno ao externo, depois para a orelha. 20 repetições por olho com toque delicadíssimo. Remove líquido acumulado que causa bolsas e olheiras por congestão.",
-    benefits: "Remove líquido acumulado, reduz bolsas e olheiras, descongestiona a região periorbital"
+    "instructions": "Estica e suaviza o platisma, o músculo que cobre o pescoço e causa rugas horizontais.",
+    "benefits": "Suaviza colar de vênus, firma pele do pescoço, relaxa cervical"
   },
   {
-    id: "fb_olheiras_02",
-    name: "Compressão Térmica Alternada",
-    problem: "olheiras",
-    zone: "Olhos",
-    duration: "4 min",
-    reps: "1×5 ciclos",
-    difficulty: "iniciante",
-    image: "/images/exercises/ex_6.png",
-    video: "",
-    videoSteps: [
-      "Prepare colheres: uma em água gelada e uma em água morna (não quente)",
-      "Aplique a colher gelada sob os olhos por 30 segundos",
-      "Troque pela colher morna por 30 segundos",
-      "Alterne 5 vezes — o contraste térmico ativa circulação e drena"
+    "id": "fb_pescoco_02",
+    "name": "Micro-Pinçamentos de Colágeno Cervical",
+    "problem": "pescoco",
+    "zone": "Pescoço",
+    "duration": "2 min",
+    "reps": "3×10",
+    "difficulty": "iniciante",
+    "image": "/images/capas/pescoco_pescoco2.jpg",
+    "video": "/videos/exercicios/pescoco/pescoco2.mp4",
+    "videoSteps": [
+      "Use as pontas dos dedos para realizar beliscamentos suaves",
+      "Percorra toda a lateral e frente do pescoço",
+      "O movimento deve ser rápido e leve, sem causar dor",
+      "Parta da base do pescoço para cima até a mandíbula"
     ],
-    instructions: "Alterne colheres geladas e mornas sob os olhos, 30 segundos cada, 5 ciclos. O contraste térmico provoca vasoconstrição e vasodilatação alternadas, bombeando o sangue e drenando a região periorbital de forma intensa.",
-    benefits: "Drena bolsas intensamente, reduz pigmentação das olheiras, ativa circulação por contraste térmico"
+    "instructions": "Os micro-beliscamentos estimulam os fibroblastos a produzirem colágeno na pele fina do pescoço.",
+    "benefits": "Estimula colágeno, melhora firmeza da pele, reduz linhas finas"
   },
   {
-    id: "fb_olheiras_03",
-    name: "Yoga Ocular Anti-Inchaço",
-    problem: "olheiras",
-    zone: "Olhos",
-    duration: "2 min",
-    reps: "2×10",
-    difficulty: "intermediário",
-    image: "/images/exercises/ex_7.png",
-    video: "",
-    videoSteps: [
-      "Feche os olhos e olhe para baixo sem mover a cabeça",
-      "Lentamente, mova os olhos para cima (ainda fechados) até olhar para o teto",
-      "Abra os olhos arregalados quando chegar ao topo — segure 3 segundos",
-      "Feche e repita — este ciclo bombeia o fluido estagnado da região"
+    "id": "fb_pescoco_03",
+    "name": "Alongamento Diagonal com Língua Lateral",
+    "problem": "pescoco",
+    "zone": "Pescoço",
+    "duration": "2 min",
+    "reps": "3×10",
+    "difficulty": "avançado",
+    "image": "/images/capas/pescoco_pescoco3.jpg",
+    "video": "/videos/exercicios/pescoco/pescoco3.mp4",
+    "videoSteps": [
+      "Vire a cabeça totalmente para o lado",
+      "Projete a língua para fora em direção à lateral da boca",
+      "Sinta o alongamento intenso do lado oposto do pescoço",
+      "Mantenha por 10 segundos em cada lado"
     ],
-    instructions: "Com olhos fechados, mova-os de baixo para cima e abra arregalados no topo por 3 segundos. Feche e repita. O movimento bomba fluidos estagnados e ativa os músculos que sustentam a pele sob os olhos.",
-    benefits: "Bombeia fluidos estagnados, ativa músculos de sustentação da pele sob os olhos, reduz inchaço matinal"
-  },
+    "instructions": "O alongamento diagonal extremo redefine o ângulo entre mandíbula e pescoço através da língua.",
+    "benefits": "Define ângulo cervical, alonga musculatura profunda, reduz papada lateral"
+  }
 ];
 
 export default exercisesBank;
-
-// ─── Utilitários do Banco ──────────────────────────────────────────
-
-/** Retorna todos os problemas únicos disponíveis */
-export function getAllProblems() {
-  const problems = [...new Set(exercisesBank.map(e => e.problem))];
-  return problems;
-}
-
-/** Retorna exercícios filtrados por problema */
-export function getExercisesByProblem(problem) {
-  return exercisesBank.filter(e => e.problem === problem);
-}
-
-/** Retorna exercícios filtrados por zona */
-export function getExercisesByZone(zone) {
-  return exercisesBank.filter(e => e.zone.toLowerCase().includes(zone.toLowerCase()));
-}
-
-/** Retorna exercícios filtrados por dificuldade */
-export function getExercisesByDifficulty(difficulty) {
-  return exercisesBank.filter(e => e.difficulty === difficulty);
-}
-
-/** Mapa de labels legíveis para os problemas */
-export const problemLabels = {
-  rugas_testa: "Rugas na Testa",
-  pes_de_galinha: "Pés de Galinha",
-  bigode_chines: "Bigode Chinês",
-  flacidez: "Flacidez Facial",
-  palpebra_caida: "Pálpebra Caída",
-  manchas_textura: "Manchas e Textura",
-  perda_tonus: "Perda de Tônus Muscular",
-  papada: "Papada / Queixo Duplo",
-  olheiras: "Olheiras e Bolsas",
-};

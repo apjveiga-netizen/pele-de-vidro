@@ -9,7 +9,11 @@ const KEYS = {
   streak: "pdv_streak",
   hasOnboarded: "pdv_onboarded",
   protocol: "pdv_protocol",
+  schemaVersion: "pdv_schema_version", // New key
 };
+
+export const CURRENT_SCHEMA_VERSION = "2024-04-10-v5";
+
 
 function get(key, fallback) {
   try {
